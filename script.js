@@ -73,7 +73,7 @@ const skillGroups = [
 ];
 
 const nav = document.querySelector("[data-nav]");
-const navLinks = [...document.querySelectorAll(".site-nav a")];
+const navLinks = [...document.querySelectorAll(".site-nav a, .brand")];
 const sections = [...document.querySelectorAll("main section[id]")];
 const skillsRegion = document.querySelector("#skills-region");
 const currentYear = document.querySelector("#current-year");
