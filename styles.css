@@ -267,37 +267,40 @@ li {
 }
 
 .portrait-card {
+  position: relative;
   display: grid;
   align-content: center;
   justify-items: center;
   width: min(100%, 360px);
-  aspect-ratio: 4 / 5;
-  padding: 2rem;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background:
-    linear-gradient(160deg, rgba(47, 93, 98, 0.18), rgba(255, 255, 255, 0.72)),
-    var(--surface);
-  box-shadow: var(--shadow);
-  text-align: center;
-}
-
-.portrait-initials {
-  display: grid;
-  place-items: center;
-  width: 132px;
-  height: 132px;
-  border: 1px solid rgba(47, 93, 98, 0.25);
+  height: min(70vh, 360px);
+  min-height: 320px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.38);
   border-radius: 50%;
-  color: var(--accent-dark);
-  font-size: 2.1rem;
-  font-weight: 800;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
 }
 
-.portrait-card p {
-  margin-top: 1.5rem;
-  font-size: 0.9rem;
-  font-weight: 700;
+.portrait-backdrop {
+  position: absolute;
+  inset: 0;
+  background-image: url("images/real-building-bg.svg");
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.04);
+  filter: saturate(0.95) contrast(1.05);
+}
+
+.profile-photo {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  object-position: center top;
 }
 
 .content-panel,
