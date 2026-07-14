@@ -72,7 +72,6 @@ const skillGroups = [
   }
 ];
 
-const navToggle = document.querySelector("[data-nav-toggle]");
 const nav = document.querySelector("[data-nav]");
 const navLinks = [...document.querySelectorAll(".site-nav a")];
 const sections = [...document.querySelectorAll("main section[id]")];
@@ -98,24 +97,16 @@ function renderSkills() {
     .join("");
 }
 
-function closeMobileNav() {
-  nav.classList.remove("open");
-  document.body.classList.remove("nav-open");
-  navToggle.setAttribute("aria-expanded", "false");
-}
-
-function toggleMobileNav() {
-  const isOpen = nav.classList.toggle("open");
-  document.body.classList.toggle("nav-open", isOpen);
-  navToggle.setAttribute("aria-expanded", String(isOpen));
-}
-
 function setActiveNavLink() {
-  const visibleSections = sections
-    .filter((section) => section.getBoundingClientRect().top <= 120);
-  const currentSection = visibleSections[visibleSections.length - 1];
+  const currentSection = sections
+    .slice()
+    .reverse()
+    .find((section) => section.getBoundingClientRect().top <= 140);
 
-  if (!currentSection) return;
+  if (!currentSection) {
+    navLinks.forEach((link) => link.classList.remove("active"));
+    return;
+  }
 
   navLinks.forEach((link) => {
     link.classList.toggle(
@@ -124,8 +115,6 @@ function setActiveNavLink() {
     );
   });
 }
-
-navToggle.addEventListener("click", toggleMobileNav);
 
 navLinks.forEach((link) => {
   link.addEventListener("click", (event) => {
@@ -136,14 +125,11 @@ navLinks.forEach((link) => {
 
     event.preventDefault();
     target.scrollIntoView({ behavior: "smooth", block: "start" });
-    closeMobileNav();
+    setActiveNavLink();
   });
 });
 
 window.addEventListener("scroll", setActiveNavLink, { passive: true });
-window.addEventListener("resize", () => {
-  if (window.innerWidth > 1180) closeMobileNav();
-});
 
 renderSkills();
 setActiveNavLink();
