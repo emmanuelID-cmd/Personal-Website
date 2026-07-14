@@ -14,6 +14,15 @@
   <header class="site-header" data-header>
     <a class="brand" href="#home" aria-label="Emmanuel De Jesus home" title="Home">⌂</a>
     <nav class="site-nav" id="primary-navigation" data-nav>
+     
+
+      <button class="nav-tab active" data-page="home">Home</button>
+      <button class="nav-tab" data-page="About">About</button>
+      <button class="nav-tab" data-page="Projects">Projects</button>
+      <button class="nav-tab" data-page="">Journey</button>
+      <button class="nav-tab" data-page="contact">Contact</button>
+
+</nav>
       <a href="#home">Home</a>
       <a href="#bio">Bio</a>
       <a href="#journey">Journey</a>
@@ -27,7 +36,7 @@
   </header>
 
   <main>
-    <section class="hero section" id="home">
+    <section class="hero section page" id="home">
       <div class="section-inner hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">Professional Portfolio</p>
@@ -50,11 +59,18 @@
       </div>
     </section>
 
-    <section class="section" id="bio">
+    <section class="section page" id="projects">
+    <div class="section-inner">
+        <h2>Projects</h2>
+        <p>Projects will be added here.</p>
+    </div>
+    </section>
+
+    <section class="section page" id="About">
       <div class="section-inner split-layout">
         <div>
           <p class="eyebrow">Person</p>
-          <h2>Bio</h2>
+          <h2>About</h2>
         </div>
         <div class="content-panel">
           <h3>Birth and Social Development</h3>
@@ -65,7 +81,7 @@
       </div>
     </section>
 
-    <section class="section muted" id="journey">
+    <section class="section muted page" id="journey">
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Experience to Execution</p>
@@ -238,7 +254,7 @@
       </div>
     </section>
 
-    <section class="section contact-section" id="contact">
+    <section class="section contact-section page" id="contact">
       <div class="section-inner contact-layout">
         <div>
           <p class="eyebrow">Contact</p>
