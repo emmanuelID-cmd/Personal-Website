@@ -81,28 +81,29 @@
           <h2>Journey</h2>
           <p>The path into AI was not random. It grew from years of adapting, learning new systems, solving operational problems, and looking for better ways to execute ideas.</p>
         </div>
-        <div class="timeline">
-          <article class="timeline-item">
-            <span>01</span>
-            <h3>Early Development</h3>
-            <p>Moving through diverse environments strengthened communication, adaptability, and relationship-building skills.</p>
-          </article>
-          <article class="timeline-item">
-            <span>02</span>
-            <h3>Career Expansion</h3>
-            <p>My professional career has spanned multiple industries, responsibilities, and leadership opportunities. Each transition required learning new systems, adapting to different expectations, and finding ways to succeed in unfamiliar environments.</p>
-          </article>
-          <article class="timeline-item">
-            <span>03</span>
-            <h3>Discovering AI</h3>
-            <p>While pursuing personal and professional goals, I encountered barriers that slowed the execution of ideas. Rather than accepting those limitations, I began exploring artificial intelligence as a practical tool for accelerating learning, improving productivity, and transforming concepts into tangible outcomes.</p>
-          </article>
-          <article class="timeline-item">
-            <span>04</span>
-            <h3>Becoming a Builder</h3>
-            <p>AI became more than a tool. It became a bridge between ideas and implementation. It allowed me to move beyond identifying opportunities and begin creating solutions.</p>
-          </article>
+        <div class="journey-timeline" role="tablist" aria-label="Journey stages" aria-orientation="horizontal">
+          <button class="journey-stage active" id="journey-tab-early-development" type="button" role="tab" aria-selected="true" aria-controls="journey-stage-content" data-journey-stage="early-development">
+            <span class="journey-stage-number" aria-hidden="true">01</span>
+            <span>Early Development</span>
+          </button>
+          <button class="journey-stage" id="journey-tab-career-expansion" type="button" role="tab" aria-selected="false" aria-controls="journey-stage-content" data-journey-stage="career-expansion" tabindex="-1">
+            <span class="journey-stage-number" aria-hidden="true">02</span>
+            <span>Career Expansion</span>
+          </button>
+          <button class="journey-stage" id="journey-tab-discovering-ai" type="button" role="tab" aria-selected="false" aria-controls="journey-stage-content" data-journey-stage="discovering-ai" tabindex="-1">
+            <span class="journey-stage-number" aria-hidden="true">03</span>
+            <span>Discovering AI</span>
+          </button>
+          <button class="journey-stage" id="journey-tab-becoming-a-builder" type="button" role="tab" aria-selected="false" aria-controls="journey-stage-content" data-journey-stage="becoming-a-builder" tabindex="-1">
+            <span class="journey-stage-number" aria-hidden="true">04</span>
+            <span>Becoming a Builder</span>
+          </button>
         </div>
+
+        <article class="journey-stage-content" id="journey-stage-content" role="tabpanel" aria-labelledby="journey-tab-early-development" aria-live="polite">
+          <h3>Early Development</h3>
+          <p>Moving through diverse environments strengthened communication, adaptability, and relationship-building skills.</p>
+        </article>
       </div>
     </section>
 

@@ -80,6 +80,27 @@ const aboutDropdown = document.querySelector(".nav-dropdown");
 const aboutDropdownButton = aboutDropdown?.querySelector('[data-tab="about"]');
 const skillsRegion = document.querySelector("#skills-region");
 const currentYear = document.querySelector("#current-year");
+const journeyStages = document.querySelectorAll("[data-journey-stage]");
+const journeyStageContent = document.querySelector("#journey-stage-content");
+
+const journeyContent = {
+  "early-development": {
+    title: "Early Development",
+    description: "Moving through diverse environments strengthened communication, adaptability, and relationship-building skills."
+  },
+  "career-expansion": {
+    title: "Career Expansion",
+    description: "My professional career has spanned multiple industries, responsibilities, and leadership opportunities. Each transition required learning new systems, adapting to different expectations, and finding ways to succeed in unfamiliar environments."
+  },
+  "discovering-ai": {
+    title: "Discovering AI",
+    description: "While pursuing personal and professional goals, I encountered barriers that slowed the execution of ideas. Rather than accepting those limitations, I began exploring artificial intelligence as a practical tool for accelerating learning, improving productivity, and transforming concepts into tangible outcomes."
+  },
+  "becoming-a-builder": {
+    title: "Becoming a Builder",
+    description: "AI became more than a tool. It became a bridge between ideas and implementation. It allowed me to move beyond identifying opportunities and begin creating solutions."
+  }
+};
 
 function renderSkills() {
   if (!skillsRegion) return;
@@ -117,6 +138,48 @@ function setAboutDropdown(open) {
   aboutDropdown.classList.toggle("is-open", open);
   aboutDropdownButton.setAttribute("aria-expanded", open ? "true" : "false");
 }
+
+function selectJourneyStage(stageButton) {
+  const content = journeyContent[stageButton.dataset.journeyStage];
+
+  if (!content || !journeyStageContent) return;
+
+  journeyStages.forEach((button) => {
+    const isActive = button === stageButton;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-selected", isActive ? "true" : "false");
+    button.tabIndex = isActive ? 0 : -1;
+  });
+
+  journeyStageContent.querySelector("h3").textContent = content.title;
+  journeyStageContent.querySelector("p").textContent = content.description;
+  journeyStageContent.setAttribute("aria-labelledby", stageButton.id);
+}
+
+journeyStages.forEach((button, index) => {
+  button.addEventListener("click", () => selectJourneyStage(button));
+
+  button.addEventListener("keydown", (event) => {
+    let nextIndex = index;
+
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      nextIndex = (index + 1) % journeyStages.length;
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      nextIndex = (index - 1 + journeyStages.length) % journeyStages.length;
+    } else if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = journeyStages.length - 1;
+    } else {
+      return;
+    }
+
+    event.preventDefault();
+    const nextButton = journeyStages[nextIndex];
+    nextButton.focus();
+    selectJourneyStage(nextButton);
+  });
+});
 
 if (aboutDropdown) {
   aboutDropdown.addEventListener("mouseenter", () => setAboutDropdown(true));
