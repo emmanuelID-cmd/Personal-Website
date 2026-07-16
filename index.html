@@ -15,7 +15,14 @@
     <button class="brand active" data-tab="home" aria-label="Emmanuel De Jesus home" aria-pressed="true" title="Home">⌂</button>
     <nav class="site-nav" id="primary-navigation" data-nav aria-label="Primary navigation">
       <button class="active" data-tab="home" aria-controls="home" aria-pressed="true">Home</button>
-      <button data-tab="about" aria-controls="about" aria-pressed="false">About</button>
+      <div class="nav-dropdown">
+        <button data-tab="about" aria-controls="about" aria-pressed="false" aria-haspopup="true" aria-expanded="false">About</button>
+        <div class="nav-dropdown-menu" aria-label="About sections">
+          <a href="#journey" data-section-link="journey">Journey</a>
+          <a href="#learned" data-section-link="learned">Learned</a>
+          <a href="#style" data-section-link="style">Style</a>
+        </div>
+      </div>
       <button data-tab="projects" aria-controls="projects" aria-pressed="false">Projects</button>
       <button data-tab="contact" aria-controls="contact" aria-pressed="false">Contact</button>
     </nav>

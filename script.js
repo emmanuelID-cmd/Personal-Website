@@ -74,7 +74,10 @@ const skillGroups = [
 
 const tabButtons = document.querySelectorAll("[data-tab]");
 const tabLinks = document.querySelectorAll("[data-tab-link]");
+const sectionLinks = document.querySelectorAll("[data-section-link]");
 const tabSections = document.querySelectorAll("[data-tab-panel]");
+const aboutDropdown = document.querySelector(".nav-dropdown");
+const aboutDropdownButton = aboutDropdown?.querySelector('[data-tab="about"]');
 const skillsRegion = document.querySelector("#skills-region");
 const currentYear = document.querySelector("#current-year");
 
@@ -108,6 +111,42 @@ function showTab(tabId) {
   });
 }
 
+function setAboutDropdown(open) {
+  if (!aboutDropdown || !aboutDropdownButton) return;
+
+  aboutDropdown.classList.toggle("is-open", open);
+  aboutDropdownButton.setAttribute("aria-expanded", open ? "true" : "false");
+}
+
+if (aboutDropdown) {
+  aboutDropdown.addEventListener("mouseenter", () => setAboutDropdown(true));
+  aboutDropdown.addEventListener("mouseleave", () => setAboutDropdown(false));
+
+  aboutDropdown.addEventListener("focusin", () => setAboutDropdown(true));
+  aboutDropdown.addEventListener("focusout", (event) => {
+    if (!aboutDropdown.contains(event.relatedTarget)) {
+      setAboutDropdown(false);
+    }
+  });
+
+  aboutDropdown.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      setAboutDropdown(false);
+      aboutDropdownButton?.focus();
+    }
+  });
+}
+
+aboutDropdownButton?.addEventListener("click", () => {
+  setAboutDropdown(true);
+});
+
+document.addEventListener("pointerdown", (event) => {
+  if (aboutDropdown && !aboutDropdown.contains(event.target)) {
+    setAboutDropdown(false);
+  }
+});
+
 tabButtons.forEach((button) => {
   button.addEventListener("click", () => {
     showTab(button.dataset.tab);
@@ -118,6 +157,24 @@ tabButtons.forEach((button) => {
 tabLinks.forEach((link) => {
   link.addEventListener("click", () => {
     showTab(link.dataset.tabLink);
+  });
+});
+
+sectionLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    setAboutDropdown(false);
+    link.blur();
+    showTab("about");
+
+    requestAnimationFrame(() => {
+      const target = document.getElementById(link.dataset.sectionLink);
+
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.history.replaceState(null, "", link.hash);
+      }
+    });
   });
 });
 
