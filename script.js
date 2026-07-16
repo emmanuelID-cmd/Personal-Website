@@ -72,9 +72,8 @@ const skillGroups = [
   }
 ];
 
-const nav = document.querySelector("[data-nav]");
-const navLinks = [...document.querySelectorAll(".site-nav a, .brand")];
-const sections = [...document.querySelectorAll("main section[id]")];
+const navLinks = document.querySelectorAll(".site-nav button");
+const tabSections = document.querySelectorAll(".tab-content");
 const skillsRegion = document.querySelector("#skills-region");
 const currentYear = document.querySelector("#current-year");
 
@@ -97,43 +96,32 @@ function renderSkills() {
     .join("");
 }
 
-function setActiveNavLink() {
-  const currentSection = sections
-    .slice()
-    .reverse()
-    .find((section) => section.getBoundingClientRect().top <= 140);
+function showTab(tabId) {
+  tabSections.forEach((section) => {
+    section.classList.remove("active");
+  });
 
-  if (!currentSection) {
-    navLinks.forEach((link) => link.classList.remove("active"));
-    return;
+  const activeSection = document.getElementById(tabId);
+
+  if (activeSection) {
+    activeSection.classList.add("active");
   }
 
-  navLinks.forEach((link) => {
-    link.classList.toggle(
-      "active",
-      link.getAttribute("href") === `#${currentSection.id}`
-    );
+  navLinks.forEach((button) => {
+    button.classList.toggle("active", button.dataset.tab === tabId);
   });
 }
 
-navLinks.forEach((link) => {
-  link.addEventListener("click", (event) => {
-    const targetId = link.getAttribute("href");
-    const target = document.querySelector(targetId);
-
-    if (!target) return;
-
-    event.preventDefault();
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
-    setActiveNavLink();
+navLinks.forEach((button) => {
+  button.addEventListener("click", () => {
+    showTab(button.dataset.tab);
   });
 });
 
-window.addEventListener("scroll", setActiveNavLink, { passive: true });
-
 renderSkills();
-setActiveNavLink();
+showTab("home");
 
 if (currentYear) {
   currentYear.textContent = new Date().getFullYear();
 }
+

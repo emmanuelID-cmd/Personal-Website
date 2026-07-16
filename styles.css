@@ -146,7 +146,7 @@ li {
   margin-left: auto;
 }
 
-.site-nav a {
+.site-nav button {
   padding: 0.55rem 0.95rem;
   border-radius: 999px;
   color: var(--muted-text);
@@ -158,13 +158,13 @@ li {
   transition: background-color 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
 }
 
-.site-nav a:hover {
+.site-nav button:hover {
   background: rgba(47, 93, 98, 0.08);
   color: var(--accent);
   transform: translateY(-1px);
 }
 
-.site-nav a.active {
+.site-nav button.active {
   background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   color: #ffffff;
   box-shadow: 0 8px 20px rgba(47, 93, 98, 0.18);
@@ -543,7 +543,7 @@ li {
     transform: none;
   }
 
-  .site-nav a {
+  .site-nav button {
     min-height: auto;
     padding: 0.55rem 0.7rem;
     border-bottom: 0;
@@ -602,4 +602,12 @@ li {
   .skill-group {
     padding: 1.1rem;
   }
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
 }

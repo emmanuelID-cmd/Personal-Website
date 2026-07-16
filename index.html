@@ -12,17 +12,16 @@
 </head>
 <body>
   <header class="site-header" data-header>
-    <a class="brand" href="#home" aria-label="Emmanuel De Jesus home" title="Home">⌂</a>
-    <nav class="site-nav" id="primary-navigation" data-nav>
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-      <a href="#contact">Contact</a>
+    <button class="brand active" data-tab="home" aria-label="Emmanuel De Jesus home" title="Home">⌂</button>    <nav class="site-nav" id="primary-navigation" data-nav>
+      <button class="active" data-tab="home">Home</button>
+      <button data-tab="about">About</button>
+      <button data-tab="projects">Projects</button>
+      <button data-tab="contact">Contact</button>
     </nav>
   </header>
 
   <main>
-    <section class="hero section" id="home">
+    <section class="section tab-content active" id="home">
       <div class="section-inner hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">Professional Portfolio</p>
@@ -45,7 +44,7 @@
       </div>
     </section>
 
-    <section class="section" id="about">
+    <section class="section tab-content" id="about">
       <div class="section-inner split-layout">
         <div>
           <p class="eyebrow">Person</p>
@@ -62,70 +61,6 @@
           <p>Those experiences developed the interpersonal foundation that continues to influence how I work with teams, stakeholders, and communities today.</p>
         </div>
       </div>
-    </section>
-
-        <section class="section" id="projects">
-          <div class="section-inner">
-            <div class="section-heading compact">
-              <p class="eyebrow">Projects</p>
-              <h2>Projects</h2>
-            </div>
-
-            <div class="card-grid three">
-
-              <article class="info-card">
-                <h3>Personal Website Portfolio</h3>
-                <p>
-                  Designed and developed a professional portfolio website to showcase my technology journey, projects, and experience. Built using modern web development practices with version control through Git and GitHub.
-                </p>
-                <p>
-                  <strong>Technology:</strong> HTML, CSS, JavaScript, Git/GitHub
-                </p>
-              </article>
-
-              <article class="info-card">
-                <h3>Budgeting & Analytics Tool</h3>
-                <p>
-                  Built a spreadsheet-based budgeting and analytics solution to organize financial data, analyze trends, and support data-driven decision making.
-                </p>
-                <p>
-                  <strong>Technology:</strong> Excel, Data Analysis, Visualization
-                </p>
-              </article>
-
-              <article class="info-card">
-                <h3>Perl Probability Random Number Generator</h3>
-                <p>
-                  Created a Perl program that generates random numbers between 1-100 and analyzes probability outcomes. The program explores scenarios such as the likelihood of generating prime numbers multiple times within a defined range.
-                </p>
-                <p>
-                  <strong>Technology:</strong> Perl, Randomization, Probability Logic
-                </p>
-              </article>
-
-              <article class="info-card">
-                <h3>Java Pig Latin Translator</h3>
-                <p>
-                  Developed a Java program that converts user-provided words into Pig Latin by applying language transformation rules through programming logic.
-                </p>
-                <p>
-                  <strong>Technology:</strong> Java, String Manipulation, Algorithm Development
-                </p>
-              </article>
-
-              <article class="info-card">
-                <h3>Visual Basic Calendar Application</h3>
-                <p>
-                  Built a Visual Basic calendar application that calculates the number of days, weeks, months, and years between specified start and end dates.
-                </p>
-                <p>
-                  <strong>Technology:</strong> Visual Basic, Date Calculations, User Interface Design
-                </p>
-              </article>
-
-            </div>
-          </div>
-        </section>
 
     <section class="section muted" id="journey">
       <div class="section-inner">
@@ -208,6 +143,72 @@
         </div>
       </div>
     </section>
+    </section>
+
+        <section class="section tab-content" id="projects">
+          <div class="section-inner">
+            <div class="section-heading compact">
+              <p class="eyebrow">Projects</p>
+              <h2>Projects</h2>
+            </div>
+
+            <div class="card-grid three">
+
+              <article class="info-card">
+                <h3>Personal Website Portfolio</h3>
+                <p>
+                  Designed and developed a professional portfolio website to showcase my technology journey, projects, and experience. Built using modern web development practices with version control through Git and GitHub.
+                </p>
+                <p>
+                  <strong>Technology:</strong> HTML, CSS, JavaScript, Git/GitHub
+                </p>
+              </article>
+
+              <article class="info-card">
+                <h3>Budgeting & Analytics Tool</h3>
+                <p>
+                  Built a spreadsheet-based budgeting and analytics solution to organize financial data, analyze trends, and support data-driven decision making.
+                </p>
+                <p>
+                  <strong>Technology:</strong> Excel, Data Analysis, Visualization
+                </p>
+              </article>
+
+              <article class="info-card">
+                <h3>Perl Probability Random Number Generator</h3>
+                <p>
+                  Created a Perl program that generates random numbers between 1-100 and analyzes probability outcomes. The program explores scenarios such as the likelihood of generating prime numbers multiple times within a defined range.
+                </p>
+                <p>
+                  <strong>Technology:</strong> Perl, Randomization, Probability Logic
+                </p>
+              </article>
+
+              <article class="info-card">
+                <h3>Java Pig Latin Translator</h3>
+                <p>
+                  Developed a Java program that converts user-provided words into Pig Latin by applying language transformation rules through programming logic.
+                </p>
+                <p>
+                  <strong>Technology:</strong> Java, String Manipulation, Algorithm Development
+                </p>
+              </article>
+
+              <article class="info-card">
+                <h3>Visual Basic Calendar Application</h3>
+                <p>
+                  Built a Visual Basic calendar application that calculates the number of days, weeks, months, and years between specified start and end dates.
+                </p>
+                <p>
+                  <strong>Technology:</strong> Visual Basic, Date Calculations, User Interface Design
+                </p>
+              </article>
+
+            </div>
+          </div>
+        </section>
+
+    
 
     <section class="section philosophy" id="philosophy">
       <div class="section-inner narrow">
@@ -300,7 +301,7 @@
       </div>
     </section>
 
-    <section class="section contact-section" id="contact">
+    <section class="section tab-content" id="contact">
       <div class="section-inner contact-layout">
         <div>
           <p class="eyebrow">Contact</p>
