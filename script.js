@@ -86,19 +86,35 @@ const journeyStageContent = document.querySelector("#journey-stage-content");
 const journeyContent = {
   "early-development": {
     title: "Early Development",
-    description: "Moving through diverse environments strengthened communication, adaptability, and relationship-building skills."
+    paragraphs: [
+      "My interest in technology began through early exposure to computers, software, and digital tools. In high school, I worked with Microsoft Office, Oracle, Visual Basic, Perl through the terminal, and Java, which introduced me to both technical systems and the logic behind programming.",
+      "Learning across different platforms taught me how to approach unfamiliar technology with curiosity and patience. I became interested not only in using software, but also in understanding how it worked, how information moved through systems, and how technology could make everyday tasks more efficient.",
+      "These early experiences established the foundation for my technical growth. They strengthened my problem-solving skills, encouraged continuous learning, and gave me the confidence to explore more advanced areas of technology."
+    ]
   },
   "career-expansion": {
     title: "Career Expansion",
-    description: "My professional career has spanned multiple industries, responsibilities, and leadership opportunities. Each transition required learning new systems, adapting to different expectations, and finding ways to succeed in unfamiliar environments."
+    paragraphs: [
+      "As my education and professional career developed, technology became increasingly connected to how I approached communication, operations, and problem-solving. In college, I expanded into web development through HTML, CSS, and JavaScript, learning how structure, design, and interaction come together to create functional digital experiences.",
+      "Across different professional environments, I continued learning new systems, platforms, and operational processes. Each transition required me to adapt quickly, understand unfamiliar tools, and identify ways technology could improve organization, productivity, and execution.",
+      "These experiences broadened my perspective beyond programming alone. I began to see technology as a practical resource for connecting people, improving workflows, and turning complex challenges into more manageable solutions."
+    ]
   },
   "discovering-ai": {
     title: "Discovering AI",
-    description: "While pursuing personal and professional goals, I encountered barriers that slowed the execution of ideas. Rather than accepting those limitations, I began exploring artificial intelligence as a practical tool for accelerating learning, improving productivity, and transforming concepts into tangible outcomes."
+    paragraphs: [
+      "As I continued building technical skills, I realized that creating effective solutions required more than writing code. It also required communicating ideas clearly, designing intuitive experiences, and understanding how people interact with technology.",
+      "Exploring artificial intelligence expanded that perspective. Working with tools such as Grok (xAI) introduced me to new ways of researching, reasoning through complex problems, and accelerating the development process. At the same time, Canva strengthened my appreciation for visual communication, demonstrating that thoughtful design is just as important as technical implementation when presenting ideas and building products.",
+      "These experiences reinforced an important lesson: successful technology is not simply functional—it is intuitive, engaging, and designed with the user in mind. Combining technical development with visual design continues to shape how I approach every project as I grow into becoming a Builder."
+    ]
   },
   "becoming-a-builder": {
     title: "Becoming a Builder",
-    description: "AI became more than a tool. It became a bridge between ideas and implementation. It allowed me to move beyond identifying opportunities and begin creating solutions."
+    paragraphs: [
+      "My progression into technology ultimately changed how I viewed ideas and execution. Instead of seeing technology only as a tool to support existing work, I began using it to create new solutions, test concepts, and transform ideas into functional projects.",
+      "Working with web development, artificial intelligence, design tools, and modern development environments allowed me to combine technical problem-solving with creativity and user-focused thinking. I learned that building requires more than writing code. It involves understanding the problem, organizing the process, designing the experience, testing the result, and continuing to improve it.",
+      "Becoming a Builder represents the combination of everything I have developed throughout my journey: adaptability, communication, technical curiosity, operational thinking, and a commitment to continuous learning. My goal is to use those strengths to create practical technology that improves experiences and solves real-world problems."
+    ]
   }
 };
 
@@ -151,8 +167,15 @@ function selectJourneyStage(stageButton) {
     button.tabIndex = isActive ? 0 : -1;
   });
 
+  const description = journeyStageContent.querySelector(".journey-stage-description");
+  const paragraphs = content.paragraphs.map((text) => {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = text;
+    return paragraph;
+  });
+
   journeyStageContent.querySelector("h3").textContent = content.title;
-  journeyStageContent.querySelector("p").textContent = content.description;
+  description.replaceChildren(...paragraphs);
   journeyStageContent.setAttribute("aria-labelledby", stageButton.id);
 }
 

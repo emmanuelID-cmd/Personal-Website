@@ -516,7 +516,7 @@ li {
   margin-bottom: 0.8rem;
 }
 
-.journey-stage-content p {
+.journey-stage-description p:last-child {
   margin-bottom: 0;
 }
 
