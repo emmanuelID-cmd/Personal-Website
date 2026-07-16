@@ -72,8 +72,9 @@ const skillGroups = [
   }
 ];
 
-const navLinks = document.querySelectorAll(".site-nav button");
-const tabSections = document.querySelectorAll(".tab-content");
+const tabButtons = document.querySelectorAll("[data-tab]");
+const tabLinks = document.querySelectorAll("[data-tab-link]");
+const tabSections = document.querySelectorAll("[data-tab-panel]");
 const skillsRegion = document.querySelector("#skills-region");
 const currentYear = document.querySelector("#current-year");
 
@@ -98,23 +99,25 @@ function renderSkills() {
 
 function showTab(tabId) {
   tabSections.forEach((section) => {
-    section.classList.remove("active");
+    section.classList.toggle("active", section.dataset.tabPanel === tabId);
   });
 
-  const activeSection = document.getElementById(tabId);
-
-  if (activeSection) {
-    activeSection.classList.add("active");
-  }
-
-  navLinks.forEach((button) => {
+  tabButtons.forEach((button) => {
     button.classList.toggle("active", button.dataset.tab === tabId);
+    button.setAttribute("aria-pressed", button.dataset.tab === tabId ? "true" : "false");
   });
 }
 
-navLinks.forEach((button) => {
+tabButtons.forEach((button) => {
   button.addEventListener("click", () => {
     showTab(button.dataset.tab);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
+
+tabLinks.forEach((link) => {
+  link.addEventListener("click", () => {
+    showTab(link.dataset.tabLink);
   });
 });
 
@@ -124,4 +127,3 @@ showTab("home");
 if (currentYear) {
   currentYear.textContent = new Date().getFullYear();
 }
-

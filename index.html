@@ -7,21 +7,22 @@
   <meta name="description" content="Professional portfolio for Emmanuel De Jesus, a builder, project manager, operations professional, and AI enthusiast.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="site-header" data-header>
-    <button class="brand active" data-tab="home" aria-label="Emmanuel De Jesus home" title="Home">⌂</button>    <nav class="site-nav" id="primary-navigation" data-nav>
-      <button class="active" data-tab="home">Home</button>
-      <button data-tab="about">About</button>
-      <button data-tab="projects">Projects</button>
-      <button data-tab="contact">Contact</button>
+    <button class="brand active" data-tab="home" aria-label="Emmanuel De Jesus home" aria-pressed="true" title="Home">⌂</button>
+    <nav class="site-nav" id="primary-navigation" data-nav aria-label="Primary navigation">
+      <button class="active" data-tab="home" aria-controls="home" aria-pressed="true">Home</button>
+      <button data-tab="about" aria-controls="about" aria-pressed="false">About</button>
+      <button data-tab="projects" aria-controls="projects" aria-pressed="false">Projects</button>
+      <button data-tab="contact" aria-controls="contact" aria-pressed="false">Contact</button>
     </nav>
   </header>
 
   <main>
-    <section class="section tab-content active" id="home">
+    <section class="section tab-content active" id="home" data-tab-panel="home">
       <div class="section-inner hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">Professional Portfolio</p>
@@ -31,8 +32,8 @@
                 My technology journey began in high school with MS Office, Oracle, Visual Basic, Perl on the Terminal, and Java. In college, I expanded into web development with HTML, CSS, and JavaScript, leading me toward AI and becoming a Builder focused on creating solutions that solve real-world problems.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#journey">View Journey</a>
-            <a class="button secondary" href="#contact">Contact</a>
+            <a class="button primary" href="#journey" data-tab-link="about">View Journey</a>
+            <a class="button secondary" href="#contact" data-tab-link="contact">Contact</a>
           </div>
         </div>
         <div class="portrait-wrap" aria-label="Professional image">
@@ -44,8 +45,9 @@
       </div>
     </section>
 
-    <section class="section tab-content" id="about">
-      <div class="section-inner split-layout">
+    <div class="tab-content" id="about" data-tab-panel="about">
+      <section class="section">
+        <div class="section-inner split-layout">
         <div>
           <p class="eyebrow">Person</p>
           <h2>About</h2>
@@ -60,9 +62,10 @@
 
           <p>Those experiences developed the interpersonal foundation that continues to influence how I work with teams, stakeholders, and communities today.</p>
         </div>
-      </div>
+        </div>
+      </section>
 
-    <section class="section muted" id="journey">
+    <section class="section muted tab-content" id="journey" data-tab-panel="about">
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Experience to Execution</p>
@@ -94,7 +97,7 @@
       </div>
     </section>
 
-    <section class="section" id="learned">
+    <section class="section tab-content" id="learned" data-tab-panel="about">
       <div class="section-inner">
         <div class="section-heading compact">
           <p class="eyebrow">Lessons</p>
@@ -117,7 +120,7 @@
       </div>
     </section>
 
-    <section class="section muted" id="style">
+    <section class="section muted tab-content" id="style" data-tab-panel="about">
       <div class="section-inner">
         <div class="section-heading compact">
           <p class="eyebrow">Thinking Style</p>
@@ -143,9 +146,9 @@
         </div>
       </div>
     </section>
-    </section>
+    </div>
 
-        <section class="section tab-content" id="projects">
+        <section class="section tab-content" id="projects" data-tab-panel="projects">
           <div class="section-inner">
             <div class="section-heading compact">
               <p class="eyebrow">Projects</p>
@@ -210,7 +213,7 @@
 
     
 
-    <section class="section philosophy" id="philosophy">
+    <section class="section philosophy tab-content" id="philosophy" data-tab-panel="home">
       <div class="section-inner narrow">
         <p class="eyebrow">Builder Philosophy</p>
         <h2>Ideas earn value through action.</h2>
@@ -220,7 +223,7 @@
       </div>
     </section>
 
-    <section class="section muted" id="background">
+    <section class="section muted tab-content" id="background" data-tab-panel="home">
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Capabilities</p>
@@ -265,7 +268,7 @@
       </div>
     </section>
 
-    <section class="section" id="hobbies">
+    <section class="section tab-content" id="hobbies" data-tab-panel="home">
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Personal Interests</p>
@@ -301,7 +304,7 @@
       </div>
     </section>
 
-    <section class="section tab-content" id="contact">
+    <section class="section tab-content" id="contact" data-tab-panel="contact">
       <div class="section-inner contact-layout">
         <div>
           <p class="eyebrow">Contact</p>
