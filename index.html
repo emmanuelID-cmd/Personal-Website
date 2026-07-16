@@ -14,7 +14,7 @@
   <header class="site-header" data-header>
     <button class="brand active" data-tab="home" aria-label="Emmanuel De Jesus home" aria-pressed="true" title="Home">⌂</button>
     <nav class="site-nav" id="primary-navigation" data-nav aria-label="Primary navigation">
-      <button class="active" data-tab="home" aria-controls="home" aria-pressed="true">Home</button>
+      <button class="active" data-tab="home" aria-controls="home-hero" aria-pressed="true">Home</button>
       <div class="nav-dropdown">
         <button data-tab="about" aria-controls="about" aria-pressed="false" aria-haspopup="true" aria-expanded="false">About</button>
         <div class="nav-dropdown-menu" aria-label="About sections">
@@ -26,10 +26,20 @@
       <button data-tab="projects" aria-controls="projects" aria-pressed="false">Projects</button>
       <button data-tab="contact" aria-controls="contact" aria-pressed="false">Contact</button>
     </nav>
+    <nav class="home-section-nav tab-content active" data-tab-panel="home" aria-label="Home sections">
+      <div class="section-inner home-section-nav-inner">
+        <a class="active" href="#home-hero" data-home-section="home-hero" aria-current="true">Hero</a>
+        <a href="#home-philosophy" data-home-section="home-philosophy">Philosophy</a>
+        <a href="#home-background" data-home-section="home-background">Professional Background</a>
+        <a href="#home-projects" data-home-section="home-projects">Featured Projects</a>
+        <a href="#home-hobbies" data-home-section="home-hobbies">Hobbies</a>
+        <a href="#home-contact" data-home-section="home-contact">Contact</a>
+      </div>
+    </nav>
   </header>
 
   <main>
-    <section class="section tab-content active" id="home" data-tab-panel="home">
+    <section class="section tab-content active home-section-target" id="home-hero" data-tab-panel="home">
       <div class="section-inner hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">Professional Portfolio</p>
@@ -227,7 +237,7 @@
 
     
 
-    <section class="section philosophy tab-content" id="philosophy" data-tab-panel="home">
+    <section class="section philosophy tab-content home-section-target" id="home-philosophy" data-tab-panel="home">
       <div class="section-inner narrow">
         <p class="eyebrow">Builder Philosophy</p>
         <h2>Ideas earn value through action.</h2>
@@ -237,7 +247,7 @@
       </div>
     </section>
 
-    <section class="section muted tab-content" id="background" data-tab-panel="home">
+    <section class="section muted tab-content home-section-target" id="home-background" data-tab-panel="home">
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Capabilities</p>
@@ -282,7 +292,34 @@
       </div>
     </section>
 
-    <section class="section tab-content" id="hobbies" data-tab-panel="home">
+    <section class="section tab-content home-section-target" id="home-projects" data-tab-panel="home">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Selected Work</p>
+          <h2>Featured Projects</h2>
+          <p>A selection of projects that reflect my progression across web development, analytics, and programming.</p>
+        </div>
+        <div class="card-grid three">
+          <article class="info-card">
+            <h3>Personal Website Portfolio</h3>
+            <p>Designed and developed a professional portfolio website to showcase my technology journey, projects, and experience.</p>
+          </article>
+          <article class="info-card">
+            <h3>Budgeting &amp; Analytics Tool</h3>
+            <p>Built a spreadsheet-based solution to organize financial data, analyze trends, and support data-driven decision making.</p>
+          </article>
+          <article class="info-card">
+            <h3>Perl Probability Random Number Generator</h3>
+            <p>Created a Perl program that generates random numbers and analyzes probability outcomes.</p>
+          </article>
+        </div>
+        <div class="section-action">
+          <button class="button secondary" type="button" data-tab="projects">View All Projects</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section muted tab-content home-section-target" id="home-hobbies" data-tab-panel="home">
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Personal Interests</p>
@@ -318,6 +355,15 @@
       </div>
     </section>
 
+    <section class="section home-contact-cta tab-content home-section-target" id="home-contact" data-tab-panel="home">
+      <div class="section-inner narrow">
+        <p class="eyebrow">Connect</p>
+        <h2>Let&rsquo;s turn ideas into practical solutions.</h2>
+        <p>If you would like to discuss a project, opportunity, or potential collaboration, visit the Contact tab to connect.</p>
+        <a class="button primary" href="#contact" data-tab-link="contact">Contact Me</a>
+      </div>
+    </section>
+
     <section class="section tab-content" id="contact" data-tab-panel="contact">
       <div class="section-inner contact-layout">
         <div>
@@ -330,7 +376,7 @@
           <a href="tel:+10000000000">Phone</a>
           <a href="#" aria-label="LinkedIn profile placeholder">LinkedIn</a>
           <a href="#" aria-label="GitHub profile placeholder">GitHub</a>
-          <a href="#home">Portfolio Website</a>
+          <a href="#home-hero" data-tab-link="home">Portfolio Website</a>
         </div>
       </div>
     </section>

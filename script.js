@@ -82,6 +82,12 @@ const skillsRegion = document.querySelector("#skills-region");
 const currentYear = document.querySelector("#current-year");
 const journeyStages = document.querySelectorAll("[data-journey-stage]");
 const journeyStageContent = document.querySelector("#journey-stage-content");
+const homeSectionLinks = document.querySelectorAll("[data-home-section]");
+const homeSections = document.querySelectorAll(".home-section-target");
+const homeSectionNav = document.querySelector(".home-section-nav");
+const siteHeader = document.querySelector("[data-header]");
+let homeSectionObserver;
+let homeScrollTicking = false;
 
 const journeyContent = {
   "early-development": {
@@ -146,7 +152,93 @@ function showTab(tabId) {
     button.classList.toggle("active", button.dataset.tab === tabId);
     button.setAttribute("aria-pressed", button.dataset.tab === tabId ? "true" : "false");
   });
+
+  if (tabId === "home") {
+    setActiveHomeSection("home-hero");
+    startHomeSectionTracking();
+  } else {
+    homeSectionObserver?.disconnect();
+  }
 }
+
+function setActiveHomeSection(sectionId) {
+  homeSectionLinks.forEach((link) => {
+    const isActive = link.dataset.homeSection === sectionId;
+    link.classList.toggle("active", isActive);
+
+    if (isActive) {
+      link.setAttribute("aria-current", "true");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+}
+
+function updateHomeNavigationMetrics() {
+  if (!homeSectionNav?.classList.contains("active") || !siteHeader) return;
+
+  const frozenNavigationHeight = Math.ceil(siteHeader.getBoundingClientRect().height);
+  document.documentElement.style.setProperty("--frozen-nav-height", `${frozenNavigationHeight}px`);
+}
+
+function updateActiveHomeSection() {
+  if (!document.querySelector('[data-tab-panel="home"].active')) return;
+
+  const navigationBottom = siteHeader?.getBoundingClientRect().bottom ?? 0;
+  const marker = Math.min(window.innerHeight * 0.6, navigationBottom + 32);
+  let activeSection = homeSections[0];
+
+  homeSections.forEach((section) => {
+    if (section.getBoundingClientRect().top <= marker) {
+      activeSection = section;
+    }
+  });
+
+  if (activeSection) {
+    setActiveHomeSection(activeSection.id);
+  }
+}
+
+function startHomeSectionTracking() {
+  homeSectionObserver?.disconnect();
+  updateHomeNavigationMetrics();
+
+  if ("IntersectionObserver" in window) {
+    homeSectionObserver = new IntersectionObserver(updateActiveHomeSection, {
+      rootMargin: "-20% 0px -45% 0px",
+      threshold: [0, 0.25, 0.5, 0.75]
+    });
+
+    homeSections.forEach((section) => homeSectionObserver.observe(section));
+  } else {
+    updateActiveHomeSection();
+  }
+}
+
+window.addEventListener("resize", updateHomeNavigationMetrics);
+
+window.addEventListener("scroll", () => {
+  if ("IntersectionObserver" in window || homeScrollTicking) return;
+
+  homeScrollTicking = true;
+  requestAnimationFrame(() => {
+    updateActiveHomeSection();
+    homeScrollTicking = false;
+  });
+}, { passive: true });
+
+homeSectionLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    const target = document.getElementById(link.dataset.homeSection);
+
+    if (target) {
+      setActiveHomeSection(target.id);
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.history.replaceState(null, "", link.hash);
+    }
+  });
+});
 
 function setAboutDropdown(open) {
   if (!aboutDropdown || !aboutDropdownButton) return;
