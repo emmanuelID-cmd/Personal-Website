@@ -29,7 +29,7 @@ body {
   overflow-x: hidden;
   background: var(--bg);
   color: var(--text);
-  font-family: "Tektur", "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
   line-height: 1.6;
 }
 
@@ -55,6 +55,7 @@ h3,
 h4 {
   margin: 0;
   color: var(--text);
+  font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
   line-height: 1.12;
 }
 
@@ -134,10 +135,10 @@ li {
   min-width: 44px;
   height: 44px;
   padding: 0;
-  border: 2px solid var(--accent-dark);
+  border: 2px solid #1f3a5f;
   border-radius: 50%;
   background: transparent;
-  color: var(--accent-dark);
+  color: #1f3a5f;
   font-size: 1.15rem;
   font-weight: 900;
   line-height: 1;
@@ -169,7 +170,7 @@ li {
   border-bottom-color: var(--surface);
   border-radius: 10px 10px 0 0;
   background: var(--surface);
-  color: var(--accent-dark);
+  color: #1f3a5f;
   box-shadow: var(--shadow);
   transform: none;
 }
@@ -207,7 +208,7 @@ li {
   width: 100%;
   padding: 0.65rem 0.75rem;
   border-radius: 7px;
-  color: var(--muted-text);
+  color: #1f3a5f;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -234,12 +235,12 @@ li {
 
 .site-nav button:hover {
   background: rgba(47, 93, 98, 0.08);
-  color: var(--accent);
+  color: #1f3a5f;
   transform: translateY(-1px);
 }
 
 .site-nav button.active {
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  background: #1f3a5f;
   color: #ffffff;
   box-shadow: 0 8px 20px rgba(47, 93, 98, 0.18);
 }
@@ -300,19 +301,26 @@ li {
 }
 
 .hero-name {
-  color: #9a5f27;
-  font-family: "Dancing Script", cursive;
+  color: #ffd700;
+  font-family: "IBM Plex Serif", Georgia, serif;
   font-size: clamp(3.4rem, 6.5vw, 5.75rem);
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1.05;
   text-shadow: 0 4px 14px rgba(154, 95, 39, 0.16);
   white-space: normal;
 }
 
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+}
+
 .hero-name-initial {
   display: inline-block;
   margin-right: 0.015em;
-  color: var(--accent);
+  color: #ffd700;
   font-size: 1.28em;
   line-height: 0.75;
   transform: translateY(0.12em);
@@ -327,15 +335,15 @@ li {
   width: 100%;
   padding: 1.15rem;
   border-radius: 5px;
-  background: #fff2a8;
+  background: #e6b800;
   box-shadow: 0 12px 24px rgba(82, 68, 24, 0.2), 0 2px 4px rgba(82, 68, 24, 0.14);
-  color: #3f371f;
+  color: #2d2515;
   transform: rotate(3.5deg);
 }
 
 .hero-sticky-note p {
   margin-bottom: 0.75rem;
-  color: #3f371f;
+  color: #2d2515;
   font-size: clamp(1rem, 1.5vw, 1.15rem);
   font-weight: 600;
   line-height: 1.35;
@@ -344,6 +352,27 @@ li {
 .hero-sticky-note p:last-child {
   margin-bottom: 0;
   text-align: right;
+}
+
+.hero .eyebrow,
+.hero-greeting-intro,
+.hero-greeting-thanks {
+  color: #3f4c5f;
+  font-size: 1.25rem;
+}
+
+.hero .eyebrow {
+  font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  font-weight: 600;
+}
+
+.hero-greeting-intro,
+.hero-greeting-thanks {
+  font-family: "IBM Plex Serif", Georgia, serif;
+}
+
+.hero-text {
+  font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
 }
 
 .eyebrow {
@@ -429,14 +458,14 @@ li {
 }
 
 .home-section-nav a:hover {
-  border-color: rgba(47, 93, 98, 0.18);
-  background: rgba(47, 93, 98, 0.08);
-  color: var(--accent-dark);
+  border-color: rgba(31, 58, 95, 0.25);
+  background: rgba(31, 58, 95, 0.08);
+  color: #1f3a5f;
 }
 
 .home-section-nav a.active {
-  border-color: var(--accent);
-  background: var(--accent);
+  border-color: #1f3a5f;
+  background: #1f3a5f;
   color: #ffffff;
 }
 

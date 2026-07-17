@@ -44,8 +44,7 @@
 ### Hero
 
 - Hero greeting updated to “Hello, my name is / Emmanuel De Jesus / Thank you for visiting my website!”
-- Cursive name-font options previewed; Dancing Script is the currently implemented name font.
-- Tektur implemented as the primary site display/body typeface, with Inter as a fallback.
+- IBM Plex Serif implemented for the Hero greeting and name; Cascadia Code implemented across the rest of the site.
 - The initial “E” receives distinct size, position, and color treatment.
 - Easter Egg invitation implemented as a responsive sticky-note design.
 - Existing Hero image, professional identity, introduction, and calls to action preserved.
@@ -89,7 +88,7 @@
 - Synchronize `website-content.md` with every user-facing copy change as the site evolves.
 - Maintain and expand `component-library.md` as reusable patterns are added or refactored.
 - Confirm and formally record the project’s developer workflow version. “Developer Workflow v1.2” is not verifiable in the current repository files or Git history.
-- Final name-font selection remains under review: Dancing Script is implemented on `main`; additional font exploration has occurred outside this documentation change.
+- Final Hero typography selection implemented: IBM Plex Serif Semi Bold for the greeting, IBM Plex Serif Bold for the name, and Cascadia Code elsewhere.
 
 ## ⬜ Planned / Not Started
 

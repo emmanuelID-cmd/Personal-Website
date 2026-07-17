@@ -159,17 +159,17 @@
 
 **Related Files:** `index.html`, `styles.css`, `website-content.md`
 
-## Decision: Use Cursive Only for the Hero Name
+## Decision: Use IBM Plex Serif for the Hero Greeting and Name
 
-**Status:** Under Review — Current implementation uses Dancing Script
+**Status:** Accepted — Implemented
 
 **Context:** The name should feel memorable while the rest of the portfolio remains technology-oriented and professional.
 
-**Decision:** Use Dancing Script for the Hero name and Tektur/Inter for the remaining site typography. Final name-font selection remains open to review.
+**Decision:** Use IBM Plex Serif Semi Bold for the Hero greeting, IBM Plex Serif Bold for “Emmanuel De Jesus,” and Cascadia Code for the rest of the site.
 
-**Reasoning:** A limited script treatment creates emphasis without reducing readability across body copy, navigation, and project content.
+**Reasoning:** A limited serif treatment creates emphasis while preserving readable, technology-oriented typography across the rest of the site.
 
-**Consequences:** Future font changes should be limited to the name class unless a separate typography decision is approved.
+**Consequences:** Future font changes should be limited to the named Hero roles unless a separate typography decision is approved.
 
 **Related Files:** `index.html`, `styles.css`
 
