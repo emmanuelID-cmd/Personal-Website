@@ -29,7 +29,7 @@ body {
   overflow-x: hidden;
   background: var(--bg);
   color: var(--text);
-  font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: "Tektur", "Inter", "Segoe UI", Roboto, Arial, sans-serif;
   line-height: 1.6;
 }
 
@@ -279,6 +279,71 @@ li {
 
 .hero-copy {
   max-width: 860px;
+}
+
+.hero-greeting-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 230px);
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  align-items: center;
+}
+
+.hero-greeting-intro,
+.hero-greeting-thanks {
+  color: var(--text);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 600;
+}
+
+.hero-greeting-intro {
+  margin-bottom: 0.2rem;
+}
+
+.hero-name {
+  color: #9a5f27;
+  font-family: "Dancing Script", cursive;
+  font-size: clamp(3.4rem, 6.5vw, 5.75rem);
+  font-weight: 400;
+  line-height: 1.05;
+  text-shadow: 0 4px 14px rgba(154, 95, 39, 0.16);
+  white-space: normal;
+}
+
+.hero-name-initial {
+  display: inline-block;
+  margin-right: 0.015em;
+  color: var(--accent);
+  font-size: 1.28em;
+  line-height: 0.75;
+  transform: translateY(0.12em);
+}
+
+.hero-greeting-thanks {
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
+.hero-sticky-note {
+  width: 100%;
+  padding: 1.15rem;
+  border-radius: 5px;
+  background: #fff2a8;
+  box-shadow: 0 12px 24px rgba(82, 68, 24, 0.2), 0 2px 4px rgba(82, 68, 24, 0.14);
+  color: #3f371f;
+  transform: rotate(3.5deg);
+}
+
+.hero-sticky-note p {
+  margin-bottom: 0.75rem;
+  color: #3f371f;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.hero-sticky-note p:last-child {
+  margin-bottom: 0;
+  text-align: right;
 }
 
 .eyebrow {
@@ -754,6 +819,14 @@ li {
   .card-grid.four {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .hero-greeting-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-sticky-note {
+    max-width: 300px;
+  }
 }
 
 @media (max-width: 1180px) {
@@ -844,6 +917,15 @@ li {
 
   .hero-actions {
     display: grid;
+  }
+
+  .hero-name {
+    font-size: clamp(3rem, 16vw, 4.5rem);
+  }
+
+  .hero-sticky-note {
+    max-width: min(280px, calc(100% - 0.75rem));
+    margin-left: 0.25rem;
   }
 
   .button {
