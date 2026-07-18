@@ -20,6 +20,7 @@
 }
 
 html {
+  background: #101820;
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-height);
 }
@@ -27,10 +28,41 @@ html {
 body {
   margin: 0;
   overflow-x: hidden;
-  background: var(--bg);
+  background: transparent;
   color: var(--text);
   font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
   line-height: 1.6;
+  isolation: isolate;
+}
+
+.site-video-background {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  background: #101820;
+  pointer-events: none;
+}
+
+.site-video-background::after {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 28, 15, 0.38);
+  content: "";
+}
+
+.site-video-background video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: hue-rotate(-115deg) saturate(1.08) brightness(0.56) contrast(1.16);
+  object-fit: cover;
+}
+
+main,
+.site-footer {
+  position: relative;
+  z-index: 0;
 }
 
 body.nav-open {
@@ -257,11 +289,11 @@ li {
   border-bottom: 1px solid var(--line);
   background:
     linear-gradient(135deg, rgba(47, 93, 98, 0.08), rgba(183, 137, 79, 0.1)),
-    var(--bg);
+    rgba(247, 248, 250, 0.72);
 }
 
 .muted {
-  background: var(--surface-muted);
+  background: rgba(238, 242, 245, 0.84);
 }
 
 .section-inner {
