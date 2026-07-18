@@ -7,7 +7,7 @@
   <meta name="description" content="Professional portfolio for Emmanuel De Jesus, a builder, project manager, operations professional, and AI enthusiast.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,600;0,700;1,600;1,700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,600;0,700;1,600;1,700&amp;family=Orbitron:wght@400;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,7 +17,25 @@
     </video>
   </div>
   <header class="site-header" data-header>
-    <button class="brand active" data-tab="home" aria-label="Emmanuel De Jesus home" aria-pressed="true" title="Home">⌂</button>
+    <div class="career-logo-gears" aria-hidden="true">
+      <span class="career-logo-gear" style="--gear-x: 5%; --gear-y: 31%; --gear-rotation: -9deg;"><img src="images/career-logos/01-transit-tech-cte.png" alt=""></span>
+      <span class="career-logo-gear" style="--gear-x: 14%; --gear-y: 72%; --gear-rotation: 8deg;"><img src="images/career-logos/02-bmcc.jpeg" alt=""></span>
+      <span class="career-logo-gear" style="--gear-x: 24%; --gear-y: 31%; --gear-rotation: -5deg;"><img src="images/career-logos/03-gamestop.png" alt=""></span>
+      <span class="career-logo-gear" style="--gear-x: 34%; --gear-y: 72%; --gear-rotation: 11deg;"><img src="images/career-logos/04-aflac.png" alt=""></span>
+      <span class="career-logo-gear" style="--gear-x: 44%; --gear-y: 31%; --gear-rotation: -8deg;"><img src="images/career-logos/05-luna-park.jpg" alt=""></span>
+      <span class="career-logo-gear" style="--gear-x: 54%; --gear-y: 72%; --gear-rotation: 6deg;"><img src="images/career-logos/06-meridian-strategies.jpeg" alt=""></span>
+      <span class="career-logo-gear" style="--gear-x: 64%; --gear-y: 31%; --gear-rotation: -12deg;"><img src="images/career-logos/07-docgo.jpg" alt=""></span>
+      <span class="career-logo-gear" style="--gear-x: 74%; --gear-y: 72%; --gear-rotation: 9deg;"><img src="images/career-logos/08-garner.png" alt=""></span>
+      <span class="career-logo-gear" style="--gear-x: 84%; --gear-y: 31%; --gear-rotation: -7deg;"><img src="images/career-logos/09-mentoring-in-medicine.png" alt=""></span>
+      <span class="career-logo-gear" style="--gear-x: 94%; --gear-y: 72%; --gear-rotation: 10deg;"><img src="images/career-logos/10-pursuit.gif" alt=""></span>
+      <span class="career-logo-gear career-logo-gear--empty" style="--gear-x: 9%; --gear-y: 104%; --gear-rotation: 3deg;"></span>
+      <span class="career-logo-gear career-logo-gear--empty" style="--gear-x: 39%; --gear-y: 104%; --gear-rotation: -8deg;"></span>
+      <span class="career-logo-gear career-logo-gear--empty" style="--gear-x: 69%; --gear-y: 104%; --gear-rotation: 6deg;"></span>
+    </div>
+    <div class="career-banner-copy">
+      <p class="career-banner-title">Explore My Adventure</p>
+      <p class="career-banner-tagline">Follow the milestones, decisions, and experiences that transformed curiosity into a career in technology.</p>
+    </div>
     <nav class="site-nav" id="primary-navigation" data-nav aria-label="Primary navigation">
       <button class="active" data-tab="home" aria-controls="home-hero" aria-pressed="true">Home</button>
       <div class="nav-dropdown">
@@ -398,7 +416,7 @@
     </section>
   </main>
 
-  <footer class="site-footer">
+  <footer class="site-footer site-footer--banner">
     <p>&copy; <span id="current-year"></span> Emmanuel De Jesus. Built with HTML, CSS, and JavaScript.</p>
   </footer>
 
