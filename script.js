@@ -86,6 +86,33 @@ const homeSectionLinks = document.querySelectorAll("[data-home-section]");
 const homeSections = document.querySelectorAll(".home-section-target");
 const homeSectionNav = document.querySelector(".home-section-nav");
 const siteHeader = document.querySelector("[data-header]");
+const heroPreviewElements = {
+  hero: document.querySelector("#home-hero"),
+  grid: document.querySelector("#home-hero .hero-grid"),
+  group: document.querySelector("#home-hero .hero-greeting"),
+  greeting: document.querySelector(".hero-greeting-intro"),
+  name: document.querySelector(".hero-name"),
+  nameInitial: document.querySelector(".hero-name-initial"),
+  thankYou: document.querySelector(".hero-greeting-thanks"),
+  textInput: document.querySelector("#hero-preview-text"),
+  status: document.querySelector("[data-hero-preview-status]"),
+  portrait: document.querySelector("#home-hero .portrait-card"),
+  stickyNote: document.querySelector("#home-hero .hero-sticky-note")
+};
+const heroLayerButtons = document.querySelectorAll("[data-hero-layer-action]");
+const heroResetButtons = document.querySelectorAll("[data-hero-reset]");
+const HERO_PREVIEW_STORAGE_KEY = "personal-website-hero-preview-v3";
+const HERO_PREVIEW_LONG_PRESS_MS = 450;
+const heroPreviewState = {
+  text: {
+    greeting: "",
+    name: "",
+    thankYou: ""
+  },
+  items: {},
+  pointer: null,
+  longPressTimer: null
+};
 let homeSectionObserver;
 let homeScrollTicking = false;
 
@@ -123,6 +150,983 @@ const journeyContent = {
     ]
   }
 };
+
+function pixelsToPoints(value) {
+  return Math.round((Number.parseFloat(value) * 72) / 96);
+}
+
+function getHeroPreviewText() {
+  return {
+    greeting: heroPreviewElements.greeting?.textContent.trim() ?? "",
+    name: heroPreviewElements.name?.textContent.trim() ?? "",
+    thankYou: heroPreviewElements.thankYou?.textContent.trim() ?? ""
+  };
+}
+
+function getHeroPreviewFontSizes() {
+  return {
+    greeting: pixelsToPoints(getComputedStyle(heroPreviewElements.greeting).fontSize),
+    name: pixelsToPoints(getComputedStyle(heroPreviewElements.name).fontSize),
+    thankYou: pixelsToPoints(getComputedStyle(heroPreviewElements.thankYou).fontSize)
+  };
+}
+
+function announceHeroPreview(message) {
+  if (heroPreviewElements.status) {
+    heroPreviewElements.status.textContent = message;
+  }
+}
+
+function updateHeroPreviewText() {
+  const lines = heroPreviewElements.textInput.value.replace(/\r/g, "").split("\n").slice(0, 3);
+
+  while (lines.length < 3) {
+    lines.push("");
+  }
+
+  heroPreviewElements.textInput.value = lines.join("\n");
+  heroPreviewElements.greeting.textContent = lines[0];
+  heroPreviewElements.nameInitial.textContent = lines[1].charAt(0);
+  heroPreviewElements.name.replaceChildren(
+    heroPreviewElements.nameInitial,
+    document.createTextNode(lines[1].slice(1))
+  );
+  heroPreviewElements.thankYou.textContent = lines[2];
+
+  heroPreviewState.text = {
+    greeting: lines[0],
+    name: lines[1],
+    thankYou: lines[2]
+  };
+
+  requestAnimationFrame(() => {
+    resolveHeroPreviewCollision();
+    updateHeroPreviewMetrics();
+  });
+}
+
+function setHeroPreviewText(text) {
+  heroPreviewElements.textInput.value = [text.greeting, text.name, text.thankYou].join("\n");
+  updateHeroPreviewText();
+}
+
+function setHeroPreviewFontSize(target, size) {
+  const clampedSize = Math.min(HERO_PREVIEW_MAX_SIZE, Math.max(HERO_PREVIEW_MIN_SIZE, size));
+  heroPreviewState.fontSizes[target] = clampedSize;
+  heroPreviewElements.group.style.setProperty(`--hero-preview-${target === "thankYou" ? "thank-you" : target}-size`, `${clampedSize}pt`);
+  updateHeroPreviewControls();
+
+  requestAnimationFrame(() => {
+    resolveHeroPreviewCollision();
+    updateHeroPreviewMetrics();
+  });
+}
+
+function updateHeroPreviewControls() {
+  heroPreviewSizeDisplays.forEach((display) => {
+    const target = display.dataset.heroSizeDisplay;
+    display.textContent = `${heroPreviewState.fontSizes[target]}pt`;
+  });
+
+  heroPreviewSizeButtons.forEach((button) => {
+    const target = button.dataset.heroSizeTarget;
+    const isDecrease = button.dataset.heroSizeAction === "decrease";
+    button.disabled = isDecrease
+      ? heroPreviewState.fontSizes[target] <= HERO_PREVIEW_MIN_SIZE
+      : heroPreviewState.fontSizes[target] >= HERO_PREVIEW_MAX_SIZE;
+  });
+}
+
+function updateHeroPreviewMetrics() {
+  const groupRect = heroPreviewElements.group.getBoundingClientRect();
+  heroPreviewElements.position.textContent = `${Math.round(heroPreviewState.position.x)}px, ${Math.round(heroPreviewState.position.y)}px`;
+  heroPreviewElements.dimensions.textContent = `${Math.round(groupRect.width)}px × ${Math.round(groupRect.height)}px`;
+}
+
+function applyHeroPreviewDimensions() {
+  const { group } = heroPreviewElements;
+
+  if (heroPreviewState.dimensions.width) {
+    group.style.setProperty("--hero-preview-width", `${heroPreviewState.dimensions.width}px`);
+  } else {
+    group.style.removeProperty("--hero-preview-width");
+  }
+
+  if (heroPreviewState.dimensions.height) {
+    group.style.setProperty("--hero-preview-height", `${heroPreviewState.dimensions.height}px`);
+  } else {
+    group.style.removeProperty("--hero-preview-height");
+  }
+}
+
+function applyHeroPreviewPosition() {
+  heroPreviewElements.group.style.setProperty("--hero-preview-x", `${heroPreviewState.position.x}px`);
+  heroPreviewElements.group.style.setProperty("--hero-preview-y", `${heroPreviewState.position.y}px`);
+}
+
+function rectsIntersect(first, second, gap = 0) {
+  return !(
+    first.right + gap <= second.left ||
+    first.left - gap >= second.right ||
+    first.bottom + gap <= second.top ||
+    first.top - gap >= second.bottom
+  );
+}
+
+function heroPreviewIsInsideHero() {
+  const heroRect = heroPreviewElements.hero.getBoundingClientRect();
+  const groupRect = heroPreviewElements.group.getBoundingClientRect();
+
+  return (
+    groupRect.left >= heroRect.left &&
+    groupRect.right <= heroRect.right &&
+    groupRect.top >= heroRect.top &&
+    groupRect.bottom <= heroRect.bottom
+  );
+}
+
+function getHeroPreviewCollisions() {
+  const groupRect = heroPreviewElements.group.getBoundingClientRect();
+  const protectedElements = [
+    heroPreviewElements.portrait,
+    heroPreviewElements.stickyNote,
+    heroPreviewElements.identity,
+    heroPreviewElements.description,
+    heroPreviewElements.actions
+  ];
+
+  return protectedElements.filter((element) => {
+    if (!element) return false;
+    return rectsIntersect(groupRect, element.getBoundingClientRect(), HERO_PREVIEW_COLLISION_GAP);
+  });
+}
+
+function resolveHeroPreviewCollision() {
+  const sideElements = [heroPreviewElements.portrait, heroPreviewElements.stickyNote];
+  heroPreviewElements.grid.classList.remove("hero-preview-reflow", "hero-preview-stack-below");
+  let collisions = getHeroPreviewCollisions();
+  const hasSideCollision = collisions.some((element) => sideElements.includes(element));
+
+  if (hasSideCollision) {
+    heroPreviewElements.grid.classList.add("hero-preview-reflow");
+    collisions = getHeroPreviewCollisions();
+  }
+
+  if (collisions.some((element) => sideElements.includes(element))) {
+    heroPreviewElements.grid.classList.remove("hero-preview-reflow");
+    heroPreviewElements.grid.classList.add("hero-preview-stack-below");
+    collisions = getHeroPreviewCollisions();
+  }
+
+  return collisions;
+}
+
+function tryHeroPreviewPosition(x, y) {
+  const previousPosition = { ...heroPreviewState.position };
+  heroPreviewState.position = { x: Math.round(x), y: Math.round(y) };
+  applyHeroPreviewPosition();
+
+  const collisions = resolveHeroPreviewCollision();
+
+  if (!heroPreviewIsInsideHero() || collisions.length) {
+    heroPreviewState.position = previousPosition;
+    applyHeroPreviewPosition();
+    resolveHeroPreviewCollision();
+    announceHeroPreview("Movement stopped to keep the Hero text clear of other Hero content.");
+    return false;
+  }
+
+  updateHeroPreviewMetrics();
+  return true;
+}
+
+function tryHeroPreviewGeometry(width, height, x, y) {
+  const previousDimensions = { ...heroPreviewState.dimensions };
+  const previousPosition = { ...heroPreviewState.position };
+
+  heroPreviewState.dimensions = {
+    width: Math.round(Math.max(1, width)),
+    height: Math.round(Math.max(1, height))
+  };
+  heroPreviewState.position = { x: Math.round(x), y: Math.round(y) };
+  applyHeroPreviewDimensions();
+  applyHeroPreviewPosition();
+
+  const collisions = resolveHeroPreviewCollision();
+
+  if (!heroPreviewIsInsideHero() || collisions.length) {
+    heroPreviewState.dimensions = previousDimensions;
+    heroPreviewState.position = previousPosition;
+    applyHeroPreviewDimensions();
+    applyHeroPreviewPosition();
+    resolveHeroPreviewCollision();
+    announceHeroPreview("Resize stopped to keep the Hero text clear of other Hero content.");
+    return false;
+  }
+
+  updateHeroPreviewMetrics();
+  return true;
+}
+
+function tryHeroPreviewDimensions(width, height) {
+  return tryHeroPreviewGeometry(width, height, heroPreviewState.position.x, heroPreviewState.position.y);
+}
+
+function resizeHeroPreviewFromDirection(direction, deltaX, deltaY, startPosition, startDimensions) {
+  let width = startDimensions.width;
+  let height = startDimensions.height;
+  let x = startPosition.x;
+  let y = startPosition.y;
+
+  if (direction.includes("e")) {
+    width += deltaX;
+  }
+
+  if (direction.includes("w")) {
+    width -= deltaX;
+    x += deltaX;
+  }
+
+  if (direction.includes("s")) {
+    height += deltaY;
+  }
+
+  if (direction.includes("n")) {
+    height -= deltaY;
+    y += deltaY;
+  }
+
+  return tryHeroPreviewGeometry(width, height, x, y);
+}
+
+function setHeroPreviewMode(mode) {
+  heroPreviewState.mode = mode;
+  heroPreviewModeButtons.forEach((button) => {
+    const isActive = button.dataset.heroPreviewMode === mode;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+  heroPreviewElements.group.dataset.heroPreviewMode = mode;
+  announceHeroPreview(`${mode === "drag" ? "Drag" : "Resize"} mode selected.`);
+}
+
+function resetHeroPreview(resetType) {
+  if (resetType === "text" || resetType === "all") {
+    setHeroPreviewText(heroPreviewState.original.text);
+  }
+
+  if (resetType === "fonts" || resetType === "all") {
+    Object.entries(heroPreviewState.original.fontSizes).forEach(([target, size]) => {
+      setHeroPreviewFontSize(target, size);
+    });
+  }
+
+  if (resetType === "position" || resetType === "all") {
+    heroPreviewState.position = { x: 0, y: 0 };
+    applyHeroPreviewPosition();
+  }
+
+  if (resetType === "size" || resetType === "all") {
+    heroPreviewState.dimensions = { width: null, height: null };
+    applyHeroPreviewDimensions();
+  }
+
+  resolveHeroPreviewCollision();
+  updateHeroPreviewMetrics();
+  announceHeroPreview(`${resetType === "all" ? "All Hero preview settings" : `Hero preview ${resetType}`} reset.`);
+}
+
+function beginHeroPreviewPointer(event, interaction, direction = null) {
+  if (interaction === "drag" && heroPreviewState.mode !== "drag") return;
+  if (interaction === "resize" && heroPreviewState.mode !== "resize") return;
+
+  event.preventDefault();
+  const groupRect = heroPreviewElements.group.getBoundingClientRect();
+  heroPreviewState.pointer = {
+    interaction,
+    direction,
+    startX: event.clientX,
+    startY: event.clientY,
+    position: { ...heroPreviewState.position },
+    dimensions: {
+      width: heroPreviewState.dimensions.width ?? groupRect.width,
+      height: heroPreviewState.dimensions.height ?? groupRect.height
+    }
+  };
+  heroPreviewElements.group.setPointerCapture(event.pointerId);
+}
+
+function moveHeroPreviewPointer(event) {
+  if (!heroPreviewState.pointer) return;
+
+  const { interaction, direction, startX, startY, position, dimensions } = heroPreviewState.pointer;
+  const deltaX = event.clientX - startX;
+  const deltaY = event.clientY - startY;
+
+  if (interaction === "drag") {
+    tryHeroPreviewPosition(position.x + deltaX, position.y + deltaY);
+  } else {
+    resizeHeroPreviewFromDirection(direction, deltaX, deltaY, position, dimensions);
+  }
+}
+
+function endHeroPreviewPointer(event) {
+  if (!heroPreviewState.pointer) return;
+
+  const interaction = heroPreviewState.pointer.interaction;
+
+  if (heroPreviewElements.group.hasPointerCapture(event.pointerId)) {
+    heroPreviewElements.group.releasePointerCapture(event.pointerId);
+  }
+
+  heroPreviewState.pointer = null;
+  updateHeroPreviewMetrics();
+  announceHeroPreview(
+    interaction === "drag"
+      ? `Hero text group position is ${Math.round(heroPreviewState.position.x)}px, ${Math.round(heroPreviewState.position.y)}px.`
+      : `Hero text group size is ${heroPreviewElements.dimensions.textContent}.`
+  );
+}
+
+function handleHeroPreviewKeyboard(event) {
+  if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) return;
+
+  const step = event.shiftKey ? 20 : 5;
+  event.preventDefault();
+
+  const resizeDirection = event.currentTarget.dataset.heroPreviewResizeHandle;
+
+  if (resizeDirection) {
+    if (heroPreviewState.mode !== "resize") {
+      announceHeroPreview("Select Resize Mode before resizing the Hero text group.");
+      return;
+    }
+
+    const groupRect = heroPreviewElements.group.getBoundingClientRect();
+    const deltaX = event.key === "ArrowRight" ? step : event.key === "ArrowLeft" ? -step : 0;
+    const deltaY = event.key === "ArrowDown" ? step : event.key === "ArrowUp" ? -step : 0;
+    if (resizeHeroPreviewFromDirection(
+      resizeDirection,
+      deltaX,
+      deltaY,
+      heroPreviewState.position,
+      {
+        width: heroPreviewState.dimensions.width ?? groupRect.width,
+        height: heroPreviewState.dimensions.height ?? groupRect.height
+      }
+    )) {
+      announceHeroPreview(`Hero text group size is ${heroPreviewElements.dimensions.textContent}.`);
+    }
+    return;
+  }
+
+  if (heroPreviewState.mode !== "drag") {
+    announceHeroPreview("Select Drag Mode before moving the Hero text group.");
+    return;
+  }
+
+  const xChange = event.key === "ArrowRight" ? step : event.key === "ArrowLeft" ? -step : 0;
+  const yChange = event.key === "ArrowDown" ? step : event.key === "ArrowUp" ? -step : 0;
+  if (tryHeroPreviewPosition(heroPreviewState.position.x + xChange, heroPreviewState.position.y + yChange)) {
+    announceHeroPreview(`Hero text group position is ${Math.round(heroPreviewState.position.x)}px, ${Math.round(heroPreviewState.position.y)}px.`);
+  }
+}
+
+function initHeroTextPreview() {
+  const { group, textInput, resizeHandles } = heroPreviewElements;
+  if (!group || !textInput || !resizeHandles.length) return;
+
+  heroPreviewState.text = getHeroPreviewText();
+  heroPreviewState.fontSizes = getHeroPreviewFontSizes();
+  heroPreviewState.original = {
+    text: { ...heroPreviewState.text },
+    fontSizes: { ...heroPreviewState.fontSizes }
+  };
+
+  group.classList.add("hero-preview-active");
+  group.tabIndex = 0;
+  group.setAttribute("role", "group");
+  group.setAttribute("aria-label", "Moveable Hero text group. Use arrow keys to move it; use any edge or corner resize handle for size changes.");
+  setHeroPreviewText(heroPreviewState.text);
+  Object.entries(heroPreviewState.fontSizes).forEach(([target, size]) => setHeroPreviewFontSize(target, size));
+  setHeroPreviewMode("drag");
+  updateHeroPreviewMetrics();
+
+  textInput.addEventListener("input", updateHeroPreviewText);
+
+  heroPreviewSizeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const direction = button.dataset.heroSizeAction === "increase" ? 1 : -1;
+      const target = button.dataset.heroSizeTarget;
+      setHeroPreviewFontSize(target, heroPreviewState.fontSizes[target] + (direction * HERO_PREVIEW_SIZE_STEP));
+      announceHeroPreview(`${target === "thankYou" ? "Thank-you" : target} font size is ${heroPreviewState.fontSizes[target]}pt.`);
+    });
+  });
+
+  heroPreviewModeButtons.forEach((button) => {
+    button.addEventListener("click", () => setHeroPreviewMode(button.dataset.heroPreviewMode));
+  });
+
+  heroPreviewResetButtons.forEach((button) => {
+    button.addEventListener("click", () => resetHeroPreview(button.dataset.heroPreviewReset));
+  });
+
+  group.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("[data-hero-preview-resize-handle]")) return;
+    beginHeroPreviewPointer(event, "drag");
+  });
+  resizeHandles.forEach((handle) => {
+    handle.addEventListener("pointerdown", (event) => {
+      beginHeroPreviewPointer(event, "resize", handle.dataset.heroPreviewResizeHandle);
+    });
+    handle.addEventListener("keydown", handleHeroPreviewKeyboard);
+  });
+  group.addEventListener("pointermove", moveHeroPreviewPointer);
+  group.addEventListener("pointerup", endHeroPreviewPointer);
+  group.addEventListener("pointercancel", endHeroPreviewPointer);
+  group.addEventListener("keydown", handleHeroPreviewKeyboard);
+
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(updateHeroPreviewMetrics).observe(group);
+  }
+
+  window.addEventListener("resize", () => {
+    resolveHeroPreviewCollision();
+    updateHeroPreviewMetrics();
+  });
+}
+
+function getHeroPreviewTextContent() {
+  return {
+    greeting: heroPreviewElements.greeting.textContent.trim(),
+    name: heroPreviewElements.name.textContent.trim(),
+    thankYou: heroPreviewElements.thankYou.textContent.trim()
+  };
+}
+
+function applyHeroPreviewTextContent(text) {
+  heroPreviewElements.textInput.value = [text.greeting, text.name, text.thankYou].join("\n");
+  heroPreviewElements.greeting.textContent = text.greeting;
+  heroPreviewElements.nameInitial.textContent = text.name.charAt(0);
+  heroPreviewElements.name.replaceChildren(
+    heroPreviewElements.nameInitial,
+    document.createTextNode(text.name.slice(1))
+  );
+  heroPreviewElements.thankYou.textContent = text.thankYou;
+  heroPreviewState.text = { ...text };
+}
+
+function saveHeroPreviewLocally() {
+  try {
+    const savedItems = Object.fromEntries(
+      Object.entries(heroPreviewState.items).map(([itemId, item]) => [itemId, {
+        x: item.x,
+        y: item.y,
+        width: item.width,
+        height: item.height,
+        zIndex: item.zIndex
+      }])
+    );
+    localStorage.setItem(HERO_PREVIEW_STORAGE_KEY, JSON.stringify({
+      text: heroPreviewState.text,
+      items: savedItems
+    }));
+    announceHeroPreview("Hero preview saved locally in this browser.");
+  } catch {
+    announceHeroPreview("This browser could not save the Hero preview locally.");
+  }
+}
+
+function loadHeroPreviewLocally() {
+  try {
+    const savedPreview = JSON.parse(localStorage.getItem(HERO_PREVIEW_STORAGE_KEY));
+    if (!savedPreview) return;
+
+    if (savedPreview.text) {
+      heroPreviewState.text = savedPreview.text;
+    }
+
+    if (savedPreview.items) {
+      Object.entries(savedPreview.items).forEach(([itemId, savedItem]) => {
+        if (heroPreviewState.items[itemId]) {
+          const { x, y, width, height, zIndex } = savedItem;
+          Object.assign(heroPreviewState.items[itemId], {
+            x,
+            y,
+            width,
+            height,
+            zIndex: Number.isFinite(zIndex) ? zIndex : heroPreviewState.items[itemId].zIndex
+          });
+        }
+      });
+    }
+  } catch {
+    localStorage.removeItem(HERO_PREVIEW_STORAGE_KEY);
+  }
+}
+
+function applyHeroPreviewItem(itemId) {
+  const item = heroPreviewState.items[itemId];
+  if (!item) return;
+
+  item.element.style.setProperty("--hero-preview-x", `${item.x}px`);
+  item.element.style.setProperty("--hero-preview-y", `${item.y}px`);
+  item.element.style.setProperty("--hero-preview-z", item.zIndex);
+
+  if (item.width) {
+    item.element.style.setProperty("--hero-preview-width", `${item.width}px`);
+  } else {
+    item.element.style.removeProperty("--hero-preview-width");
+  }
+
+  if (item.height) {
+    item.element.style.setProperty("--hero-preview-height", `${item.height}px`);
+  } else {
+    item.element.style.removeProperty("--hero-preview-height");
+  }
+}
+
+function constrainHeroPreviewItem(itemId) {
+  const item = heroPreviewState.items[itemId];
+  const itemRect = item.element.getBoundingClientRect();
+  const heroRect = heroPreviewElements.hero.getBoundingClientRect();
+  let xOffset = 0;
+  let yOffset = 0;
+
+  if (itemRect.left < heroRect.left) xOffset = heroRect.left - itemRect.left;
+  if (itemRect.right > heroRect.right) xOffset = heroRect.right - itemRect.right;
+  if (itemRect.top < heroRect.top) yOffset = heroRect.top - itemRect.top;
+  if (itemRect.bottom > heroRect.bottom) yOffset = heroRect.bottom - itemRect.bottom;
+
+  if (xOffset || yOffset) {
+    item.x += xOffset;
+    item.y += yOffset;
+    applyHeroPreviewItem(itemId);
+  }
+}
+
+function heroPreviewItemsOverlap(first, second) {
+  const firstRect = first.element.getBoundingClientRect();
+  const secondRect = second.element.getBoundingClientRect();
+
+  return !(
+    firstRect.right + 24 <= secondRect.left ||
+    firstRect.left - 24 >= secondRect.right ||
+    firstRect.bottom + 24 <= secondRect.top ||
+    firstRect.top - 24 >= secondRect.bottom
+  );
+}
+
+function reflowObstructedHeroPreviewItems(activeItemId) {
+  // Overlap is intentional in this preview. This legacy hook is retained as a no-op.
+}
+
+function getHeroPreviewResizeDirection(item, event) {
+  const rect = item.element.getBoundingClientRect();
+  const horizontal = event.clientX - rect.left < rect.width * 0.25
+    ? "w"
+    : event.clientX - rect.left > rect.width * 0.75
+      ? "e"
+      : "";
+  const vertical = event.clientY - rect.top < rect.height * 0.25
+    ? "n"
+    : event.clientY - rect.top > rect.height * 0.75
+      ? "s"
+      : "";
+
+  if (vertical && horizontal) return `${vertical}${horizontal}`;
+  if (vertical || horizontal) return vertical || horizontal;
+
+  const distances = {
+    n: event.clientY - rect.top,
+    s: rect.bottom - event.clientY,
+    w: event.clientX - rect.left,
+    e: rect.right - event.clientX
+  };
+
+  return Object.entries(distances).sort(([, first], [, second]) => first - second)[0][0];
+}
+
+function resizeHeroPreviewItem(itemId, direction, deltaX, deltaY, start) {
+  const item = heroPreviewState.items[itemId];
+  let { width, height, x, y } = start;
+
+  if (direction.includes("e")) width += deltaX;
+  if (direction.includes("w")) {
+    width -= deltaX;
+    x += deltaX;
+  }
+  if (direction.includes("s")) height += deltaY;
+  if (direction.includes("n")) {
+    height -= deltaY;
+    y += deltaY;
+  }
+
+  item.width = Math.max(1, Math.round(width));
+  item.height = Math.max(1, Math.round(height));
+  item.x = Math.round(x);
+  item.y = Math.round(y);
+  applyHeroPreviewItem(itemId);
+  constrainHeroPreviewItem(itemId);
+  reflowObstructedHeroPreviewItems(itemId);
+}
+
+function beginDirectHeroPreviewInteraction(event, itemId) {
+  if (event.button !== undefined && event.button !== 0) return;
+
+  const item = heroPreviewState.items[itemId];
+  const rect = item.element.getBoundingClientRect();
+  Object.values(heroPreviewState.items).forEach((previewItem) => {
+    previewItem.element.classList.remove("hero-preview-selected");
+  });
+  item.element.classList.add("hero-preview-selected");
+  heroPreviewState.pointer = {
+    itemId,
+    startX: event.clientX,
+    startY: event.clientY,
+    start: { x: item.x, y: item.y, width: item.width ?? rect.width, height: item.height ?? rect.height },
+    resizeDirection: getHeroPreviewResizeDirection(item, event),
+    resize: false,
+    moved: false
+  };
+
+  heroPreviewState.longPressTimer = window.setTimeout(() => {
+    if (!heroPreviewState.pointer) return;
+    heroPreviewState.pointer.resize = true;
+    item.element.classList.add("hero-preview-resizing");
+    announceHeroPreview("Resize mode active. Drag from the selected edge or corner.");
+  }, HERO_PREVIEW_LONG_PRESS_MS);
+
+  item.element.setPointerCapture(event.pointerId);
+}
+
+function moveDirectHeroPreviewInteraction(event) {
+  const interaction = heroPreviewState.pointer;
+  if (!interaction) return;
+
+  const item = heroPreviewState.items[interaction.itemId];
+  const deltaX = event.clientX - interaction.startX;
+  const deltaY = event.clientY - interaction.startY;
+
+  if (!interaction.resize && (Math.abs(deltaX) > 4 || Math.abs(deltaY) > 4)) {
+    window.clearTimeout(heroPreviewState.longPressTimer);
+    interaction.moved = true;
+    item.x = Math.round(interaction.start.x + deltaX);
+    item.y = Math.round(interaction.start.y + deltaY);
+    applyHeroPreviewItem(interaction.itemId);
+    constrainHeroPreviewItem(interaction.itemId);
+    reflowObstructedHeroPreviewItems(interaction.itemId);
+  }
+
+  if (interaction.resize) {
+    interaction.moved = true;
+    resizeHeroPreviewItem(interaction.itemId, interaction.resizeDirection, deltaX, deltaY, interaction.start);
+  }
+}
+
+function endDirectHeroPreviewInteraction(event) {
+  const interaction = heroPreviewState.pointer;
+  if (!interaction) return;
+
+  const item = heroPreviewState.items[interaction.itemId];
+  window.clearTimeout(heroPreviewState.longPressTimer);
+  item.element.classList.remove("hero-preview-resizing");
+
+  if (item.element.hasPointerCapture(event.pointerId)) {
+    item.element.releasePointerCapture(event.pointerId);
+  }
+
+  heroPreviewState.pointer = null;
+  saveHeroPreviewLocally();
+}
+
+function initHeroTextPreview() {
+  const { group, textInput, portrait, stickyNote } = heroPreviewElements;
+  if (!group || !textInput || !portrait || !stickyNote) return;
+
+  heroPreviewState.text = getHeroPreviewTextContent();
+  heroPreviewState.items = {
+    text: { element: group, x: 0, y: 0, width: null, height: null },
+    photo: { element: portrait, x: 0, y: 0, width: null, height: null },
+    postit: { element: stickyNote, x: 0, y: 0, width: null, height: null }
+  };
+  loadHeroPreviewLocally();
+
+  applyHeroPreviewTextContent(heroPreviewState.text);
+  Object.entries(heroPreviewState.items).forEach(([itemId, item]) => {
+    item.element.classList.add("hero-preview-interactive");
+    item.element.tabIndex = 0;
+    item.element.setAttribute("aria-label", `${itemId === "text" ? "Hero text" : itemId === "photo" ? "Profile photo" : "Post-it note"}. Drag to move; long press and drag near an edge or corner to resize.`);
+    applyHeroPreviewItem(itemId);
+    item.element.addEventListener("pointerdown", (event) => beginDirectHeroPreviewInteraction(event, itemId));
+    item.element.addEventListener("pointermove", moveDirectHeroPreviewInteraction);
+    item.element.addEventListener("pointerup", endDirectHeroPreviewInteraction);
+    item.element.addEventListener("pointercancel", endDirectHeroPreviewInteraction);
+  });
+
+  textInput.addEventListener("input", () => {
+    const lines = textInput.value.replace(/\r/g, "").split("\n").slice(0, 3);
+    while (lines.length < 3) lines.push("");
+    applyHeroPreviewTextContent({ greeting: lines[0], name: lines[1], thankYou: lines[2] });
+    saveHeroPreviewLocally();
+  });
+}
+
+function selectEditableElement(itemId) {
+  heroPreviewState.selectedId = itemId;
+  const highestZIndex = Math.max(...Object.values(heroPreviewState.items).map((item) => item.zIndex));
+
+  Object.entries(heroPreviewState.items).forEach(([currentItemId, item]) => {
+    item.element.classList.toggle("hero-preview-selected", currentItemId === itemId);
+  });
+
+  const selectedItem = heroPreviewState.items[itemId];
+  selectedItem.zIndex = highestZIndex + 1;
+  applyHeroPreviewItem(itemId);
+}
+
+function deselectEditableElement() {
+  heroPreviewState.selectedId = null;
+  Object.values(heroPreviewState.items).forEach((item) => {
+    item.element.classList.remove("hero-preview-selected");
+  });
+}
+
+function constrainEditableElementToHero(itemId) {
+  const item = heroPreviewState.items[itemId];
+  const itemRect = item.element.getBoundingClientRect();
+  const heroRect = heroPreviewElements.hero.getBoundingClientRect();
+  let xOffset = 0;
+  let yOffset = 0;
+
+  if (itemRect.left < heroRect.left) xOffset = heroRect.left - itemRect.left;
+  if (itemRect.right > heroRect.right) xOffset = heroRect.right - itemRect.right;
+  if (itemRect.top < heroRect.top) yOffset = heroRect.top - itemRect.top;
+  if (itemRect.bottom > heroRect.bottom) yOffset = heroRect.bottom - itemRect.bottom;
+
+  if (xOffset || yOffset) {
+    item.x += xOffset;
+    item.y += yOffset;
+    applyHeroPreviewItem(itemId);
+  }
+}
+
+function getEditableResizeStart(item) {
+  const rect = item.element.getBoundingClientRect();
+  return {
+    x: item.x,
+    y: item.y,
+    width: item.width ?? rect.width,
+    height: item.height ?? rect.height
+  };
+}
+
+function updateEditableElementResize(itemId, direction, deltaX, deltaY, start) {
+  const item = heroPreviewState.items[itemId];
+  let { x, y, width, height } = start;
+
+  if (direction.includes("e")) width += deltaX;
+  if (direction.includes("w")) {
+    width -= deltaX;
+    x += deltaX;
+  }
+  if (direction.includes("s")) height += deltaY;
+  if (direction.includes("n")) {
+    height -= deltaY;
+    y += deltaY;
+  }
+
+  item.x = Math.round(x);
+  item.y = Math.round(y);
+  item.width = Math.max(0, Math.round(width));
+  item.height = Math.max(0, Math.round(height));
+  applyHeroPreviewItem(itemId);
+}
+
+function beginResize(event, itemId, direction) {
+  event.preventDefault();
+  event.stopPropagation();
+  selectEditableElement(itemId);
+  const item = heroPreviewState.items[itemId];
+  heroPreviewState.pointer = {
+    type: "resize",
+    itemId,
+    direction,
+    startX: event.clientX,
+    startY: event.clientY,
+    start: getEditableResizeStart(item)
+  };
+  item.element.setPointerCapture(event.pointerId);
+}
+
+function startLongPress(event, itemId) {
+  if (event.button !== undefined && event.button !== 0) return;
+  const item = heroPreviewState.items[itemId];
+  selectEditableElement(itemId);
+
+  heroPreviewState.pointer = {
+    type: "pending",
+    itemId,
+    startX: event.clientX,
+    startY: event.clientY,
+    start: getEditableResizeStart(item)
+  };
+  item.element.setPointerCapture(event.pointerId);
+  heroPreviewState.longPressTimer = window.setTimeout(() => {
+    if (!heroPreviewState.pointer || heroPreviewState.pointer.itemId !== itemId) return;
+    heroPreviewState.pointer.type = "drag";
+    item.element.classList.add("hero-preview-dragging");
+    announceHeroPreview("Drag mode active. Move the selected Hero element freely.");
+  }, HERO_PREVIEW_LONG_PRESS_MS);
+}
+
+function updateDrag(event) {
+  const interaction = heroPreviewState.pointer;
+  if (!interaction || interaction.type === "pending") return;
+  const item = heroPreviewState.items[interaction.itemId];
+  const deltaX = event.clientX - interaction.startX;
+  const deltaY = event.clientY - interaction.startY;
+
+  if (interaction.type === "drag") {
+    item.x = Math.round(interaction.start.x + deltaX);
+    item.y = Math.round(interaction.start.y + deltaY);
+    applyHeroPreviewItem(interaction.itemId);
+    return;
+  }
+
+  if (interaction.type === "resize") {
+    updateEditableElementResize(interaction.itemId, interaction.direction, deltaX, deltaY, interaction.start);
+  }
+}
+
+function endDrag(event) {
+  const interaction = heroPreviewState.pointer;
+  if (!interaction) return;
+  const item = heroPreviewState.items[interaction.itemId];
+  window.clearTimeout(heroPreviewState.longPressTimer);
+  item.element.classList.remove("hero-preview-dragging");
+
+  if (item.element.hasPointerCapture(event.pointerId)) {
+    item.element.releasePointerCapture(event.pointerId);
+  }
+
+  heroPreviewState.pointer = null;
+  saveHeroPreviewLocally();
+}
+
+function setLayerOrder(action) {
+  const itemId = heroPreviewState.selectedId;
+  if (!itemId) {
+    announceHeroPreview("Select a Hero element before changing its layer order.");
+    return;
+  }
+
+  const layers = Object.values(heroPreviewState.items).map((item) => item.zIndex);
+  const item = heroPreviewState.items[itemId];
+  const lowest = Math.min(...layers);
+  const highest = Math.max(...layers);
+
+  if (action === "front") item.zIndex = highest + 1;
+  if (action === "back") item.zIndex = lowest - 1;
+  if (action === "forward") item.zIndex += 1;
+  if (action === "backward") item.zIndex -= 1;
+
+  applyHeroPreviewItem(itemId);
+  saveHeroPreviewLocally();
+}
+
+function resetElementLayout(itemId) {
+  const original = heroPreviewState.original.items[itemId];
+  const item = heroPreviewState.items[itemId];
+  Object.assign(item, original);
+  applyHeroPreviewItem(itemId);
+}
+
+function createResizeHandles(itemId) {
+  const handles = document.createElement("div");
+  handles.className = "hero-preview-handles";
+
+  ["nw", "n", "ne", "w", "e", "sw", "s", "se"].forEach((direction) => {
+    const handle = document.createElement("button");
+    handle.type = "button";
+    handle.className = "hero-preview-handle";
+    handle.dataset.direction = direction;
+    handle.setAttribute("aria-label", `Resize ${itemId} from the ${direction} edge or corner`);
+    handle.addEventListener("pointerdown", (event) => beginResize(event, itemId, direction));
+    handles.append(handle);
+  });
+
+  heroPreviewState.items[itemId].element.append(handles);
+}
+
+function initHeroTextPreview() {
+  const { group, textInput, portrait, stickyNote } = heroPreviewElements;
+  if (!group || !textInput || !portrait || !stickyNote) return;
+
+  heroPreviewState.text = getHeroPreviewTextContent();
+  heroPreviewState.items = {
+    text: { element: group, x: 74, y: -3, width: 1404, height: 118, zIndex: 64 },
+    photo: { element: portrait, x: 54, y: 34, width: null, height: null, zIndex: 54 },
+    postit: { element: stickyNote, x: 21, y: 120, width: 293, height: 172, zIndex: 63 }
+  };
+  heroPreviewState.original = {
+    text: { ...heroPreviewState.text },
+    items: Object.fromEntries(Object.entries(heroPreviewState.items).map(([itemId, item]) => [itemId, {
+      x: item.x,
+      y: item.y,
+      width: item.width,
+      height: item.height,
+      zIndex: item.zIndex
+    }]))
+  };
+  loadHeroPreviewLocally();
+
+  applyHeroPreviewTextContent(heroPreviewState.text);
+  Object.entries(heroPreviewState.items).forEach(([itemId, item]) => {
+    item.element.classList.add("hero-preview-interactive");
+    item.element.setAttribute("aria-label", `${itemId === "text" ? "Hero text" : itemId === "photo" ? "Profile photo" : "Post-it note"}. Click to select and resize; long press for 450 milliseconds to drag.`);
+    applyHeroPreviewItem(itemId);
+    createResizeHandles(itemId);
+    item.element.addEventListener("pointerdown", (event) => {
+      if (event.target.closest(".hero-preview-handle")) return;
+      startLongPress(event, itemId);
+    });
+    item.element.addEventListener("pointermove", updateDrag);
+    item.element.addEventListener("pointerup", endDrag);
+    item.element.addEventListener("pointercancel", endDrag);
+  });
+
+  document.addEventListener("pointerdown", (event) => {
+    if (!event.target.closest(".hero-preview-interactive")) {
+      deselectEditableElement();
+    }
+  });
+
+  textInput.addEventListener("input", () => {
+    const lines = textInput.value.replace(/\r/g, "").split("\n").slice(0, 3);
+    while (lines.length < 3) lines.push("");
+    applyHeroPreviewTextContent({ greeting: lines[0], name: lines[1], thankYou: lines[2] });
+    saveHeroPreviewLocally();
+  });
+
+  heroLayerButtons.forEach((button) => {
+    button.addEventListener("click", () => setLayerOrder(button.dataset.heroLayerAction));
+  });
+
+  heroResetButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const resetTarget = button.dataset.heroReset;
+      if (resetTarget === "all") {
+        applyHeroPreviewTextContent(heroPreviewState.original.text);
+        Object.keys(heroPreviewState.items).forEach(resetElementLayout);
+      } else {
+        resetElementLayout(resetTarget);
+        if (resetTarget === "text") applyHeroPreviewTextContent(heroPreviewState.original.text);
+      }
+      saveHeroPreviewLocally();
+    });
+  });
+}
 
 function renderSkills() {
   if (!skillsRegion) return;
