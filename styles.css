@@ -1172,6 +1172,27 @@ h4 {
   box-shadow: none !important;
 }
 
+#about .content-panel,
+#about .journey-stage-content,
+#learned .info-card,
+#style .info-card,
+#projects .info-card,
+#contact .contact-card,
+#contact .contact-card a {
+  border: 0 !important;
+  background: transparent;
+  box-shadow: none !important;
+}
+
+#about .about-copy {
+  column-rule: 0;
+}
+
+#about .journey-stage-number {
+  border: 0;
+  box-shadow: none;
+}
+
 #home-hobbies .info-card {
   padding: 0;
   overflow: hidden;
