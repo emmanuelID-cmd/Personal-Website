@@ -1234,6 +1234,37 @@ h4 {
   text-align: center;
 }
 
+/* Keep the Banner boundaries intact while removing visible site-content borders. */
+main {
+  --line: transparent;
+}
+
+main * {
+  border-color: transparent !important;
+}
+
+main .section,
+main .muted,
+main .philosophy,
+main .home-contact-cta,
+main .contact-section {
+  background: transparent !important;
+}
+
+main .content-panel,
+main .info-card,
+main .skill-group,
+main .journey-stage-content,
+main .contact-card,
+main .contact-card a {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+main .journey-stage:not(.active) .journey-stage-number {
+  background: transparent;
+}
+
 .philosophy {
   background: var(--accent-dark);
 }
