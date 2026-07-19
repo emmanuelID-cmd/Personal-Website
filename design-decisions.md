@@ -2,7 +2,7 @@
 
 **Purpose:** Record the architectural, content, UX, and visual decisions that guide the Personal Website.
 
-**Last Updated:** 2026-07-17
+**Last Updated:** 2026-07-19
 **Living Document:** Revisit these decisions when requirements change. Status describes the current implementation, not merely an earlier proposal.
 
 ## Decision: Use Four Main Tabs
@@ -186,3 +186,17 @@
 **Consequences:** Roadmap status may remain open until code, deployment evidence, or an approved project record confirms completion.
 
 **Related Files:** `website-itinerary.md`, `component-library.md`, `website-content.md`
+
+## Decision: Use Section-Specific Heading Color Families
+
+**Status:** Accepted — Implemented
+
+**Context:** The site-wide background treatment requires a clear, accessible way to distinguish Home, About, Journey, Projects, and Contact content without recoloring ordinary paragraph copy or changing the established layout.
+
+**Decision:** Define reusable CSS custom properties for each major section's primary heading color and a brighter related subheading tint. Apply them only to verified section headings, subheadings, eyebrow labels, and Journey stage labels. About, Journey, Learned, and Style share the Soft Sage pair as one related interface.
+
+**Reasoning:** Related color pairs make each major interface easier to scan while preserving a coherent professional palette. Semantic heading levels, sizes, and weights continue to communicate hierarchy for visitors who cannot rely on color alone.
+
+**Consequences:** New headings should use the matching section variables instead of hardcoded colors. The Hero greeting block, its hanging `E`, navigation colors, and Adventure Banner are protected from this system; the Banner retains its independent visual treatment.
+
+**Related Files:** `styles.css`, `website-itinerary.md`, `component-library.md`, `design-decisions.md`

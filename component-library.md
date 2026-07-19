@@ -2,7 +2,7 @@
 
 **Purpose:** Document the reusable interface components currently implemented in the Personal Website, including their markup, styles, behavior, and maintenance constraints.
 
-**Last Updated:** 2026-07-17
+**Last Updated:** 2026-07-19
 **Living Document:** Keep entries aligned with `index.html`, `styles.css`, and `script.js`. A component is marked Complete only when its implementation is present in the current source.
 
 ## Main Tab Navigation
@@ -16,15 +16,15 @@
 - `styles.css`
 - `script.js`
 
-**HTML Structure:** The header contains the Home brand button and a `nav.site-nav`. Main controls use `button[data-tab]`; tab panels use `[data-tab-panel]`.
+**HTML Structure:** The header contains `nav.site-nav`. Main controls use `button[data-tab]`; tab panels use `[data-tab-panel]`.
 
-**CSS Selectors:** `.site-header`, `.brand`, `.site-nav`, `.site-nav > button`, `.active`.
+**CSS Selectors:** `.site-header`, `.site-nav`, `.site-nav > button`, `.active`.
 
 **JavaScript:** `showTab(tabId)` toggles panel visibility, active classes, and `aria-pressed`. The `tabButtons` click listener selects a tab and scrolls to the top.
 
 **Responsive Behavior:** The navigation wraps and reduces spacing at the 820px and 560px breakpoints.
 
-**Accessibility:** Buttons are keyboard operable and expose `aria-pressed`; the Home brand has an accessible label and title.
+**Accessibility:** Buttons are keyboard operable and expose `aria-pressed`.
 
 **Notes:** Keep the four primary tabs stable when adding secondary navigation.
 
@@ -114,6 +114,27 @@
 **Responsive Behavior:** The two-column Hero collapses to one column at tablet/mobile breakpoints. The sticky note scales and remains beside or below the greeting without covering it.
 
 **Accessibility:** Heading hierarchy begins with `h1`; the profile image has meaningful alt text; the sticky note uses an accessible label and hides the decorative egg emoji from assistive technology.
+
+## Section Heading Color System
+
+**Status:** Complete
+
+**Purpose:** Distinguish major content interfaces through related, readable heading and subheading color families without changing body-copy colors or hierarchy.
+
+**Location:**
+- `styles.css`
+
+**HTML Structure:** Applies to existing semantic `h2`, `h3`, `h4`, and `.eyebrow` elements within Home, About, Journey, Projects, and Contact section IDs.
+
+**CSS Selectors:** `#home-philosophy`, `#home-background`, `#home-projects`, `#home-hobbies`, `#home-contact`, `#about`, `#learned`, `#style`, `#journey`, `#projects`, and `#contact` heading selectors.
+
+**JavaScript:** None. This is a CSS-only visual system.
+
+**Responsive Behavior:** The same variables apply at every breakpoint; existing heading sizing and layout rules remain unchanged.
+
+**Accessibility:** Primary heading colors and brighter related subheading tints supplement, rather than replace, semantic heading levels, size, and weight. The protected Hero greeting and Adventure Banner are deliberately excluded.
+
+**Notes:** Variables in `:root` define the Home, About, Journey, Projects, and Contact color families. About, Journey, Learned, and Style currently share the Soft Sage pair. Paragraph text, navigation states, the Hero greeting block, and Banner visuals must not be captured by these rules.
 
 ## Journey Timeline
 

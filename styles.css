@@ -8,6 +8,17 @@
   --accent: #2f5d62;
   --accent-dark: #24494d;
   --warm: #b7894f;
+  /* Section heading color system. The Hero greeting and Adventure Banner are excluded. */
+  --home-heading-color: #9ed7dc;
+  --home-subheading-color: #d2f1f3;
+  --about-heading-color: #9fc7ae;
+  --about-subheading-color: #dff5e5;
+  --journey-heading-color: #9fc7ae;
+  --journey-subheading-color: #dff5e5;
+  --projects-heading-color: #79aacb;
+  --projects-subheading-color: #cce8f6;
+  --contact-heading-color: #d08e9b;
+  --contact-subheading-color: #f4c8d0;
   --shadow: 0 18px 50px rgba(23, 32, 42, 0.08);
   --header-height: 76px;
   --frozen-nav-height: 127px;
@@ -1263,6 +1274,89 @@ main .contact-card a {
 
 main .journey-stage:not(.active) .journey-stage-number {
   background: transparent;
+}
+
+/*
+ * Section heading color system
+ *
+ * Keep the Hero greeting block and the Adventure Banner out of this scope.
+ * Each major interface uses a primary heading color and a related brighter
+ * subheading tint, while paragraph copy retains the established text colors.
+ */
+#home-philosophy h2,
+#home-background h2,
+#home-projects h2,
+#home-hobbies h2,
+#home-contact h2 {
+  color: var(--home-heading-color);
+}
+
+#home-philosophy .eyebrow,
+#home-philosophy h3,
+#home-philosophy h4,
+#home-background .eyebrow,
+#home-background h3,
+#home-background h4,
+#home-projects .eyebrow,
+#home-projects h3,
+#home-projects h4,
+#home-hobbies .eyebrow,
+#home-hobbies h3,
+#home-hobbies h4,
+#home-contact .eyebrow,
+#home-contact h3,
+#home-contact h4 {
+  color: var(--home-subheading-color);
+}
+
+#about h2,
+#learned h2,
+#style h2 {
+  color: var(--about-heading-color);
+}
+
+#about .eyebrow,
+#about h3,
+#about h4,
+#learned .eyebrow,
+#learned h3,
+#learned h4,
+#style .eyebrow,
+#style h3,
+#style h4 {
+  color: var(--about-subheading-color);
+}
+
+#journey h2,
+#journey .journey-stage.active {
+  color: var(--journey-heading-color);
+}
+
+#journey .eyebrow,
+#journey h3,
+#journey h4,
+#journey .journey-stage {
+  color: var(--journey-subheading-color);
+}
+
+#projects h2 {
+  color: var(--projects-heading-color);
+}
+
+#projects .eyebrow,
+#projects h3,
+#projects h4 {
+  color: var(--projects-subheading-color);
+}
+
+#contact h2 {
+  color: var(--contact-heading-color);
+}
+
+#contact .eyebrow,
+#contact h3,
+#contact h4 {
+  color: var(--contact-subheading-color);
 }
 
 .philosophy {

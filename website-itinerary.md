@@ -2,7 +2,7 @@
 
 **Purpose:** Track the Personal Website roadmap and the verified status of implementation work.
 
-**Last Updated:** 2026-07-17
+**Last Updated:** 2026-07-19
 **Living Document:** Update this file whenever work is completed, assigned, reprioritized, or removed from the roadmap. Statuses are based on the current source code and repository history.
 
 ## ✅ Completed
@@ -20,7 +20,7 @@
 
 - Four primary tabs implemented: Home, About, Projects, and Contact.
 - Original hamburger navigation replaced with horizontal navigation.
-- Home icon added as a separate Home control.
+- Primary navigation uses the Home tab as the Home control; no separate Home icon is present.
 - Main-tab controls and Home-section controls remain separate while sharing one fixed navigation region.
 - Home secondary navigation visually unified with the primary navigation.
 - Navigation spacing reduced from `2rem` to `1rem`.
@@ -48,6 +48,13 @@
 - The initial “E” receives distinct size, position, and color treatment.
 - Easter Egg invitation implemented as a responsive sticky-note design.
 - Existing Hero image, professional identity, introduction, and calls to action preserved.
+
+### Visual System
+
+- The established site-wide background treatment continues through all main content interfaces; the Adventure Banner retains its separate background treatment.
+- Home, Projects, and Contact use distinct reusable color families with brighter related subheading tints; About, Journey, Learned, and Style share the Soft Sage pair to remain visually aligned.
+- The Hero greeting, name, thank-you line, hanging capital `E`, and Adventure Banner typography are excluded from the section-heading color system.
+- Heading hierarchy remains semantic and is reinforced by existing size and weight in addition to color.
 
 ### Home Content
 
