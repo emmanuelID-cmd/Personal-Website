@@ -1832,3 +1832,38 @@ main .journey-stage:not(.active) .journey-stage-number {
 .tab-content.active {
   display: block;
 }
+
+/* Standard ordinary section copy; Contact content is intentionally excluded. */
+p.resizable-section-text {
+  font-size: 16pt;
+  line-height: 1.6;
+}
+
+/* Requested subheader sizes. These selectors intentionally exclude Contact and main section headings. */
+#home-philosophy .eyebrow,
+#home-contact .eyebrow,
+#home-background h3,
+#home-background .skill-group h3,
+#home-projects h3,
+#home-hobbies h3,
+#about .about-copy h3,
+#learned h3,
+#projects h3 {
+  font-size: 20pt;
+}
+
+#style h3 {
+  font-size: 18pt;
+}
+
+#style p.resizable-section-text {
+  font-size: 14pt;
+}
+
+#journey .journey-stage {
+  font-size: 14pt;
+}
+
+#journey .journey-stage-content h3 {
+  font-size: 20pt;
+}

@@ -2,7 +2,7 @@
 
 **Purpose:** Serve as the Single Source of Truth for user-facing copy in the Personal Website.
 
-**Last Updated:** 2026-07-17
+**Last Updated:** 2026-07-19
 **Living Document:** Update this file whenever visible website copy changes. Unless a section is explicitly marked pending, the wording below reflects the current website.
 
 ## Site-Wide Content
@@ -50,8 +50,6 @@ Enjoy exploring the site—and if you're curious, see if you can find my Easter 
 
 ### Hero Introduction
 
-**Eyebrow:** Professional Portfolio
-
 **Identity:** Builder | Project Manager | Operations Professional | AI Enthusiast
 
 My technology journey began in high school with MS Office, Oracle, Visual Basic, Perl on the Terminal, and Java. In college, I expanded into web development with HTML, CSS, and JavaScript, leading me toward AI and becoming a Builder focused on creating solutions that solve real-world problems.
@@ -71,8 +69,6 @@ My approach combines adaptability, operational thinking, continuous learning, an
 Whether improving a process, managing a project, or exploring new technologies, I focus on turning concepts into measurable outcomes.
 
 ### Professional Background
-
-**Eyebrow:** Capabilities
 
 #### Education
 
@@ -162,8 +158,6 @@ Intermediate School 302 Beacon Program, 2009
 
 ### Featured Projects
 
-**Eyebrow:** Selected Work
-
 A selection of projects that reflect my progression across web development, analytics, and programming.
 
 #### Personal Website Portfolio
@@ -180,9 +174,7 @@ Created a Perl program that generates random numbers and analyzes probability ou
 
 **Action:** View All Projects
 
-### Hobbies
-
-**Eyebrow:** Personal Interests
+### Personal Interests
 
 My interests outside of work often mirror many of the characteristics that shape my professional approach.
 
@@ -224,8 +216,6 @@ If you would like to discuss a project, opportunity, or potential collaboration,
 
 ### About
 
-**Eyebrow:** Person
-
 #### Birth and Social Development
 
 Growing up and moving through different environments exposed me to people from many backgrounds, personalities, and perspectives. Each new experience challenged me to adapt, communicate effectively, and build meaningful relationships with people from all walks of life.
@@ -237,8 +227,6 @@ As my curiosity grew, so did my interest in technology. What began as learning e
 That early foundation sparked a lasting interest in learning how technology works and how it can be used to build practical solutions. It established the mindset of continuous learning and adaptability that would later shape my academic path, professional career, and ultimately my transition into artificial intelligence and becoming a Builder.
 
 ### Journey
-
-**Eyebrow:** Experience to Execution
 
 The path into AI was not random. It grew from years of adapting, learning new systems, solving operational problems, and looking for better ways to execute ideas.
 
@@ -307,8 +295,6 @@ I naturally look for opportunities to refine processes and improve outcomes.
 I prefer ideas that can be implemented and measured rather than remaining theoretical.
 
 ## Projects
-
-**Eyebrow:** Projects
 
 ### Personal Website Portfolio
 

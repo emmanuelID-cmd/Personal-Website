@@ -1408,6 +1408,7 @@ function selectJourneyStage(stageButton) {
   const description = journeyStageContent.querySelector(".journey-stage-description");
   const paragraphs = content.paragraphs.map((text) => {
     const paragraph = document.createElement("p");
+    paragraph.className = "resizable-section-text";
     paragraph.textContent = text;
     return paragraph;
   });
