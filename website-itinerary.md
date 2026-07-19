@@ -80,7 +80,8 @@
 ### Projects and Contact
 
 - Projects tab includes five project cards: Personal Website Portfolio, Budgeting & Analytics Tool, Perl Probability Random Number Generator, Java Pig Latin Translator, and Visual Basic Calendar Application.
-- Contact tab includes professional identity and Email, Phone, LinkedIn, GitHub, and Portfolio Website links.
+- Contact tab includes professional identity, verified Email, Phone, LinkedIn, GitHub, and Portfolio Website links, plus a responsive two-column message form and email-preview modal.
+- Contact form Clear, Preview, Back, and future Submit workflow are implemented; Submit currently communicates that delivery functionality is coming soon.
 - Footer year generated dynamically.
 
 ### Accessibility and Responsive Behavior
@@ -104,8 +105,7 @@
 - Add project screenshots.
 - Add verified GitHub repository links for individual projects.
 - Add verified live project links.
-- Replace placeholder Contact links and values with approved contact information.
-- Add a contact form, validation, submission feedback, and error handling.
+- Connect the Contact form Submit workflow to an approved email-delivery service with validation, feedback, and error handling.
 - Conduct a formal accessibility audit.
 - Expand SEO and social-sharing metadata.
 - Optimize images and responsive image delivery.

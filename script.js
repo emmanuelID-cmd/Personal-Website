@@ -86,6 +86,20 @@ const homeSectionLinks = document.querySelectorAll("[data-home-section]");
 const homeSections = document.querySelectorAll(".home-section-target");
 const homeSectionNav = document.querySelector(".home-section-nav");
 const siteHeader = document.querySelector("[data-header]");
+const contactForm = document.querySelector("#contact-message-form");
+const contactSenderEmail = document.querySelector("#contact-sender-email");
+const contactSubject = document.querySelector("#contact-subject");
+const contactMessage = document.querySelector("#contact-message");
+const contactClearButton = document.querySelector("[data-contact-clear]");
+const contactPreviewButton = document.querySelector("[data-contact-preview]");
+const contactPreviewModal = document.querySelector("#contact-preview-modal");
+const contactPreviewCloseButton = document.querySelector("[data-contact-preview-close]");
+const contactSubmitButtons = document.querySelectorAll("[data-contact-submit]");
+const contactPreviewEmail = document.querySelector("[data-contact-preview-email]");
+const contactPreviewSubject = document.querySelector("[data-contact-preview-subject]");
+const contactPreviewMessage = document.querySelector("[data-contact-preview-message]");
+const contactSubmitStatus = document.querySelector("[data-contact-submit-status]");
+const contactFormStatus = document.querySelector("[data-contact-form-status]");
 const heroPreviewElements = {
   hero: document.querySelector("#home-hero"),
   grid: document.querySelector("#home-hero .hero-grid"),
@@ -115,6 +129,134 @@ const heroPreviewState = {
 };
 let homeSectionObserver;
 let homeScrollTicking = false;
+
+function validateEmail() {
+  if (!contactSenderEmail) return false;
+
+  const email = contactSenderEmail.value.trim();
+  contactSenderEmail.setCustomValidity("");
+
+  if (!email || !contactSenderEmail.validity.valid) return false;
+
+  const domain = email.slice(email.lastIndexOf("@") + 1);
+  const validDomain = /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/i.test(domain);
+
+  if (!validDomain) {
+    contactSenderEmail.setCustomValidity("Please enter a valid email address.");
+    return false;
+  }
+
+  return true;
+}
+
+function validateContactForm() {
+  const emailValid = validateEmail();
+  const subjectValid = Boolean(contactSubject?.value.trim());
+  const messageValid = Boolean(contactMessage?.value.trim());
+
+  return {
+    emailValid,
+    subjectValid,
+    messageValid,
+    isValid: emailValid && subjectValid && messageValid
+  };
+}
+
+function updateButtonStates() {
+  const validation = validateContactForm();
+
+  if (contactClearButton) {
+    contactClearButton.disabled = !validation.messageValid;
+  }
+
+  if (contactPreviewButton) {
+    contactPreviewButton.disabled = !validation.isValid;
+  }
+
+  contactSubmitButtons.forEach((button) => {
+    button.disabled = !validation.isValid;
+  });
+
+  return validation;
+}
+
+function focusFirstInvalidContactField() {
+  const validation = validateContactForm();
+
+  if (!validation.emailValid) {
+    contactSenderEmail?.focus();
+    contactSenderEmail?.reportValidity();
+  } else if (!validation.subjectValid) {
+    contactSubject?.focus();
+  } else if (!validation.messageValid) {
+    contactMessage?.focus();
+  }
+
+  return validation;
+}
+
+function clearContactForm() {
+  if (contactMessage) {
+    contactMessage.value = "";
+  }
+  if (contactSubmitStatus) {
+    contactSubmitStatus.textContent = "";
+  }
+  if (contactFormStatus) {
+    contactFormStatus.textContent = "";
+  }
+  updateButtonStates();
+  contactMessage?.focus();
+}
+
+function populatePreview() {
+  if (!contactPreviewEmail || !contactPreviewSubject || !contactPreviewMessage) return;
+
+  contactPreviewEmail.textContent = contactSenderEmail?.value ?? "";
+  contactPreviewSubject.textContent = contactSubject?.value ?? "";
+  contactPreviewMessage.textContent = contactMessage?.value ?? "";
+}
+
+function openContactPreview() {
+  if (!contactPreviewModal) return;
+
+  if (!updateButtonStates().isValid) {
+    focusFirstInvalidContactField();
+    return;
+  }
+
+  populatePreview();
+  if (contactSubmitStatus) {
+    contactSubmitStatus.textContent = "";
+  }
+
+  if (!contactPreviewModal.open) {
+    contactPreviewModal.showModal();
+  }
+}
+
+function closeContactPreview() {
+  if (contactPreviewModal?.open) {
+    contactPreviewModal.close();
+  }
+
+  contactPreviewButton?.focus();
+}
+
+function submitContactForm() {
+  if (!updateButtonStates().isValid) {
+    focusFirstInvalidContactField();
+    return;
+  }
+
+  const message = "Submission functionality coming soon.";
+  if (contactSubmitStatus) {
+    contactSubmitStatus.textContent = message;
+  }
+  if (contactFormStatus) {
+    contactFormStatus.textContent = message;
+  }
+}
 
 const journeyContent = {
   "early-development": {
@@ -1360,6 +1502,28 @@ sectionLinks.forEach((link) => {
   });
 });
 
+contactForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  focusFirstInvalidContactField();
+});
+
+[contactSenderEmail, contactSubject, contactMessage].forEach((field) => {
+  field?.addEventListener("input", updateButtonStates);
+});
+
+contactClearButton?.addEventListener("click", clearContactForm);
+contactPreviewButton?.addEventListener("click", openContactPreview);
+contactPreviewCloseButton?.addEventListener("click", closeContactPreview);
+contactSubmitButtons.forEach((button) => {
+  button.addEventListener("click", submitContactForm);
+});
+
+contactPreviewModal?.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeContactPreview();
+});
+
+updateButtonStates();
 renderSkills();
 showTab("home");
 

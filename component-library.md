@@ -219,27 +219,28 @@
 
 **Accessibility:** Native controls, descriptive labels, visible hover/focus states, and no inline JavaScript.
 
-## Contact Card
+## Contact Interface and Message Preview
 
-**Status:** Complete (form planned)
+**Status:** Complete — delivery integration pending
 
-**Purpose:** Display contact routes and a return-to-portfolio link.
+**Purpose:** Present contact routes alongside a message form that can be reviewed before a future delivery workflow is connected.
 
 **Location:**
 - `index.html`
 - `styles.css`
+- `script.js`
 
-**HTML Structure:** `section#contact` contains `.contact-layout` and `.contact-card` links.
+**HTML Structure:** `section#contact` uses `.section-heading.compact` followed by a two-column `.contact-layout`. `.contact-information` holds labelled `mailto:`, `tel:`, and external links; `#contact-message-form` contains email, subject, and message fields. `dialog#contact-preview-modal` presents the review state.
 
-**CSS Selectors:** `.contact-layout`, `.contact-card`, `.contact-card a`.
+**CSS Selectors:** `#contact .contact-layout`, `.contact-information`, `.contact-message-form`, `.contact-field`, `.contact-preview-modal`, `.contact-email-preview`, and `.contact-preview-actions`.
 
-**JavaScript:** Portfolio link uses `data-tab-link="home"`; no form logic exists.
+**JavaScript:** `clearContactForm()`, `populatePreview()`, `openContactPreview()`, `closeContactPreview()`, and `submitContactForm()` handle the local workflow. Submission intentionally reports that functionality is coming soon rather than sending email.
 
-**Responsive Behavior:** Contact columns stack on smaller screens.
+**Responsive Behavior:** The information and form columns share the desktop width and stack with the information first below the existing tablet breakpoint. The modal remains centered and scrollable within the viewport.
 
-**Accessibility:** Native `mailto`, `tel`, and anchor links; placeholder social links carry descriptive labels.
+**Accessibility:** Native labels, `mailto:`, `tel:`, and external-link security attributes are used. Fields have visible focus states; the dialog is keyboard accessible and Escape/Back close it without clearing the form.
 
-**Notes:** Contact values and social URLs are placeholders and must be replaced only with approved values.
+**Notes:** The Preview action does not send email. A future approved delivery service must replace only the Submit placeholder workflow.
 
 ## Responsive Layout Utilities
 

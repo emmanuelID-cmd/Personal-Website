@@ -200,3 +200,17 @@
 **Consequences:** New headings should use the matching section variables instead of hardcoded colors. The Hero greeting block, its hanging `E`, navigation colors, and Adventure Banner are protected from this system; the Banner retains its independent visual treatment.
 
 **Related Files:** `styles.css`, `website-itinerary.md`, `component-library.md`, `design-decisions.md`
+
+## Decision: Review Contact Messages Before Delivery
+
+**Status:** Accepted — Implemented locally; delivery pending
+
+**Context:** Visitors need a clear way to compose a message, while the website does not yet have an approved email-delivery service or backend.
+
+**Decision:** Use a two-column Contact layout with verified contact routes on the left and a message form on the right. The form offers Clear and Preview actions; Preview opens an accessible native dialog that shows the entered From, Subject, and Message values. Submit reports that delivery functionality is coming soon.
+
+**Reasoning:** The workflow allows visitors to review their message and demonstrates the intended interaction without exposing email credentials, introducing an unapproved third-party service, or implying that a message has been sent.
+
+**Consequences:** The form values remain in place when the dialog closes. Future delivery work must replace the Submit placeholder with validated, secure server-side or provider-backed handling.
+
+**Related Files:** `index.html`, `styles.css`, `script.js`, `website-itinerary.md`, `component-library.md`

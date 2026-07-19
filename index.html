@@ -100,8 +100,8 @@
 
     <div class="tab-content" id="about" data-tab-panel="about">
       <section class="section about-section">
-        <div class="section-inner about-layout">
-          <div class="about-heading">
+        <div class="section-inner">
+          <div class="section-heading compact">
             <p class="eyebrow">Person</p>
             <h2>About</h2>
           </div>
@@ -407,22 +407,85 @@
     </section>
 
     <section class="section tab-content" id="contact" data-tab-panel="contact">
-      <div class="section-inner contact-layout">
-        <div>
+      <div class="section-inner">
+        <div class="section-heading compact">
           <p class="eyebrow">Contact</p>
           <h2>Emmanuel De Jesus</h2>
           <p class="identity">Builder | Project Manager | Operations Professional | AI Enthusiast</p>
         </div>
-        <div class="contact-card">
-          <a href="mailto:email@example.com">Email</a>
-          <a href="tel:+10000000000">Phone</a>
-          <a href="#" aria-label="LinkedIn profile placeholder">LinkedIn</a>
-          <a href="#" aria-label="GitHub profile placeholder">GitHub</a>
-          <a href="#home-hero" data-tab-link="home">Portfolio Website</a>
+        <div class="contact-layout">
+          <dl class="contact-information" aria-label="Contact information">
+            <div>
+              <dt>Email</dt>
+              <dd><a href="mailto:help.pureentertainment@gmail.com">help.pureentertainment@gmail.com</a></dd>
+            </div>
+            <div>
+              <dt>Phone</dt>
+              <dd><a href="tel:+19292124094">929-212-4094</a></dd>
+            </div>
+            <div>
+              <dt>LinkedIn</dt>
+              <dd><a href="https://www.linkedin.com/in/emmanuel-de-jesus-63bb93293" target="_blank" rel="noopener noreferrer">linkedin.com/in/emmanuel-de-jesus-63bb93293</a></dd>
+            </div>
+            <div>
+              <dt>GitHub</dt>
+              <dd><a href="https://github.com/emmanuelID-cmd" target="_blank" rel="noopener noreferrer">github.com/emmanuelID-cmd</a></dd>
+            </div>
+            <div>
+              <dt>Portfolio Website</dt>
+              <dd><a href="https://personal-website-gamma-one-43.vercel.app" target="_blank" rel="noopener noreferrer">personal-website-gamma-one-43.vercel.app</a></dd>
+            </div>
+          </dl>
+
+          <form class="contact-message-form" id="contact-message-form">
+            <div class="contact-field">
+              <label for="contact-sender-email">User Email</label>
+              <input id="contact-sender-email" name="email" type="email" placeholder="Your Email Address" autocomplete="email" required>
+            </div>
+            <div class="contact-field">
+              <label for="contact-subject">Subject</label>
+              <input id="contact-subject" name="subject" type="text" placeholder="Subject" required>
+            </div>
+            <div class="contact-field">
+              <label for="contact-message">Message</label>
+              <textarea id="contact-message" name="message" rows="8" placeholder="Message" required></textarea>
+            </div>
+            <div class="contact-form-actions">
+              <button class="button secondary" type="button" data-contact-clear disabled>Clear</button>
+              <button class="button primary" type="button" data-contact-preview disabled>Preview</button>
+              <button class="button primary" type="button" data-contact-submit disabled>Submit</button>
+            </div>
+            <p class="contact-form-status" data-contact-form-status role="status" aria-live="polite"></p>
+          </form>
         </div>
       </div>
     </section>
   </main>
+
+  <dialog class="contact-preview-modal" id="contact-preview-modal" aria-labelledby="contact-preview-title">
+    <div class="contact-preview-modal-content">
+      <h2 id="contact-preview-title">Preview Email</h2>
+      <dl class="contact-email-preview">
+        <div>
+          <dt>From:</dt>
+          <dd data-contact-preview-email></dd>
+        </div>
+        <div>
+          <dt>Subject:</dt>
+          <dd data-contact-preview-subject></dd>
+        </div>
+        <div>
+          <dt>Message:</dt>
+          <dd data-contact-preview-message></dd>
+        </div>
+      </dl>
+      <div class="contact-preview-actions">
+        <button class="button secondary" type="button" data-contact-preview-close>Back</button>
+        <button class="button primary" type="button" data-contact-submit disabled>Submit</button>
+      </div>
+      <p class="contact-submit-status" data-contact-submit-status role="status" aria-live="polite"></p>
+    </div>
+  </dialog>
 
   <footer class="site-footer site-footer--banner">
     <p>&copy; <span id="current-year"></span> Emmanuel De Jesus. Built with HTML, CSS, and JavaScript.</p>

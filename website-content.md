@@ -352,11 +352,11 @@ Builder | Project Manager | Operations Professional | AI Enthusiast
 
 ### Contact Information
 
-- Email — current website value: `email@example.com` (placeholder)
-- Phone — current website value: `+10000000000` (placeholder)
-- LinkedIn — current website target: `#` (placeholder)
-- GitHub — current website target: `#` (placeholder)
-- Portfolio Website — returns to the Home Hero
+- Email — `help.pureentertainment@gmail.com`
+- Phone — `929-212-4094`
+- LinkedIn — `https://www.linkedin.com/in/emmanuel-de-jesus-63bb93293`
+- GitHub — `https://github.com/emmanuelID-cmd`
+- Portfolio Website — `https://personal-website-gamma-one-43.vercel.app`
 
 ### Contact Form Labels and Messages
 
