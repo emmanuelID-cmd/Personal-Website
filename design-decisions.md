@@ -109,7 +109,7 @@
 
 **Context:** The bunny Easter Egg must persist across tab changes and scrolling while never leaving the visible screen.
 
-**Decision:** Place a restrained technology-themed robotic bunny outside all tab panels as a fixed button and animate it with requestAnimationFrame using live viewport, rendered-image, and frozen-header dimensions. Keep its sign stationary relative to the bunny and alternate it on/off every five seconds. Activation opens a separate reward page while preserving the original tab state.
+**Decision:** Place a restrained technology-themed robotic bunny outside all tab panels as a fixed button and animate it with requestAnimationFrame using live viewport, rendered-image, and frozen-header dimensions. Keep its sign stationary relative to the bunny and alternate it on/off every five seconds. Activation opens a separate reward page while preserving the original tab state. Keep the bunny visually hidden in `Personal-Website`; maintain its visible presentation in the separate `Personal-Website-Vis` repository.
 
 **Reasoning:** A global fixed element retains one continuous position across every interface and scroll state. Collision calculations provide true Pong-style reflection without relying on a page-sized CSS animation path.
 

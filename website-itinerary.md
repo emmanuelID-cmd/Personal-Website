@@ -59,6 +59,7 @@
 
 ### Global Pong Bunny Easter Egg
 
+- Primary `Personal-Website` repository keeps the bunny visually hidden while preserving its interaction and animation state; `Personal-Website-Vis` preserves the visible version.
 - Transparent robotic bunny and separate “Catch Me!” sign assets implemented without a surrounding background, border, or frame.
 - Pong-style diagonal viewport movement reverses at horizontal and vertical boundaries.
 - Fixed global positioning preserves the bunny’s location across scrolling and tab changes.

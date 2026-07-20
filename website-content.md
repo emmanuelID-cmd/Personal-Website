@@ -29,7 +29,7 @@
 
 **Sign:** Catch Me!
 
-The transparent robotic bunny moves diagonally within the visible browser viewport and persists across all tab interfaces. Its stationary “Catch Me!” sign alternates between visible and invisible every five seconds. Activating the bunny opens the Super DeCoder reward page.
+The transparent robotic bunny is visually hidden in the primary website while its diagonal viewport movement, tab persistence, five-second sign state, and Super DeCoder reward-page activation remain functional. The visible version is maintained in `Personal-Website-Vis`.
 
 ### Super DeCoder Reward
 

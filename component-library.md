@@ -99,7 +99,7 @@
 
 **Status:** Complete
 
-**Purpose:** Add a persistent robotic-bunny Easter Egg that moves diagonally within the currently visible browser viewport.
+**Purpose:** Add a persistent but visually hidden robotic-bunny Easter Egg that moves diagonally within the currently visible browser viewport.
 
 **Location:**
 - `index.html`
@@ -114,13 +114,13 @@
 
 **HTML Structure:** `button[data-pong-bunny]` is a global fixed control containing separate transparent sign and bunny image layers outside every tab panel. The reward page contains `[data-reward-back]`, the envelope-holding robot image, and the congratulatory HTML text.
 
-**CSS Selectors:** `.pong-bunny`, `.pong-bunny-sign`, `.pong-bunny-character`, `catch-me-sign-blink`.
+**CSS Selectors:** `.pong-bunny`, `.pong-bunny-sign`, `.pong-bunny-character`, `catch-me-sign-blink`. The original repository applies `opacity: 0` to `.pong-bunny`; the visible variant is maintained separately in `Personal-Website-Vis`.
 
 **JavaScript:** `initPongBunny()` starts requestAnimationFrame movement and opens the reward page on activation. `animatePongBunny()` applies diagonal Pong-style motion, reverses the relevant velocity at viewport edges, and keeps the full overlay below the frozen header and within the viewport. Resize handling clamps the current position without resetting it. `super-decoder.js` focuses/closes the reward tab and provides history/referrer fallbacks.
 
 **Responsive Behavior:** The overlay scales with `clamp()` and uses live viewport and header dimensions for every collision boundary.
 
-**Accessibility:** The moving bunny is a labelled native button with a visible focus state. The reward image has meaningful alternative text, the Back control is keyboard operable, and reduced-motion preferences stop movement and blinking.
+**Accessibility:** The hidden moving bunny remains a labelled native button and retains keyboard activation. The reward image has meaningful alternative text, the Back control is keyboard operable, and reduced-motion preferences stop movement and blinking.
 
 ## About Dropdown
 
