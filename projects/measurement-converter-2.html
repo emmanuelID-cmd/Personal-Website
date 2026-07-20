@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Measurement Converter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bezel-dark:#242320;
+    --bezel-light:#3a3833;
+    --lcd-bg:#c4d1b4;
+    --lcd-bg-dim:#b7c5a6;
+    --lcd-ink:#2e3a24;
+    --lcd-ink-dim:#7c8a6c;
+    --amber:#ffb000;
+    --amber-dim:#8a5f00;
+    --label:#d8d3c4;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background: radial-gradient(circle at 30% 20%, #3a3833 0%, #1a1917 70%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Share Tech Mono', monospace;
+    padding:24px;
+  }
+
+  .device{
+    width:100%;
+    max-width:720px;
+    background: linear-gradient(160deg, var(--bezel-light), var(--bezel-dark) 60%);
+    border-radius:18px;
+    padding:28px 28px 34px;
+    box-shadow:
+      0 20px 50px rgba(0,0,0,0.55),
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      inset 0 -2px 4px rgba(0,0,0,0.5);
+    position:relative;
+  }
+
+  .screw{
+    position:absolute;
+    width:10px; height:10px;
+    border-radius:50%;
+    background: radial-gradient(circle at 35% 35%, #6b675e, #171614 70%);
+    box-shadow: inset 0 0 2px #000;
+  }
+  .screw.tl{ top:12px; left:12px; }
+  .screw.tr{ top:12px; right:12px; }
+  .screw.bl{ bottom:12px; left:12px; }
+  .screw.br{ bottom:12px; right:12px; }
+
+  h1{
+    color: var(--label);
+    text-align:center;
+    font-family:'VT323', monospace;
+    letter-spacing:3px;
+    font-size:34px;
+    margin:6px 0 2px;
+    text-transform:uppercase;
+  }
+
+  .model-tag{
+    text-align:center;
+    color: var(--amber-dim);
+    font-size:11px;
+    letter-spacing:4px;
+    margin-bottom:18px;
+  }
+
+  .instructions{
+    background: #16150f;
+    border:1px solid #000;
+    border-radius:6px;
+    padding:10px 14px;
+    color: var(--amber);
+    font-size:13px;
+    line-height:1.5;
+    text-align:center;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.7);
+    margin-bottom:20px;
+  }
+  .instructions p{ margin:8px 0; }
+  .instructions p:first-child{ margin-top:0; }
+  .instructions p:last-child{ margin-bottom:0; }
+
+  /* ---- Tabs ---- */
+  .tabs{
+    display:flex;
+    gap:6px;
+    margin-bottom:20px;
+    background:#16150f;
+    border-radius:8px;
+    padding:6px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.7);
+  }
+
+  .tab-btn{
+    flex:1;
+    background: transparent;
+    border:1px solid transparent;
+    color: var(--amber-dim);
+    font-family:'Share Tech Mono', monospace;
+    font-size:12px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    padding:9px 4px;
+    border-radius:5px;
+    cursor:pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .tab-btn:hover{ color: var(--amber); }
+
+  .tab-btn.active{
+    background: linear-gradient(180deg, #2a2924, #1c1b17);
+    color: var(--amber);
+    border-color:#000;
+    box-shadow:
+      0 2px 0 rgba(255,255,255,0.05) inset,
+      0 2px 6px rgba(0,0,0,0.5);
+  }
+
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  /* ---- Converter panel (two boxes + swap) ---- */
+  .panel{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+  }
+
+  .lcd-unit{
+    flex:1;
+    min-width:0;
+  }
+
+  .lcd-screen{
+    background: linear-gradient(180deg, var(--lcd-bg), var(--lcd-bg-dim));
+    border-radius:6px;
+    padding:14px 10px 10px;
+    box-shadow:
+      inset 0 3px 6px rgba(0,0,0,0.35),
+      inset 0 -1px 0 rgba(255,255,255,0.2);
+    position:relative;
+    overflow:hidden;
+  }
+
+  .lcd-screen::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.05) 0px,
+      rgba(0,0,0,0.05) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    pointer-events:none;
+  }
+
+  .lcd-readout{
+    width:100%;
+    background:transparent;
+    border:none;
+    outline:none;
+    font-family:'VT323', monospace;
+    font-size:42px;
+    color: var(--lcd-ink);
+    text-align:right;
+    letter-spacing:2px;
+    text-shadow: 0 0 1px var(--lcd-ink);
+    padding:0 4px;
+    -moz-appearance:textfield;
+  }
+  .lcd-readout::placeholder{ color: var(--lcd-ink-dim); }
+  .lcd-readout::-webkit-outer-spin-button,
+  .lcd-readout::-webkit-inner-spin-button{
+    -webkit-appearance:none; margin:0;
+  }
+
+  .lcd-unit.active .lcd-screen,
+  .lcd-screen:focus-within{
+    box-shadow:
+      inset 0 3px 6px rgba(0,0,0,0.35),
+      inset 0 -1px 0 rgba(255,255,255,0.2),
+      0 0 0 2px var(--amber-dim);
+  }
+
+  .unit-select{
+    width:100%;
+    margin-top:8px;
+    background: #16150f;
+    color: var(--amber);
+    border: 1px solid #000;
+    border-radius:5px;
+    padding:6px 8px;
+    font-family:'Share Tech Mono', monospace;
+    font-size:12px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    text-align:center;
+    text-align-last:center;
+    cursor:pointer;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.6);
+  }
+  .unit-select:focus{
+    outline:none;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.6), 0 0 0 2px var(--amber-dim);
+  }
+
+  .unit-label{
+    font-family:'Share Tech Mono', monospace;
+    color: var(--label);
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    text-align:center;
+    margin-top:8px;
+  }
+
+  .swap-btn{
+    flex-shrink:0;
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #4a473f, #201f1b 75%);
+    border: 1px solid #060605;
+    color: var(--amber);
+    font-family:'VT323', monospace;
+    font-size:24px;
+    cursor:pointer;
+    box-shadow:
+      0 3px 0 #0c0b09,
+      0 5px 8px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.15);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+    align-self:center;
+    margin-top:26px;
+  }
+  .swap-btn:hover{ color:#ffd166; }
+  .swap-btn:active{
+    transform: translateY(3px);
+    box-shadow:
+      0 0 0 #0c0b09,
+      0 2px 4px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .swap-btn.spin{ animation: spin360 0.35s ease; }
+  @keyframes spin360{
+    from{ transform: rotate(0deg); }
+    to{ transform: rotate(180deg); }
+  }
+
+  /* ---- Temperature panel: 3 stacked boxes, no dropdown, no swap ---- */
+  .temp-panel{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .temp-unit .lcd-readout{ font-size:38px; }
+
+  .footer-note{
+    text-align:center;
+    color:#5a574e;
+    font-size:10px;
+    letter-spacing:2px;
+    margin-top:20px;
+    text-transform:uppercase;
+  }
+
+  @media (max-width:520px){
+    .lcd-readout{ font-size:30px; }
+    .swap-btn{ width:44px; height:44px; font-size:18px; margin-top:18px; }
+    h1{ font-size:26px; }
+    .panel{ gap:8px; }
+    .tab-btn{ font-size:10px; padding:8px 2px; }
+  }
+
+  /* ============================================================
+     CALCULATOR
+     ============================================================ */
+
+  :root{ --section-gap: 28px; }
+
+  .section-divider{
+    height:6px;
+    margin: var(--section-gap) 0;
+    border:none;
+    border-radius:4px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--amber) 0px,
+      var(--amber) 10px,
+      var(--amber-dim) 10px,
+      var(--amber-dim) 20px
+    );
+    box-shadow: 0 0 10px rgba(255,176,0,0.45), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+
+  .calc-title{
+    color: var(--label);
+    text-align:center;
+    font-family:'VT323', monospace;
+    letter-spacing:3px;
+    font-size:28px;
+    margin:0 0 var(--section-gap);
+    text-transform:uppercase;
+  }
+
+  .calc-screen{
+    background: linear-gradient(180deg, var(--lcd-bg), var(--lcd-bg-dim));
+    border-radius:6px;
+    padding:14px 12px 12px;
+    box-shadow:
+      inset 0 3px 6px rgba(0,0,0,0.35),
+      inset 0 -1px 0 rgba(255,255,255,0.2);
+    margin-bottom:14px;
+    min-height:78px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:4px;
+  }
+
+  .calc-expr{
+    font-family:'Share Tech Mono', monospace;
+    color: var(--lcd-ink-dim);
+    font-size:14px;
+    letter-spacing:1px;
+    text-align:right;
+    min-height:16px;
+    word-break:break-all;
+  }
+
+  .calc-result{
+    font-family:'VT323', monospace;
+    color: var(--lcd-ink);
+    font-size:40px;
+    text-align:right;
+    letter-spacing:1px;
+    line-height:1.1;
+  }
+
+  .calc-result.err{ color:#8a2a1e; }
+
+  .answer-switch{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    justify-content:flex-end;
+    margin-bottom:14px;
+    min-height:0;
+  }
+  .answer-switch:empty{ margin-bottom:0; }
+
+  .chip-btn{
+    background:#16150f;
+    color: var(--amber-dim);
+    border:1px solid #000;
+    border-radius:12px;
+    padding:4px 10px;
+    font-family:'Share Tech Mono', monospace;
+    font-size:11px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    cursor:pointer;
+  }
+  .chip-btn.active{
+    color: var(--amber);
+    box-shadow: 0 0 0 1px var(--amber-dim);
+  }
+
+  .unit-groups{
+    margin-bottom:16px;
+  }
+
+  .unit-group{
+    margin-bottom:8px;
+  }
+
+  .unit-group-label{
+    color: var(--amber-dim);
+    font-size:10px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-bottom:4px;
+  }
+
+  .unit-group-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+
+  .unit-key{
+    flex:1 1 auto;
+    min-width:44px;
+    background: linear-gradient(180deg, #322f29, #201f1b);
+    color: var(--label);
+    border:1px solid #060605;
+    border-radius:6px;
+    padding:7px 6px;
+    font-family:'Share Tech Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    cursor:pointer;
+    box-shadow: 0 2px 0 #0c0b09, inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+  .unit-key:active{ transform: translateY(1px); box-shadow:0 1px 0 #0c0b09; }
+  .unit-key.disabled{ opacity:0.35; cursor:not-allowed; }
+
+  .keypad{
+    display:flex;
+    gap:10px;
+    margin-bottom:16px;
+    align-items:stretch;
+  }
+
+  .numpad, .oppad{
+    flex:1 1 0;
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    gap:8px;
+  }
+
+  .key{
+    background: linear-gradient(180deg, #3a3833, #232019);
+    color: var(--label);
+    border:1px solid #060605;
+    border-radius:8px;
+    padding:16px 0;
+    font-family:'VT323', monospace;
+    font-size:24px;
+    cursor:pointer;
+    box-shadow: 0 3px 0 #0c0b09, inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .key:active{ transform: translateY(2px); box-shadow:0 1px 0 #0c0b09; }
+
+  .key.fn{ color: var(--amber); }
+  .key.op{ color:#ffd166; }
+  .key.equals{
+    background: linear-gradient(180deg, #6d4a00, #3a2700);
+    color:#ffd980;
+  }
+  .key.clear{ color:#e08a6b; }
+
+  .key.round-key{
+    font-family:'Share Tech Mono', monospace;
+    font-size:10px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color: var(--amber-dim);
+    padding:16px 2px;
+  }
+  .key.round-key.active{ color: var(--amber); box-shadow:0 0 0 2px var(--amber-dim), 0 3px 0 #0c0b09, inset 0 1px 0 rgba(255,255,255,0.1); }
+
+  .digit-control{
+    background:#16150f;
+    border-radius:6px;
+    padding:10px 12px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.7);
+  }
+
+  .digit-control-row{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:8px;
+  }
+  .digit-control-row:last-child{ margin-bottom:0; }
+
+  .digit-control-label{
+    color: var(--label);
+    font-size:10px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-right:4px;
+    flex-basis:100%;
+  }
+
+  .digit-key{
+    width:26px;
+    height:26px;
+    background:#232019;
+    color: var(--amber-dim);
+    border:1px solid #000;
+    border-radius:5px;
+    font-family:'Share Tech Mono', monospace;
+    font-size:12px;
+    cursor:pointer;
+  }
+  .digit-key.active{ color: var(--amber); box-shadow:0 0 0 1px var(--amber-dim); }
+
+  @media (max-width:520px){
+    .calc-result{ font-size:30px; }
+    .key{ font-size:19px; padding:13px 0; }
+    .unit-key{ font-size:10px; padding:6px 4px; }
+    .keypad{ flex-direction:column; }
+    .key.round-key{ font-size:9px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="device">
+  <div class="screw tl"></div>
+  <div class="screw tr"></div>
+  <div class="screw bl"></div>
+  <div class="screw br"></div>
+
+  <h1>Measurement Converter</h1>
+  <div class="model-tag">METRIC &nbsp;⇄&nbsp; CUSTOMARY &nbsp;·&nbsp; MODEL DC-1</div>
+
+  <div class="instructions">
+    <p>Type any number in any textbox and it will convert to the assigned conversion.</p>
+    <p>Use the Drop-down to switch Conversion Type and the Swap "&lt;&gt;" to switch</p>
+    <p>Use Tabs to switch Conversion Measurement Grade</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="height">Height</button>
+    <button class="tab-btn" data-tab="weight">Weight</button>
+    <button class="tab-btn" data-tab="liquid">Liquid</button>
+    <button class="tab-btn" data-tab="temperature">Temperature</button>
+  </div>
+
+  <!-- HEIGHT -->
+  <div class="tab-panel active" data-tab-panel="height">
+    <div class="panel">
+      <div class="lcd-unit active" data-field="A">
+        <div class="lcd-screen"><input type="text" inputmode="decimal" class="lcd-readout" placeholder="0" autocomplete="off"></div>
+        <select class="unit-select"></select>
+      </div>
+      <button class="swap-btn" title="Swap units" aria-label="Swap the two unit fields">&lt;&gt;</button>
+      <div class="lcd-unit" data-field="B">
+        <div class="lcd-screen"><input type="text" inputmode="decimal" class="lcd-readout" placeholder="0" autocomplete="off"></div>
+        <select class="unit-select"></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEIGHT -->
+  <div class="tab-panel" data-tab-panel="weight">
+    <div class="panel">
+      <div class="lcd-unit active" data-field="A">
+        <div class="lcd-screen"><input type="text" inputmode="decimal" class="lcd-readout" placeholder="0" autocomplete="off"></div>
+        <select class="unit-select"></select>
+      </div>
+      <button class="swap-btn" title="Swap units" aria-label="Swap the two unit fields">&lt;&gt;</button>
+      <div class="lcd-unit" data-field="B">
+        <div class="lcd-screen"><input type="text" inputmode="decimal" class="lcd-readout" placeholder="0" autocomplete="off"></div>
+        <select class="unit-select"></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIQUID -->
+  <div class="tab-panel" data-tab-panel="liquid">
+    <div class="panel">
+      <div class="lcd-unit active" data-field="A">
+        <div class="lcd-screen"><input type="text" inputmode="decimal" class="lcd-readout" placeholder="0" autocomplete="off"></div>
+        <select class="unit-select"></select>
+      </div>
+      <button class="swap-btn" title="Swap units" aria-label="Swap the two unit fields">&lt;&gt;</button>
+      <div class="lcd-unit" data-field="B">
+        <div class="lcd-screen"><input type="text" inputmode="decimal" class="lcd-readout" placeholder="0" autocomplete="off"></div>
+        <select class="unit-select"></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEMPERATURE -->
+  <div class="tab-panel" data-tab-panel="temperature">
+    <div class="temp-panel">
+      <div class="lcd-unit temp-unit active">
+        <div class="lcd-screen"><input type="text" inputmode="decimal" class="lcd-readout" data-unit="F" placeholder="0" autocomplete="off"></div>
+        <div class="unit-label">Fahrenheit</div>
+      </div>
+      <div class="lcd-unit temp-unit">
+        <div class="lcd-screen"><input type="text" inputmode="decimal" class="lcd-readout" data-unit="C" placeholder="0" autocomplete="off"></div>
+        <div class="unit-label">Celsius</div>
+      </div>
+      <div class="lcd-unit temp-unit">
+        <div class="lcd-screen"><input type="text" inputmode="decimal" class="lcd-readout" data-unit="K" placeholder="0" autocomplete="off"></div>
+        <div class="unit-label">Kelvin</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">Arrow keys move between screens · &lt;&gt; swaps them</div>
+
+  <hr class="section-divider">
+
+  <h2 class="calc-title">Calculator</h2>
+
+  <div class="calc-screen">
+    <div class="calc-expr" id="calcExpr">&nbsp;</div>
+    <div class="calc-result" id="calcResult">0</div>
+  </div>
+
+  <div class="answer-switch" id="answerSwitch"></div>
+
+  <div class="unit-groups">
+    <div class="unit-group">
+      <div class="unit-group-label">Height</div>
+      <div class="unit-group-row" data-cat="height"></div>
+    </div>
+    <div class="unit-group">
+      <div class="unit-group-label">Weight</div>
+      <div class="unit-group-row" data-cat="weight"></div>
+    </div>
+    <div class="unit-group">
+      <div class="unit-group-label">Liquid</div>
+      <div class="unit-group-row" data-cat="liquid"></div>
+    </div>
+    <div class="unit-group">
+      <div class="unit-group-label">Temperature</div>
+      <div class="unit-group-row" data-cat="temperature"></div>
+    </div>
+  </div>
+
+  <div class="keypad" id="keypad">
+    <div class="numpad">
+      <button class="key" data-action="digit" data-value="7">7</button>
+      <button class="key" data-action="digit" data-value="8">8</button>
+      <button class="key" data-action="digit" data-value="9">9</button>
+
+      <button class="key" data-action="digit" data-value="4">4</button>
+      <button class="key" data-action="digit" data-value="5">5</button>
+      <button class="key" data-action="digit" data-value="6">6</button>
+
+      <button class="key" data-action="digit" data-value="1">1</button>
+      <button class="key" data-action="digit" data-value="2">2</button>
+      <button class="key" data-action="digit" data-value="3">3</button>
+
+      <button class="key" data-action="digit" data-value="0">0</button>
+      <button class="key" data-action="decimal">.</button>
+      <button class="key equals" data-action="equals">=</button>
+    </div>
+
+    <div class="oppad">
+      <button class="key clear" data-action="clear">C</button>
+      <button class="key clear" data-action="del">DEL</button>
+      <button class="key fn" data-action="paren" data-value="(">(</button>
+
+      <button class="key fn" data-action="paren" data-value=")">)</button>
+      <button class="key fn" data-action="op" data-value="^">^</button>
+      <button class="key fn" data-action="sqrt">&radic;</button>
+
+      <button class="key op" data-action="op" data-value="+">+</button>
+      <button class="key op" data-action="op" data-value="&minus;">&minus;</button>
+      <button class="key op" data-action="op" data-value="&times;">&times;</button>
+
+      <button class="key op" data-action="op" data-value="&divide;">&divide;</button>
+      <button class="key round-key" id="roundUpBtn" data-mode="up">Round Up</button>
+      <button class="key round-key" id="roundDownBtn" data-mode="down">Round Down</button>
+    </div>
+  </div>
+
+  <div class="digit-control">
+    <div class="digit-control-row">
+      <span class="digit-control-label">Decimal Places</span>
+      <div id="digitKeys" style="display:contents"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function formatNum(n){
+    if (!isFinite(n)) return '';
+    return parseFloat(n.toFixed(6)).toString();
+  }
+
+  /* ===================== TABS ===================== */
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabPanels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector(`.tab-panel[data-tab-panel="${btn.dataset.tab}"]`).classList.add('active');
+    });
+  });
+
+  /* ===================== UNIT TABLES (base unit = 1) ===================== */
+  const HEIGHT_UNITS = {
+    mm: { label: 'Millimeters', factor: 0.001 },
+    cm: { label: 'Centimeters', factor: 0.01 },
+    m:  { label: 'Meters',      factor: 1 },
+    km: { label: 'Kilometers',  factor: 1000 },
+    in: { label: 'Inches',      factor: 0.0254 },
+    ft: { label: 'Feet',        factor: 0.3048 },
+    yd: { label: 'Yards',       factor: 0.9144 },
+    mi: { label: 'Miles',       factor: 1609.34 }
+  };
+
+  const WEIGHT_UNITS = {
+    mg: { label: 'Milligrams',  factor: 0.001 },
+    g:  { label: 'Grams',       factor: 1 },
+    kg: { label: 'Kilograms',   factor: 1000 },
+    t:  { label: 'Metric Tons', factor: 1000000 },
+    oz: { label: 'Ounces',      factor: 28.3495 },
+    lb: { label: 'Pounds',      factor: 453.592 },
+    ton:{ label: 'US Tons',     factor: 907185 }
+  };
+
+  const LIQUID_UNITS = {
+    ml:   { label: 'Milliliters',  factor: 1 },
+    l:    { label: 'Liters',       factor: 1000 },
+    floz: { label: 'Fluid Ounces', factor: 29.5735 },
+    cup:  { label: 'Cups',         factor: 236.588 },
+    pt:   { label: 'Pints',        factor: 473.176 },
+    qt:   { label: 'Quarts',       factor: 946.353 },
+    gal:  { label: 'Gallons',      factor: 3785.41 }
+  };
+
+  /* ===================== GENERIC TWO-BOX CONVERTER ===================== */
+  function initConverter(root, units, defaultA, defaultB){
+    const keys = Object.keys(units);
+    const unitA = root.querySelector('[data-field="A"]');
+    const unitB = root.querySelector('[data-field="B"]');
+    const inputA = unitA.querySelector('.lcd-readout');
+    const inputB = unitB.querySelector('.lcd-readout');
+    const selectA = unitA.querySelector('.unit-select');
+    const selectB = unitB.querySelector('.unit-select');
+    const swapBtn = root.querySelector('.swap-btn');
+    const panel = root.querySelector('.panel');
+
+    function populateSelect(selectEl, excludeKey, selectedKey){
+      const prev = selectEl.value;
+      selectEl.innerHTML = '';
+      keys.forEach(key => {
+        if (key === excludeKey) return;
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = units[key].label;
+        selectEl.appendChild(opt);
+      });
+      const toSelect = selectedKey || prev;
+      if (toSelect && [...selectEl.options].some(o => o.value === toSelect)){
+        selectEl.value = toSelect;
+      }
+    }
+
+    function refreshSelects(){
+      populateSelect(selectA, selectB.value, selectA.value);
+      populateSelect(selectB, selectA.value, selectB.value);
+    }
+
+    function convert(value, fromKey, toKey){
+      const base = value * units[fromKey].factor;
+      return base / units[toKey].factor;
+    }
+
+    function setActive(which){
+      unitA.classList.toggle('active', which === 'A');
+      unitB.classList.toggle('active', which === 'B');
+    }
+
+    function recalcFromA(){
+      const val = parseFloat(inputA.value);
+      if (inputA.value.trim() === '' || isNaN(val)){ inputB.value = ''; return; }
+      inputB.value = formatNum(convert(val, selectA.value, selectB.value));
+    }
+
+    function recalcFromB(){
+      const val = parseFloat(inputB.value);
+      if (inputB.value.trim() === '' || isNaN(val)){ inputA.value = ''; return; }
+      inputA.value = formatNum(convert(val, selectB.value, selectA.value));
+    }
+
+    // initial setup
+    populateSelect(selectA, defaultB, defaultA);
+    populateSelect(selectB, defaultA, defaultB);
+
+    inputA.addEventListener('input', () => { setActive('A'); recalcFromA(); });
+    inputB.addEventListener('input', () => { setActive('B'); recalcFromB(); });
+    inputA.addEventListener('focus', () => setActive('A'));
+    inputB.addEventListener('focus', () => setActive('B'));
+
+    selectA.addEventListener('change', () => {
+      refreshSelects();
+      inputA.value = '';
+      inputB.value = '';
+    });
+    selectB.addEventListener('change', () => {
+      refreshSelects();
+      inputA.value = '';
+      inputB.value = '';
+    });
+
+    inputA.addEventListener('keydown', (e) => {
+      const atEnd = inputA.selectionStart === inputA.value.length;
+      if (e.key === 'ArrowRight' && atEnd){
+        e.preventDefault();
+        inputB.focus();
+        inputB.setSelectionRange(0, 0);
+      } else if (e.key === 'ArrowDown'){
+        e.preventDefault();
+        inputB.focus();
+      }
+    });
+
+    inputB.addEventListener('keydown', (e) => {
+      const atStart = inputB.selectionStart === 0;
+      if (e.key === 'ArrowLeft' && atStart){
+        e.preventDefault();
+        inputA.focus();
+        const len = inputA.value.length;
+        inputA.setSelectionRange(len, len);
+      } else if (e.key === 'ArrowUp'){
+        e.preventDefault();
+        inputA.focus();
+      }
+    });
+
+    swapBtn.addEventListener('click', () => {
+      swapBtn.classList.remove('spin');
+      void swapBtn.offsetWidth;
+      swapBtn.classList.add('spin');
+
+      // Swap the unit + value CONTENT between the two boxes in place.
+      // (We intentionally do NOT also move the boxes' DOM position —
+      // doing both at once cancels out visually, since the box that
+      // moves also carries the swapped-in value with it.)
+      const oldAunit = selectA.value;
+      const oldBunit = selectB.value;
+      const oldAval = inputA.value;
+      const oldBval = inputB.value;
+
+      // Rebuild each dropdown's option list around what it will contain
+      // AFTER the swap, so the target unit is actually a valid option
+      // before we try to select it (otherwise the browser silently
+      // ignores the assignment and the swap appears to "revert").
+      populateSelect(selectA, oldAunit, oldBunit); // A excludes B's new unit (oldAunit), selects oldBunit
+      populateSelect(selectB, oldBunit, oldAunit); // B excludes A's new unit (oldBunit), selects oldAunit
+
+      inputA.value = oldBval;
+      inputB.value = oldAval;
+
+      if (unitA.classList.contains('active')){ inputA.focus(); }
+      else { inputB.focus(); }
+    });
+  }
+
+  initConverter(document.querySelector('[data-tab-panel="height"]'), HEIGHT_UNITS, 'km', 'mi');
+  initConverter(document.querySelector('[data-tab-panel="weight"]'), WEIGHT_UNITS, 'kg', 'lb');
+  initConverter(document.querySelector('[data-tab-panel="liquid"]'), LIQUID_UNITS, 'l', 'gal');
+
+  /* ===================== TEMPERATURE (3-way, always in sync) ===================== */
+  (function initTemperature(){
+    const root = document.querySelector('[data-tab-panel="temperature"]');
+    const fInput = root.querySelector('[data-unit="F"]');
+    const cInput = root.querySelector('[data-unit="C"]');
+    const kInput = root.querySelector('[data-unit="K"]');
+
+    function clearOthers(exceptEl){
+      [fInput, cInput, kInput].forEach(el => { if (el !== exceptEl) el.value = ''; });
+    }
+
+    function highlight(el){
+      [fInput, cInput, kInput].forEach(input => {
+        input.closest('.lcd-unit').classList.toggle('active', input === el);
+      });
+    }
+
+    fInput.addEventListener('input', () => {
+      highlight(fInput);
+      const f = parseFloat(fInput.value);
+      if (fInput.value.trim() === '' || isNaN(f)){ clearOthers(fInput); return; }
+      const c = (f - 32) * 5 / 9;
+      cInput.value = formatNum(c);
+      kInput.value = formatNum(c + 273.15);
+    });
+
+    cInput.addEventListener('input', () => {
+      highlight(cInput);
+      const c = parseFloat(cInput.value);
+      if (cInput.value.trim() === '' || isNaN(c)){ clearOthers(cInput); return; }
+      fInput.value = formatNum(c * 9 / 5 + 32);
+      kInput.value = formatNum(c + 273.15);
+    });
+
+    kInput.addEventListener('input', () => {
+      highlight(kInput);
+      const k = parseFloat(kInput.value);
+      if (kInput.value.trim() === '' || isNaN(k)){ clearOthers(kInput); return; }
+      const c = k - 273.15;
+      cInput.value = formatNum(c);
+      fInput.value = formatNum(c * 9 / 5 + 32);
+    });
+
+    fInput.addEventListener('focus', () => highlight(fInput));
+    cInput.addEventListener('focus', () => highlight(cInput));
+    kInput.addEventListener('focus', () => highlight(kInput));
+
+    // Arrow keys move between the stacked fields (down/up, or right/left at text edges).
+    function atEnd(el){ return el.selectionStart === el.value.length; }
+    function atStart(el){ return el.selectionStart === 0; }
+
+    fInput.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || (e.key === 'ArrowRight' && atEnd(fInput))){
+        e.preventDefault(); cInput.focus();
+      }
+    });
+    cInput.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || (e.key === 'ArrowRight' && atEnd(cInput))){
+        e.preventDefault(); kInput.focus();
+      } else if (e.key === 'ArrowUp' || (e.key === 'ArrowLeft' && atStart(cInput))){
+        e.preventDefault(); fInput.focus();
+      }
+    });
+    kInput.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp' || (e.key === 'ArrowLeft' && atStart(kInput))){
+        e.preventDefault(); cInput.focus();
+      }
+    });
+  })();
+
+  /* ===================== CALCULATOR ===================== */
+  (function initCalculator(){
+    // Every unit the calculator understands, tagged with its category and
+    // a base-unit conversion. Temperature uses real functions since it
+    // isn't a simple multiplicative factor; everything else is linear.
+    const CALC_UNITS = {
+      mm:  { cat:'height', label:'mm',    toBase:v=>v*0.001,      fromBase:v=>v/0.001 },
+      cm:  { cat:'height', label:'cm',    toBase:v=>v*0.01,       fromBase:v=>v/0.01 },
+      m:   { cat:'height', label:'m',     toBase:v=>v,            fromBase:v=>v },
+      km:  { cat:'height', label:'km',    toBase:v=>v*1000,       fromBase:v=>v/1000 },
+      in:  { cat:'height', label:'in',    toBase:v=>v*0.0254,     fromBase:v=>v/0.0254 },
+      ft:  { cat:'height', label:'ft',    toBase:v=>v*0.3048,     fromBase:v=>v/0.3048 },
+      yd:  { cat:'height', label:'yd',    toBase:v=>v*0.9144,     fromBase:v=>v/0.9144 },
+      mi:  { cat:'height', label:'mi',    toBase:v=>v*1609.34,    fromBase:v=>v/1609.34 },
+
+      mg:  { cat:'weight', label:'mg',    toBase:v=>v*0.001,      fromBase:v=>v/0.001 },
+      g:   { cat:'weight', label:'g',     toBase:v=>v,            fromBase:v=>v },
+      kg:  { cat:'weight', label:'kg',    toBase:v=>v*1000,       fromBase:v=>v/1000 },
+      t:   { cat:'weight', label:'t',     toBase:v=>v*1000000,    fromBase:v=>v/1000000 },
+      oz:  { cat:'weight', label:'oz',    toBase:v=>v*28.3495,    fromBase:v=>v/28.3495 },
+      lb:  { cat:'weight', label:'lb',    toBase:v=>v*453.592,    fromBase:v=>v/453.592 },
+      ton: { cat:'weight', label:'ton',   toBase:v=>v*907185,     fromBase:v=>v/907185 },
+
+      ml:  { cat:'liquid', label:'ml',    toBase:v=>v,            fromBase:v=>v },
+      l:   { cat:'liquid', label:'L',     toBase:v=>v*1000,       fromBase:v=>v/1000 },
+      floz:{ cat:'liquid', label:'fl oz', toBase:v=>v*29.5735,    fromBase:v=>v/29.5735 },
+      cup: { cat:'liquid', label:'cup',   toBase:v=>v*236.588,    fromBase:v=>v/236.588 },
+      pt:  { cat:'liquid', label:'pt',    toBase:v=>v*473.176,    fromBase:v=>v/473.176 },
+      qt:  { cat:'liquid', label:'qt',    toBase:v=>v*946.353,    fromBase:v=>v/946.353 },
+      gal: { cat:'liquid', label:'gal',   toBase:v=>v*3785.41,    fromBase:v=>v/3785.41 },
+
+      F:   { cat:'temperature', label:'°F', toBase:v=>(v-32)*5/9, fromBase:v=>v*9/5+32 },
+      C:   { cat:'temperature', label:'°C', toBase:v=>v,          fromBase:v=>v },
+      K:   { cat:'temperature', label:'K',  toBase:v=>v-273.15,   fromBase:v=>v+273.15 }
+    };
+
+    const CATEGORY_ORDER = ['height','weight','liquid','temperature'];
+    const CATEGORY_UNIT_KEYS = {
+      height: ['mm','cm','m','km','in','ft','yd','mi'],
+      weight: ['mg','g','kg','t','oz','lb','ton'],
+      liquid: ['ml','l','floz','cup','pt','qt','gal'],
+      temperature: ['F','C','K']
+    };
+    const MAX_UNITS_PER_EQUATION = 4;
+
+    // Which physical dimension each category maps to, for the
+    // dimensional-analysis engine used by * / ^.
+    const CAT_TO_DIM = { height:'length', weight:'mass', liquid:'volume' };
+    const DIM_TO_CAT = { length:'height', mass:'weight', volume:'liquid' };
+    const DIM_BASE_LABEL = { mass:'g', length:'m', volume:'mL' };
+    const SUPERSCRIPT = {0:'\u2070',1:'\u00b9',2:'\u00b2',3:'\u00b3',4:'\u2074',5:'\u2075',6:'\u2076',7:'\u2077',8:'\u2078',9:'\u2079'};
+
+    // ---- state ----
+    let tokens = [];        // {type:'num'|'op'|'unit'|'sqrt'|'lparen'|'rparen', value}
+    let errored = false;
+    let lastAnswer = null;  // result object from evaluate()
+    let displayUnit = null; // which unit the answer is currently shown in
+    let digitPlaces = null; // 0-8 or null
+    let roundMode = null;   // 'up' | 'down' | null
+
+    // ---- DOM refs ----
+    const exprEl = document.getElementById('calcExpr');
+    const resultEl = document.getElementById('calcResult');
+    const answerSwitchEl = document.getElementById('answerSwitch');
+    const digitKeysEl = document.getElementById('digitKeys');
+    const roundUpBtn = document.getElementById('roundUpBtn');
+    const roundDownBtn = document.getElementById('roundDownBtn');
+    const keypadEl = document.getElementById('keypad');
+
+    // ---- build unit buttons ----
+    CATEGORY_ORDER.forEach(cat => {
+      const row = document.querySelector(`.unit-group-row[data-cat="${cat}"]`);
+      CATEGORY_UNIT_KEYS[cat].forEach(key => {
+        const btn = document.createElement('button');
+        btn.className = 'unit-key';
+        btn.textContent = CALC_UNITS[key].label;
+        btn.dataset.unit = key;
+        btn.addEventListener('click', () => onUnitPress(key));
+        row.appendChild(btn);
+      });
+    });
+
+    // ---- build digit-place buttons (0-8) ----
+    for (let i = 0; i <= 8; i++){
+      const btn = document.createElement('button');
+      btn.className = 'digit-key';
+      btn.textContent = String(i);
+      btn.dataset.places = String(i);
+      btn.addEventListener('click', () => {
+        digitPlaces = (digitPlaces === i) ? null : i; // tap active one again to turn off
+        refreshDigitKeys();
+        renderAnswer();
+      });
+      digitKeysEl.appendChild(btn);
+    }
+
+    function refreshDigitKeys(){
+      digitKeysEl.querySelectorAll('.digit-key').forEach(b => {
+        b.classList.toggle('active', digitPlaces !== null && Number(b.dataset.places) === digitPlaces);
+      });
+    }
+
+    roundUpBtn.addEventListener('click', () => {
+      roundMode = (roundMode === 'up') ? null : 'up';
+      refreshRoundKeys();
+      renderAnswer();
+    });
+    roundDownBtn.addEventListener('click', () => {
+      roundMode = (roundMode === 'down') ? null : 'down';
+      refreshRoundKeys();
+      renderAnswer();
+    });
+    function refreshRoundKeys(){
+      roundUpBtn.classList.toggle('active', roundMode === 'up');
+      roundDownBtn.classList.toggle('active', roundMode === 'down');
+    }
+
+    // ---- helpers ----
+    function lastToken(){ return tokens[tokens.length - 1]; }
+    function unitsInExpression(){ return tokens.filter(t => t.type === 'unit'); }
+    function openParenDepth(){
+      return tokens.filter(t => t.type === 'lparen').length - tokens.filter(t => t.type === 'rparen').length;
+    }
+
+    function showErr(){
+      errored = true;
+      lastAnswer = null;
+      displayUnit = null;
+      answerSwitchEl.innerHTML = '';
+      resultEl.textContent = 'Err';
+      resultEl.classList.add('err');
+    }
+
+    function clearAll(){
+      tokens = [];
+      errored = false;
+      lastAnswer = null;
+      displayUnit = null;
+      resultEl.classList.remove('err');
+      answerSwitchEl.innerHTML = '';
+      render();
+    }
+
+    function tokensToDisplayString(){
+      return tokens.map(t => {
+        if (t.type === 'sqrt') return '\u221A';
+        if (t.type === 'unit') return CALC_UNITS[t.value].label;
+        if (t.type === 'lparen') return '(';
+        if (t.type === 'rparen') return ')';
+        return t.value;
+      }).join(' ').trim();
+    }
+
+    // The expression line is ALWAYS kept up to date -- including in an
+    // error state, so the person can see exactly what they typed. The
+    // big result field stays blank until '=' is pressed (no premature "0").
+    function render(){
+      exprEl.textContent = tokensToDisplayString() || '\u00A0';
+      if (!errored){
+        resultEl.classList.remove('err');
+        if (lastAnswer === null){
+          resultEl.textContent = '\u00A0';
+        }
+      }
+    }
+
+    function cleanFloat(n){
+      return parseFloat(n.toFixed(10));
+    }
+
+    // Round Up / Round Down apply as soon as either is pressed, using the
+    // selected decimal-place count -- or 0 places (the next whole integer)
+    // if no decimal place has been chosen. Only when NEITHER round button
+    // is active do we leave the number unrounded, per spec.
+    function applyRounding(n){
+      if (roundMode === null) return cleanFloat(n);
+      const places = digitPlaces === null ? 0 : digitPlaces;
+      const factor = Math.pow(10, places);
+      return roundMode === 'up' ? Math.ceil(n * factor) / factor
+                                 : Math.floor(n * factor) / factor;
+    }
+
+    function formatResult(n){
+      const rounded = applyRounding(n);
+      if (roundMode !== null){
+        const places = digitPlaces === null ? 0 : digitPlaces;
+        return rounded.toFixed(places);
+      }
+      return rounded.toString();
+    }
+
+    function fmtExp(n){
+      if (Number.isInteger(n) && n >= 0 && n <= 9) return SUPERSCRIPT[n];
+      return '^' + (Number.isInteger(n) ? n : n.toFixed(2));
+    }
+
+    // Builds a label like "g\u00b2", "g/mL", or "g\u00b7m" out of a dims
+    // object for results that don't collapse to a single named unit.
+    function synthesizeLabel(dims){
+      const order = ['mass','length','volume'];
+      const numParts = [], denParts = [];
+      order.forEach(k => {
+        const exp = dims[k] || 0;
+        if (exp === 0) return;
+        const label = DIM_BASE_LABEL[k] + (Math.abs(exp) === 1 ? '' : fmtExp(Math.abs(exp)));
+        (exp > 0 ? numParts : denParts).push(label);
+      });
+      if (numParts.length === 0 && denParts.length === 0) return '';
+      let str = numParts.length ? numParts.join('\u00b7') : '1';
+      if (denParts.length) str += '/' + denParts.join('\u00b7');
+      return str;
+    }
+
+    function dimsEqual(a, b){
+      if (a === null || b === null) return a === b; // only equal if both temperature
+      const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+      for (const k of keys) if ((a[k]||0) !== (b[k]||0)) return false;
+      return true;
+    }
+    function dimsIsEmpty(d){ return d !== null && Object.values(d).every(v => v === 0); }
+    function mergeDims(a, b, sign){
+      const out = {};
+      const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+      keys.forEach(k => { const v = (a[k]||0) + sign*(b[k]||0); if (v !== 0) out[k] = v; });
+      return out;
+    }
+    function scaleDims(a, factor){
+      const out = {};
+      Object.keys(a).forEach(k => { const v = a[k]*factor; if (v !== 0) out[k] = v; });
+      return out;
+    }
+
+    function renderAnswer(){
+      if (errored || lastAnswer === null) return;
+      const res = lastAnswer;
+      let text;
+      if (res.kind === 'plain'){
+        text = formatResult(res.mag);
+      } else if (res.kind === 'simple' || res.kind === 'temperature'){
+        const unit = displayUnit;
+        const value = unit ? CALC_UNITS[unit].fromBase(res.mag) : res.mag;
+        text = formatResult(value) + (unit ? ' ' + CALC_UNITS[unit].label : '');
+      } else { // compound
+        const label = synthesizeLabel(res.dims);
+        text = formatResult(res.mag) + (label ? ' ' + label : '');
+      }
+      resultEl.textContent = text;
+      answerSwitchEl.querySelectorAll('.chip-btn').forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.unit === displayUnit);
+      });
+    }
+
+    function buildAnswerSwitch(unitsUsed){
+      answerSwitchEl.innerHTML = '';
+      if (!unitsUsed || unitsUsed.length === 0) return;
+      unitsUsed.forEach(key => {
+        const chip = document.createElement('button');
+        chip.className = 'chip-btn';
+        chip.textContent = CALC_UNITS[key].label;
+        chip.dataset.unit = key;
+        chip.addEventListener('click', () => { displayUnit = key; renderAnswer(); });
+        answerSwitchEl.appendChild(chip);
+      });
+    }
+
+    // ---- button press handlers ----
+    function onDigitPress(d){
+      if (errored) return;
+      const last = lastToken();
+      if (last && last.type === 'rparen') return; // no implicit multiplication
+      if (last && last.type === 'num'){ last.value += d; }
+      else { tokens.push({ type:'num', value:d }); }
+      lastAnswer = null;
+      render();
+    }
+
+    function onDecimalPress(){
+      if (errored) return;
+      const last = lastToken();
+      if (last && last.type === 'rparen') return;
+      if (last && last.type === 'num'){ if (!last.value.includes('.')) last.value += '.'; }
+      else { tokens.push({ type:'num', value:'0.' }); }
+      lastAnswer = null;
+      render();
+    }
+
+    function onOpPress(op){
+      if (errored) return;
+      const last = lastToken();
+      if (!last || (last.type !== 'num' && last.type !== 'unit' && last.type !== 'rparen')) return;
+      tokens.push({ type:'op', value:op });
+      lastAnswer = null;
+      render();
+    }
+
+    function onSqrtPress(){
+      if (errored) return;
+      const last = lastToken();
+      if (last && (last.type === 'num' || last.type === 'unit' || last.type === 'rparen' || last.type === 'sqrt')) return;
+      tokens.push({ type:'sqrt' });
+      lastAnswer = null;
+      render();
+    }
+
+    function onParenPress(paren){
+      if (errored) return;
+      const last = lastToken();
+      if (paren === '('){
+        if (last && (last.type === 'num' || last.type === 'unit' || last.type === 'rparen')) return;
+        tokens.push({ type:'lparen' });
+      } else {
+        if (openParenDepth() <= 0) return;
+        if (!last || (last.type !== 'num' && last.type !== 'unit' && last.type !== 'rparen')) return;
+        tokens.push({ type:'rparen' });
+      }
+      lastAnswer = null;
+      render();
+    }
+
+    function onUnitPress(key){
+      if (errored) return;
+      const last = lastToken();
+
+      // Two units typed back-to-back -- push it anyway so the full
+      // (invalid) expression stays visible, then show Err.
+      if (last && last.type === 'unit'){
+        tokens.push({ type:'unit', value:key });
+        render();
+        showErr();
+        return;
+      }
+      // A unit must attach to a number that was just entered.
+      if (!last || last.type !== 'num') return;
+
+      // No more than 4 units in one equation -- same treatment: show it,
+      // then Err, so the person can see what triggered it.
+      if (unitsInExpression().length >= MAX_UNITS_PER_EQUATION){
+        tokens.push({ type:'unit', value:key });
+        render();
+        showErr();
+        return;
+      }
+
+      tokens.push({ type:'unit', value:key });
+      lastAnswer = null;
+      render();
+    }
+
+    function onDelete(){
+      if (errored){ clearAll(); return; }
+      const last = lastToken();
+      if (!last) return;
+      if (last.type === 'num' && last.value.length > 1){ last.value = last.value.slice(0, -1); }
+      else { tokens.pop(); }
+      lastAnswer = null;
+      render();
+    }
+
+    // ---- evaluator ----
+    // Step 1: collapse [sqrt]? num [unit]? into 'value' atoms carrying a
+    // magnitude (in base units) and a dims vector; pass '(' ')' 'op' through.
+    function buildAtoms(){
+      const atoms = [];
+      let i = 0;
+      let pendingSqrt = false;
+
+      while (i < tokens.length){
+        const t = tokens[i];
+        if (t.type === 'lparen'){ atoms.push({ type:'lparen' }); i++; continue; }
+        if (t.type === 'rparen'){ atoms.push({ type:'rparen' }); i++; continue; }
+        if (t.type === 'sqrt'){ pendingSqrt = true; i++; continue; }
+        if (t.type === 'op'){ atoms.push({ type:'op', value:t.value }); i++; continue; }
+        if (t.type === 'num'){
+          let raw = parseFloat(t.value);
+          if (t.value === '' || t.value === '.' || isNaN(raw)) return null;
+          let unit = null;
+          if (tokens[i+1] && tokens[i+1].type === 'unit'){ unit = tokens[i+1].value; i++; }
+          if (pendingSqrt){
+            if (raw < 0) return null;
+            raw = Math.sqrt(raw);
+            pendingSqrt = false;
+          }
+          let mag, dims;
+          if (unit){
+            const info = CALC_UNITS[unit];
+            mag = info.toBase(raw);
+            dims = (info.cat === 'temperature') ? null
+                 : { [CAT_TO_DIM[info.cat]]: 1 };
+          } else {
+            mag = raw; dims = {};
+          }
+          atoms.push({ type:'value', mag, dims });
+          i++;
+          continue;
+        }
+        return null; // stray unit token or unexpected type
+      }
+      if (pendingSqrt) return null; // trailing sqrt with nothing after
+      return atoms;
+    }
+
+    // Step 2: shunting-yard infix -> RPN, honoring parens and precedence.
+    function toRPN(atoms){
+      const prec = { '^':3, '\u00d7':2, '\u00f7':2, '+':1, '\u2212':1 };
+      const rightAssoc = { '^':true };
+      const output = [], opStack = [];
+
+      for (const a of atoms){
+        if (a.type === 'value'){ output.push(a); }
+        else if (a.type === 'lparen'){ opStack.push(a); }
+        else if (a.type === 'rparen'){
+          let found = false;
+          while (opStack.length){
+            const top = opStack[opStack.length - 1];
+            if (top.type === 'lparen'){ opStack.pop(); found = true; break; }
+            output.push(opStack.pop());
+          }
+          if (!found) return null; // mismatched parens
+        } else if (a.type === 'op'){
+          while (opStack.length){
+            const top = opStack[opStack.length - 1];
+            if (top.type !== 'op') break;
+            if (prec[top.value] > prec[a.value] || (prec[top.value] === prec[a.value] && !rightAssoc[a.value])){
+              output.push(opStack.pop());
+            } else break;
+          }
+          opStack.push(a);
+        }
+      }
+      while (opStack.length){
+        const top = opStack.pop();
+        if (top.type === 'lparen') return null; // mismatched parens
+        output.push(top);
+      }
+      return output;
+    }
+
+    // Step 3: evaluate RPN with dimension-aware operators.
+    function applyOp(a, b, op){
+      if (op === '+' || op === '\u2212'){
+        if (!dimsEqual(a.dims, b.dims)) return null;
+        const mag = op === '+' ? a.mag + b.mag : a.mag - b.mag;
+        return { type:'value', mag, dims:a.dims };
+      }
+      if (op === '\u00d7'){
+        if (a.dims === null || b.dims === null) return null; // temperature can't multiply
+        return { type:'value', mag:a.mag*b.mag, dims:mergeDims(a.dims, b.dims, 1) };
+      }
+      if (op === '\u00f7'){
+        if (a.dims === null || b.dims === null) return null;
+        if (b.mag === 0) return null; // divide by zero
+        return { type:'value', mag:a.mag/b.mag, dims:mergeDims(a.dims, b.dims, -1) };
+      }
+      if (op === '^'){
+        if (a.dims === null || b.dims === null) return null;
+        if (!dimsIsEmpty(b.dims)) return null; // exponent must be unitless
+        const mag = Math.pow(a.mag, b.mag);
+        if (!isFinite(mag)) return null;
+        return { type:'value', mag, dims:scaleDims(a.dims, b.mag) };
+      }
+      return null;
+    }
+
+    function evalRPN(rpn){
+      const stack = [];
+      for (const a of rpn){
+        if (a.type === 'value'){ stack.push(a); continue; }
+        if (stack.length < 2) return null;
+        const b = stack.pop(), av = stack.pop();
+        const r = applyOp(av, b, a.value);
+        if (r === null) return null;
+        stack.push(r);
+      }
+      return stack.length === 1 ? stack[0] : null;
+    }
+
+    function evaluate(){
+      if (tokens.length === 0) return { error:true };
+      const last = lastToken();
+      if (last.type !== 'num' && last.type !== 'unit' && last.type !== 'rparen') return { error:true };
+      if (openParenDepth() !== 0) return { error:true };
+
+      const atoms = buildAtoms();
+      if (!atoms || atoms.length === 0) return { error:true };
+      const rpn = toRPN(atoms);
+      if (!rpn) return { error:true };
+      const result = evalRPN(rpn);
+      if (!result || !isFinite(result.mag)) return { error:true };
+
+      if (result.dims === null){
+        const unitsUsed = [...new Set(tokens.filter(t => t.type === 'unit' && CALC_UNITS[t.value].cat === 'temperature').map(t => t.value))];
+        return { error:false, kind:'temperature', mag:result.mag, unitsUsed };
+      }
+      const nonzero = Object.entries(result.dims).filter(([,v]) => v !== 0);
+      if (nonzero.length === 0){
+        return { error:false, kind:'plain', mag:result.mag };
+      }
+      if (nonzero.length === 1 && nonzero[0][1] === 1){
+        const cat = DIM_TO_CAT[nonzero[0][0]];
+        const unitsUsed = [...new Set(tokens.filter(t => t.type === 'unit' && CALC_UNITS[t.value].cat === cat).map(t => t.value))];
+        return { error:false, kind:'simple', mag:result.mag, unitsUsed };
+      }
+      return { error:false, kind:'compound', mag:result.mag, dims:result.dims };
+    }
+
+    function onEquals(){
+      if (errored) return;
+      const res = evaluate();
+      if (res.error){ showErr(); return; }
+      lastAnswer = res;
+      if (res.kind === 'simple' || res.kind === 'temperature'){
+        displayUnit = res.unitsUsed.length ? res.unitsUsed[0] : null;
+        buildAnswerSwitch(res.unitsUsed);
+      } else {
+        displayUnit = null;
+        buildAnswerSwitch([]);
+      }
+      render();
+      renderAnswer();
+    }
+
+    // ---- wire up keypad ----
+    keypadEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const action = btn.dataset.action;
+      if (action === 'digit') onDigitPress(btn.dataset.value);
+      else if (action === 'decimal') onDecimalPress();
+      else if (action === 'op') onOpPress(btn.dataset.value);
+      else if (action === 'sqrt') onSqrtPress();
+      else if (action === 'paren') onParenPress(btn.dataset.value);
+      else if (action === 'clear') clearAll();
+      else if (action === 'del') onDelete();
+      else if (action === 'equals') onEquals();
+    });
+
+    render();
+  })();
+
+  window.addEventListener('load', () => {
+    document.querySelector('[data-tab-panel="height"] [data-field="A"] .lcd-readout').focus();
+  });
+</script>
+
+</body>
+</html>

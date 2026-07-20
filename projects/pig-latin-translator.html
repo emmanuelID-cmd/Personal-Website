@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pig Latin Translator</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f4f1ea;
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .wrap {
+    width: 100%;
+    max-width: 700px;
+  }
+  h1 {
+    font-size: 1.5rem;
+    color: #2d2a26;
+    margin-bottom: 4px;
+  }
+  p.sub {
+    color: #7a7469;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+  }
+  .section { margin-bottom: 14px; }
+  .label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #5c574d;
+  }
+  .btn-row {
+    display: flex;
+    gap: 6px;
+  }
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #fff;
+    border: 1px solid #d8d2c4;
+    color: #5c574d;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.05s;
+  }
+  .icon-btn:hover {
+    background: #f0ece1;
+    border-color: #b08d57;
+  }
+  .icon-btn:active {
+    transform: scale(0.96);
+  }
+  .icon-btn.copied {
+    background: #e7f3e5;
+    border-color: #6fa869;
+    color: #3f7a3a;
+  }
+  .icon-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  textarea, .output {
+    width: 100%;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid #d8d2c4;
+    font-family: inherit;
+    resize: vertical;
+  }
+  textarea {
+    min-height: 110px; /* ~4-5 lines */
+    background: #fff;
+    color: #2d2a26;
+  }
+  textarea:focus {
+    outline: none;
+    border-color: #b08d57;
+    box-shadow: 0 0 0 3px rgba(176,141,87,0.15);
+  }
+  .output {
+    min-height: 110px;
+    background: #fbf9f4;
+    color: #2d2a26;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .placeholder { color: #a39d8e; }
+
+  .swap-row {
+    display: flex;
+    justify-content: center;
+    margin: -4px 0 10px;
+  }
+  .swap-btn {
+    background: #2d2a26;
+    color: #f4f1ea;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s, transform 0.05s;
+  }
+  .swap-btn:hover { background: #4a453d; }
+  .swap-btn:active { transform: scale(0.96); }
+  .swap-icon {
+    font-size: 1rem;
+    display: inline-block;
+    transition: transform 0.25s;
+  }
+  .swap-icon.spin { transform: rotate(180deg); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🐷 Pig Latin Translator</h1>
+  <p class="sub">Type anything below — it translates live, no need to press Enter.</p>
+
+  <div class="section">
+    <div class="label-row">
+      <label for="input">Your Text</label>
+      <div class="btn-row">
+        <button class="icon-btn" id="speakInputBtn" title="Read this box aloud">🔊 Listen</button>
+        <button class="icon-btn" id="copyInputBtn" title="Copy this box">📋 Copy</button>
+      </div>
+    </div>
+    <textarea id="input" placeholder="Start typing here..."></textarea>
+  </div>
+
+  <div class="swap-row">
+    <button class="swap-btn" id="swapBtn" title="Send the Pig Latin output back into the input box">
+      <span class="swap-icon" id="swapIcon">⇅</span> Swap
+    </button>
+  </div>
+
+  <div class="section">
+    <div class="label-row">
+      <label>Pig Latin</label>
+      <div class="btn-row">
+        <button class="icon-btn" id="speakOutputBtn" title="Read this box aloud">🔊 Listen</button>
+        <button class="icon-btn" id="copyOutputBtn" title="Copy this box">📋 Copy</button>
+      </div>
+    </div>
+    <div id="output" class="output"><span class="placeholder">Translation will appear here...</span></div>
+  </div>
+</div>
+
+<script>
+// ---------- Pig Latin logic ----------
+function translateWord(word) {
+  const match = word.match(/^([A-Za-z]+)([^A-Za-z]*)$/);
+  if (!match) return word;
+
+  const letters = match[1];
+  const trailing = match[2];
+
+  const isCapitalized = letters[0] === letters[0].toUpperCase() && letters[0] !== letters[0].toLowerCase();
+  const lower = letters.toLowerCase();
+
+  const vowels = "aeiou";
+  let pigLower;
+
+  if (vowels.includes(lower[0])) {
+    pigLower = lower + "way";
+  } else {
+    let i = 0;
+    while (i < lower.length && !vowels.includes(lower[i])) {
+      if (lower[i] === 'q' && lower[i+1] === 'u') {
+        i += 2;
+        continue;
+      }
+      i++;
+    }
+    if (i === 0) i = 1;
+    pigLower = lower.slice(i) + lower.slice(0, i) + "ay";
+  }
+
+  let result = pigLower;
+  if (isCapitalized) {
+    result = pigLower.charAt(0).toUpperCase() + pigLower.slice(1);
+  }
+
+  return result + trailing;
+}
+
+function translateText(text) {
+  if (text.length === 0) return "";
+  return text.replace(/\S+/g, translateWord);
+}
+
+// ---------- Elements ----------
+const input = document.getElementById('input');
+const output = document.getElementById('output');
+const swapBtn = document.getElementById('swapBtn');
+const swapIcon = document.getElementById('swapIcon');
+
+function currentOutputText() {
+  return output.textContent === 'Translation will appear here...' ? '' : output.textContent;
+}
+
+function update() {
+  const val = input.value;
+  if (val.trim().length === 0) {
+    output.innerHTML = '<span class="placeholder">Translation will appear here...</span>';
+    return;
+  }
+  output.textContent = translateText(val);
+}
+
+input.addEventListener('input', update);
+
+// ---------- Swap: pulls the Pig Latin output back into the input box ----------
+swapBtn.addEventListener('click', () => {
+  const outText = currentOutputText();
+  input.value = outText;
+  swapIcon.classList.add('spin');
+  setTimeout(() => swapIcon.classList.remove('spin'), 250);
+  update();
+  input.focus();
+});
+
+// ---------- Copy ----------
+function wireCopyButton(btn, getText) {
+  btn.addEventListener('click', async () => {
+    const text = getText();
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    const original = btn.innerHTML;
+    btn.classList.add('copied');
+    btn.innerHTML = '✓ Copied';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = original;
+    }, 1300);
+  });
+}
+
+wireCopyButton(document.getElementById('copyInputBtn'), () => input.value);
+wireCopyButton(document.getElementById('copyOutputBtn'), () => currentOutputText());
+
+// ---------- Audio (Web Speech API) ----------
+const synth = window.speechSynthesis;
+const speakInputBtn = document.getElementById('speakInputBtn');
+const speakOutputBtn = document.getElementById('speakOutputBtn');
+
+function resetSpeakBtn(btn) {
+  btn.innerHTML = '🔊 Listen';
+}
+
+function wireSpeakButton(btn, getText) {
+  if (!synth) {
+    btn.disabled = true;
+    btn.title = "Speech not supported in this browser";
+    return;
+  }
+  btn.addEventListener('click', () => {
+    if (synth.speaking) {
+      synth.cancel();
+      resetSpeakBtn(speakInputBtn);
+      resetSpeakBtn(speakOutputBtn);
+      return;
+    }
+    const text = getText();
+    if (!text) return;
+    const utter = new SpeechSynthesisUtterance(text);
+    btn.innerHTML = '⏹ Stop';
+    utter.onend = () => resetSpeakBtn(btn);
+    utter.onerror = () => resetSpeakBtn(btn);
+    synth.speak(utter);
+  });
+}
+
+wireSpeakButton(speakInputBtn, () => input.value);
+wireSpeakButton(speakOutputBtn, () => currentOutputText());
+</script>
+</body>
+</html>
