@@ -1,0 +1,63 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  color: #17202a;
+  font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+}
+
+.reward-back-button {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  min-height: 44px;
+  padding: 0.65rem 1rem;
+  border: 0;
+  border-radius: 8px;
+  background: #12636d;
+  color: #ffffff;
+  cursor: pointer;
+  font: 700 1rem/1 "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+}
+
+.reward-back-button:hover {
+  background: #2f919a;
+}
+
+.reward-back-button:focus-visible {
+  outline: 3px solid #b7894f;
+  outline-offset: 3px;
+}
+
+.reward-page {
+  display: grid;
+  min-height: 100vh;
+  min-height: 100svh;
+  place-content: center;
+  justify-items: center;
+  gap: 1.25rem;
+  padding: 5rem 1.5rem 2rem;
+  text-align: center;
+}
+
+.reward-bunny {
+  display: block;
+  width: min(300px, 58vw);
+  max-height: 66vh;
+  object-fit: contain;
+}
+
+.reward-page p {
+  margin: 0;
+  font-size: clamp(1.1rem, 3vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.35;
+}

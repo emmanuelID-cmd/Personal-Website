@@ -103,6 +103,20 @@
 
 **Related Files:** `index.html`, `styles.css`, `script.js`
 
+## Decision: Keep the Pong Bunny Global and Viewport-Bound
+
+**Status:** Accepted — Implemented
+
+**Context:** The bunny Easter Egg must persist across tab changes and scrolling while never leaving the visible screen.
+
+**Decision:** Place a restrained technology-themed robotic bunny outside all tab panels as a fixed button and animate it with requestAnimationFrame using live viewport, rendered-image, and frozen-header dimensions. Keep its sign stationary relative to the bunny and alternate it on/off every five seconds. Activation opens a separate reward page while preserving the original tab state.
+
+**Reasoning:** A global fixed element retains one continuous position across every interface and scroll state. Collision calculations provide true Pong-style reflection without relying on a page-sized CSS animation path.
+
+**Consequences:** The bunny remains below the Main Navigation layer but is pointer and keyboard operable. The reward page’s Back button focuses and closes its tab, with fallbacks when browser restrictions apply. Reduced-motion preferences disable both travel and sign blinking.
+
+**Related Files:** `index.html`, `styles.css`, `script.js`, `images/bunny-pong.png`, `images/catch-me-sign.png`
+
 ## Decision: Offset Scrolling for the Frozen Header
 
 **Status:** Accepted — Implemented

@@ -111,6 +111,7 @@ const bannerAudioMuteButton = document.querySelector("[data-audio-mute]");
 const bannerAudioVolumeIcon = document.querySelector("[data-audio-volume-icon]");
 const bannerAudioVolume = document.querySelector("[data-audio-volume]");
 const bannerAudioStatus = document.querySelector("[data-audio-status]");
+const pongBunny = document.querySelector("[data-pong-bunny]");
 const projectDemos = {
   measurement: {
     title: "Measurement Converter / Dimensional Analysis Engine (Calculator)",
@@ -150,6 +151,103 @@ const heroPreviewState = {
 };
 let homeSectionObserver;
 let homeScrollTicking = false;
+
+const pongBunnyState = {
+  x: 24,
+  y: 160,
+  velocityX: 108,
+  velocityY: 86,
+  previousTime: null,
+  frame: null
+};
+
+function getPongBunnyBounds() {
+  const inset = 8;
+  const bunnyRect = pongBunny.getBoundingClientRect();
+  const headerBottom = siteHeader?.getBoundingClientRect().bottom ?? 0;
+
+  return {
+    minX: inset,
+    maxX: Math.max(inset, window.innerWidth - bunnyRect.width - inset),
+    minY: Math.min(window.innerHeight - bunnyRect.height - inset, headerBottom + inset),
+    maxY: Math.max(headerBottom + inset, window.innerHeight - bunnyRect.height - inset)
+  };
+}
+
+function positionPongBunny() {
+  if (!pongBunny) return;
+  pongBunny.style.transform = `translate3d(${Math.round(pongBunnyState.x)}px, ${Math.round(pongBunnyState.y)}px, 0)`;
+}
+
+function keepPongBunnyInView() {
+  if (!pongBunny) return;
+  const bounds = getPongBunnyBounds();
+  pongBunnyState.x = Math.min(bounds.maxX, Math.max(bounds.minX, pongBunnyState.x));
+  pongBunnyState.y = Math.min(bounds.maxY, Math.max(bounds.minY, pongBunnyState.y));
+  positionPongBunny();
+}
+
+function animatePongBunny(timestamp) {
+  if (!pongBunny) return;
+
+  if (pongBunnyState.previousTime === null) {
+    pongBunnyState.previousTime = timestamp;
+  }
+
+  const elapsed = Math.min((timestamp - pongBunnyState.previousTime) / 1000, 0.05);
+  const bounds = getPongBunnyBounds();
+  pongBunnyState.previousTime = timestamp;
+  pongBunnyState.x += pongBunnyState.velocityX * elapsed;
+  pongBunnyState.y += pongBunnyState.velocityY * elapsed;
+
+  if (pongBunnyState.x <= bounds.minX || pongBunnyState.x >= bounds.maxX) {
+    pongBunnyState.x = Math.min(bounds.maxX, Math.max(bounds.minX, pongBunnyState.x));
+    pongBunnyState.velocityX *= -1;
+  }
+
+  if (pongBunnyState.y <= bounds.minY || pongBunnyState.y >= bounds.maxY) {
+    pongBunnyState.y = Math.min(bounds.maxY, Math.max(bounds.minY, pongBunnyState.y));
+    pongBunnyState.velocityY *= -1;
+  }
+
+  positionPongBunny();
+  pongBunnyState.frame = requestAnimationFrame(animatePongBunny);
+}
+
+function initPongBunny() {
+  if (!pongBunny) return;
+
+  const startAnimation = () => {
+    keepPongBunnyInView();
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    pongBunnyState.frame = requestAnimationFrame(animatePongBunny);
+  };
+
+  const bunnyImages = Array.from(pongBunny.querySelectorAll("img"));
+  const pendingImages = bunnyImages.filter((image) => !image.complete);
+
+  if (!pendingImages.length) {
+    startAnimation();
+  } else {
+    let remainingImages = pendingImages.length;
+    const handleImageReady = () => {
+      remainingImages -= 1;
+      if (remainingImages === 0) startAnimation();
+    };
+    pendingImages.forEach((image) => {
+      image.addEventListener("load", handleImageReady, { once: true });
+      image.addEventListener("error", handleImageReady, { once: true });
+    });
+  }
+
+  window.addEventListener("resize", keepPongBunnyInView);
+  pongBunny.addEventListener("click", () => {
+    const rewardWindow = window.open("super-decoder.html", "_blank");
+    if (!rewardWindow) {
+      window.location.href = "super-decoder.html";
+    }
+  });
+}
 
 const BANNER_AUDIO_SAMPLE_RATE = 22050;
 const bannerAudioTracks = [
@@ -1813,6 +1911,7 @@ updateButtonStates();
 renderSkills();
 showTab("home");
 initBannerAudio();
+initPongBunny();
 
 if (currentYear) {
   currentYear.textContent = new Date().getFullYear();

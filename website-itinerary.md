@@ -57,6 +57,17 @@
 - Easter Egg invitation implemented as a responsive sticky-note design.
 - Existing Hero image, professional identity, introduction, and calls to action preserved.
 
+### Global Pong Bunny Easter Egg
+
+- Transparent robotic bunny and separate “Catch Me!” sign assets implemented without a surrounding background, border, or frame.
+- Pong-style diagonal viewport movement reverses at horizontal and vertical boundaries.
+- Fixed global positioning preserves the bunny’s location across scrolling and tab changes.
+- Stationary sign alternates between visible and invisible every five seconds, independently from the bunny’s travel animation.
+- Moving bunny implemented as a keyboard-accessible control that opens a separate reward tab.
+- Blank reward page centers the robotic bunny holding an envelope above the “Congratulations you are a Super DeCoder” HTML text.
+- Reward Back button closes the reward tab and returns focus to the unchanged portfolio state, with navigation fallbacks.
+- Reduced-motion preferences stop both animations.
+
 ### Visual System
 
 - The established site-wide background treatment continues through all main content interfaces; the Adventure Banner retains its separate background treatment.

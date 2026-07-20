@@ -25,6 +25,18 @@
 
 ## Home
 
+### Global Pong Bunny
+
+**Sign:** Catch Me!
+
+The transparent robotic bunny moves diagonally within the visible browser viewport and persists across all tab interfaces. Its stationary “Catch Me!” sign alternates between visible and invisible every five seconds. Activating the bunny opens the Super DeCoder reward page.
+
+### Super DeCoder Reward
+
+**Action:** Back
+
+Congratulations you are a Super DeCoder
+
 ### Adventure Banner Audio Controls
 
 - Current track number and title from a 12-track electronic playlist
