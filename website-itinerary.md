@@ -30,6 +30,14 @@
 - Horizontal page scrolling prevented.
 - Tab content switching implemented in `script.js`.
 - About hover/focus dropdown implemented for Journey, Learned, and Style.
+- Home secondary navigation aligned left to reserve the Banner's far-right region for audio controls.
+
+### Adventure Banner Audio
+
+- Twelve original synthesized tracks with varied durations and electronic styles generated locally without third-party audio licensing requirements.
+- Accessible previous/next track, play/pause, 10-second rewind and fast-forward, seek, time, speed, mute, and volume controls implemented.
+- Audio remains off until user interaction and loops only after playback begins.
+- Audio controls share the navigation row on desktop and reflow on tablet/mobile layouts.
 
 ### Information Architecture
 

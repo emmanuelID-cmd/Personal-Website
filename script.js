@@ -95,6 +95,22 @@ const projectDemoModal = document.querySelector("#project-demo-modal");
 const projectDemoCloseButton = document.querySelector("[data-project-demo-close]");
 const projectDemoTitle = document.querySelector("#project-demo-title");
 const projectDemoFrame = document.querySelector("[data-project-demo-frame]");
+const bannerAudio = document.querySelector("[data-banner-audio]");
+const bannerAudioElement = document.querySelector("[data-audio-element]");
+const bannerAudioTrack = document.querySelector("[data-audio-track]");
+const bannerAudioPreviousButton = document.querySelector("[data-audio-previous]");
+const bannerAudioPlayButton = document.querySelector("[data-audio-play]");
+const bannerAudioPlayIcon = document.querySelector("[data-audio-play-icon]");
+const bannerAudioNextButton = document.querySelector("[data-audio-next]");
+const bannerAudioRewindButton = document.querySelector("[data-audio-rewind]");
+const bannerAudioForwardButton = document.querySelector("[data-audio-forward]");
+const bannerAudioProgress = document.querySelector("[data-audio-progress]");
+const bannerAudioTime = document.querySelector("[data-audio-time]");
+const bannerAudioSpeed = document.querySelector("[data-audio-speed]");
+const bannerAudioMuteButton = document.querySelector("[data-audio-mute]");
+const bannerAudioVolumeIcon = document.querySelector("[data-audio-volume-icon]");
+const bannerAudioVolume = document.querySelector("[data-audio-volume]");
+const bannerAudioStatus = document.querySelector("[data-audio-status]");
 const projectDemos = {
   measurement: {
     title: "Measurement Converter / Dimensional Analysis Engine (Calculator)",
@@ -134,6 +150,240 @@ const heroPreviewState = {
 };
 let homeSectionObserver;
 let homeScrollTicking = false;
+
+const BANNER_AUDIO_SAMPLE_RATE = 22050;
+const bannerAudioTracks = [
+  { title: "Circuit Dawn", style: "Techno", duration: 32, bpm: 120, bass: [110, 110, 130.81, 98], kick: [0, 4, 8, 12], snare: [4, 12], lead: true },
+  { title: "Neon Terminal", style: "Peak Techno", duration: 28, bpm: 132, bass: [82.41, 98, 110, 123.47], kick: [0, 4, 8, 12], snare: [4, 12], lead: false },
+  { title: "Binary Skyline", style: "Synthwave", duration: 36, bpm: 108, bass: [65.41, 82.41, 98, 73.42], kick: [0, 6, 8, 14], snare: [4, 12], lead: true },
+  { title: "Data Pulse", style: "Minimal Techno", duration: 24, bpm: 126, bass: [98, 98, 116.54, 103.83], kick: [0, 4, 8, 12], snare: [6, 14], lead: false },
+  { title: "Cloud Runner", style: "Electro", duration: 30, bpm: 116, bass: [73.42, 87.31, 110, 98], kick: [0, 3, 8, 11], snare: [4, 12], lead: true },
+  { title: "Midnight Compiler", style: "Ambient Techno", duration: 42, bpm: 96, bass: [55, 65.41, 73.42, 82.41], kick: [0, 8, 11], snare: [4, 12], lead: true },
+  { title: "Quantum Steps", style: "Glitch", duration: 26, bpm: 140, bass: [123.47, 92.5, 138.59, 103.83], kick: [0, 3, 6, 8, 12, 15], snare: [4, 10, 14], lead: true },
+  { title: "Signal Harbor", style: "Downtempo", duration: 38, bpm: 88, bass: [65.41, 73.42, 82.41, 55], kick: [0, 7, 10], snare: [4, 12], lead: false },
+  { title: "Chrome Circuit", style: "Industrial Techno", duration: 34, bpm: 128, bass: [92.5, 92.5, 110, 103.83], kick: [0, 4, 7, 8, 12], snare: [4, 12, 15], lead: false },
+  { title: "Pixel Sprint", style: "Chiptune", duration: 22, bpm: 150, bass: [130.81, 164.81, 196, 146.83], kick: [0, 4, 8, 12], snare: [4, 12], lead: true },
+  { title: "Future Workshop", style: "Tech House", duration: 40, bpm: 124, bass: [82.41, 98, 110, 87.31], kick: [0, 4, 8, 12], snare: [4, 12], lead: false },
+  { title: "Launch Sequence", style: "Progressive Techno", duration: 45, bpm: 130, bass: [73.42, 82.41, 110, 98], kick: [0, 4, 8, 12], snare: [4, 12], lead: true }
+];
+let bannerAudioUrl;
+let currentBannerAudioTrack = 0;
+let continueBannerAudioPlayback = false;
+
+function createAdventureRhythmWave(track) {
+  const sampleCount = track.duration * BANNER_AUDIO_SAMPLE_RATE;
+  const buffer = new ArrayBuffer(44 + (sampleCount * 2));
+  const view = new DataView(buffer);
+  let noiseState = 0x12345678 + track.bpm;
+
+  function writeText(offset, text) {
+    for (let index = 0; index < text.length; index += 1) {
+      view.setUint8(offset + index, text.charCodeAt(index));
+    }
+  }
+
+  writeText(0, "RIFF");
+  view.setUint32(4, 36 + (sampleCount * 2), true);
+  writeText(8, "WAVE");
+  writeText(12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, BANNER_AUDIO_SAMPLE_RATE, true);
+  view.setUint32(28, BANNER_AUDIO_SAMPLE_RATE * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  writeText(36, "data");
+  view.setUint32(40, sampleCount * 2, true);
+
+  for (let index = 0; index < sampleCount; index += 1) {
+    const time = index / BANNER_AUDIO_SAMPLE_RATE;
+    const beatDuration = 60 / track.bpm;
+    const stepDuration = beatDuration / 2;
+    const stepPosition = time % stepDuration;
+    const stepIndex = Math.floor(time / stepDuration) % 16;
+    const bassPosition = time % beatDuration;
+    const bassIndex = Math.floor(time / (beatDuration * 2)) % track.bass.length;
+    let sample = 0;
+
+    noiseState ^= noiseState << 13;
+    noiseState ^= noiseState >>> 17;
+    noiseState ^= noiseState << 5;
+    const noise = ((noiseState >>> 0) / 2147483648) - 1;
+
+    if (track.kick.includes(stepIndex) && stepPosition < 0.16) {
+      const kickFrequency = 100 - (58 * (stepPosition / 0.16));
+      sample += Math.sin(2 * Math.PI * kickFrequency * stepPosition) * Math.exp(-19 * stepPosition) * 0.76;
+    }
+
+    if (track.snare.includes(stepIndex) && stepPosition < 0.13) {
+      sample += noise * Math.exp(-25 * stepPosition) * 0.38;
+    }
+
+    if (stepPosition < 0.04) {
+      const hatStrength = stepIndex % 2 === 0 ? 0.13 : 0.08;
+      sample += noise * Math.exp(-72 * stepPosition) * hatStrength;
+    }
+
+    const bassFrequency = track.bass[bassIndex];
+    const bassEnvelope = Math.exp(-3.5 * bassPosition);
+    sample += (
+      Math.sin(2 * Math.PI * bassFrequency * time) +
+      (0.28 * Math.sin(2 * Math.PI * bassFrequency * 2 * time))
+    ) * bassEnvelope * 0.075;
+
+    if (track.lead && stepIndex % 4 === 2) {
+      sample += Math.sin(2 * Math.PI * bassFrequency * 4 * time) * Math.exp(-9 * stepPosition) * 0.055;
+    }
+
+    const clampedSample = Math.max(-1, Math.min(1, sample));
+    view.setInt16(44 + (index * 2), clampedSample * 0x7fff, true);
+  }
+
+  return new Blob([buffer], { type: "audio/wav" });
+}
+
+function formatAudioTime(seconds) {
+  const safeSeconds = Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
+  const minutes = Math.floor(safeSeconds / 60);
+  return `${minutes}:${Math.floor(safeSeconds % 60).toString().padStart(2, "0")}`;
+}
+
+function updateBannerAudioTrackLabel() {
+  if (!bannerAudioTrack) return;
+  const track = bannerAudioTracks[currentBannerAudioTrack];
+  const trackNumber = String(currentBannerAudioTrack + 1).padStart(2, "0");
+  bannerAudioTrack.textContent = `${trackNumber} / ${bannerAudioTracks.length} — ${track.title}`;
+  bannerAudioTrack.title = `${track.title} — ${track.style}`;
+}
+
+function updateBannerAudioControls() {
+  if (!bannerAudioElement || !bannerAudioProgress || !bannerAudioTime) return;
+
+  const duration = Number.isFinite(bannerAudioElement.duration)
+    ? bannerAudioElement.duration
+    : bannerAudioTracks[currentBannerAudioTrack].duration;
+  bannerAudioProgress.max = duration;
+  bannerAudioProgress.value = bannerAudioElement.currentTime;
+  bannerAudioTime.textContent = `${formatAudioTime(bannerAudioElement.currentTime)} / ${formatAudioTime(duration)}`;
+  bannerAudioPlayIcon.textContent = bannerAudioElement.paused ? "▶" : "❚❚";
+  bannerAudioPlayButton.setAttribute("aria-label", bannerAudioElement.paused ? "Play adventure rhythm" : "Pause adventure rhythm");
+  bannerAudioVolumeIcon.textContent = bannerAudioElement.muted || bannerAudioElement.volume === 0 ? "×" : "♪";
+  bannerAudioMuteButton.setAttribute("aria-label", bannerAudioElement.muted ? "Unmute adventure rhythm" : "Mute adventure rhythm");
+}
+
+function setBannerAudioReady(ready) {
+  bannerAudio?.querySelectorAll("button, input, select").forEach((control) => {
+    control.disabled = !ready;
+  });
+  if (bannerAudioStatus) {
+    bannerAudioStatus.textContent = ready ? "Adventure rhythm ready." : "Adventure rhythm unavailable.";
+  }
+}
+
+function seekBannerAudio(change) {
+  if (!bannerAudioElement) return;
+  const duration = Number.isFinite(bannerAudioElement.duration)
+    ? bannerAudioElement.duration
+    : bannerAudioTracks[currentBannerAudioTrack].duration;
+  bannerAudioElement.currentTime = Math.max(0, Math.min(duration, bannerAudioElement.currentTime + change));
+  updateBannerAudioControls();
+}
+
+function loadBannerAudioTrack(trackIndex, continuePlayback = false) {
+  if (!bannerAudioElement || !bannerAudioProgress || !bannerAudioTime) return;
+
+  currentBannerAudioTrack = (trackIndex + bannerAudioTracks.length) % bannerAudioTracks.length;
+  const track = bannerAudioTracks[currentBannerAudioTrack];
+  continueBannerAudioPlayback = continuePlayback;
+  setBannerAudioReady(false);
+  bannerAudioStatus.textContent = `Loading ${track.title}.`;
+  bannerAudioElement.pause();
+
+  if (bannerAudioUrl) {
+    URL.revokeObjectURL(bannerAudioUrl);
+  }
+
+  bannerAudioUrl = URL.createObjectURL(createAdventureRhythmWave(track));
+  bannerAudioElement.src = bannerAudioUrl;
+  bannerAudioProgress.max = track.duration;
+  bannerAudioProgress.value = 0;
+  updateBannerAudioTrackLabel();
+  bannerAudioTime.textContent = `0:00 / ${formatAudioTime(track.duration)}`;
+  bannerAudioElement.load();
+}
+
+function initBannerAudio() {
+  if (!bannerAudioElement || !bannerAudioPlayButton || !bannerAudioProgress) return;
+
+  try {
+    bannerAudioElement.loop = true;
+    bannerAudioElement.volume = Number(bannerAudioVolume?.value ?? 0.35);
+    bannerAudioElement.addEventListener("loadedmetadata", async () => {
+      setBannerAudioReady(true);
+      updateBannerAudioControls();
+      updateHomeNavigationMetrics();
+      if (continueBannerAudioPlayback) {
+        continueBannerAudioPlayback = false;
+        try {
+          await bannerAudioElement.play();
+        } catch (error) {
+          bannerAudioStatus.textContent = "The selected rhythm is ready. Press Play to continue.";
+        }
+      }
+    });
+    bannerAudioElement.addEventListener("timeupdate", updateBannerAudioControls);
+    bannerAudioElement.addEventListener("play", updateBannerAudioControls);
+    bannerAudioElement.addEventListener("pause", updateBannerAudioControls);
+    bannerAudioElement.addEventListener("error", () => setBannerAudioReady(false));
+
+    bannerAudioPlayButton.addEventListener("click", async () => {
+      if (bannerAudioElement.paused) {
+        try {
+          await bannerAudioElement.play();
+          bannerAudioStatus.textContent = "Adventure rhythm playing.";
+        } catch (error) {
+          bannerAudioStatus.textContent = "Playback could not start. Try the play button again.";
+        }
+      } else {
+        bannerAudioElement.pause();
+        bannerAudioStatus.textContent = "Adventure rhythm paused.";
+      }
+    });
+
+    bannerAudioPreviousButton?.addEventListener("click", () => {
+      loadBannerAudioTrack(currentBannerAudioTrack - 1, !bannerAudioElement.paused);
+    });
+    bannerAudioNextButton?.addEventListener("click", () => {
+      loadBannerAudioTrack(currentBannerAudioTrack + 1, !bannerAudioElement.paused);
+    });
+    bannerAudioRewindButton?.addEventListener("click", () => seekBannerAudio(-10));
+    bannerAudioForwardButton?.addEventListener("click", () => seekBannerAudio(10));
+    bannerAudioProgress.addEventListener("input", () => {
+      bannerAudioElement.currentTime = Number(bannerAudioProgress.value);
+      updateBannerAudioControls();
+    });
+    bannerAudioSpeed?.addEventListener("change", () => {
+      bannerAudioElement.playbackRate = Number(bannerAudioSpeed.value);
+      bannerAudioStatus.textContent = `Playback speed ${Number(bannerAudioSpeed.value).toFixed(2)} times.`;
+    });
+    bannerAudioMuteButton?.addEventListener("click", () => {
+      bannerAudioElement.muted = !bannerAudioElement.muted;
+      updateBannerAudioControls();
+    });
+    bannerAudioVolume?.addEventListener("input", () => {
+      bannerAudioElement.volume = Number(bannerAudioVolume.value);
+      bannerAudioElement.muted = false;
+      updateBannerAudioControls();
+    });
+    window.addEventListener("beforeunload", () => {
+      if (bannerAudioUrl) URL.revokeObjectURL(bannerAudioUrl);
+    });
+    loadBannerAudioTrack(0);
+  } catch (error) {
+    setBannerAudioReady(false);
+  }
+}
 
 function validateEmail() {
   if (!contactSenderEmail) return false;
@@ -1562,6 +1812,7 @@ projectDemoModal?.addEventListener("close", () => {
 updateButtonStates();
 renderSkills();
 showTab("home");
+initBannerAudio();
 
 if (currentYear) {
   currentYear.textContent = new Date().getFullYear();

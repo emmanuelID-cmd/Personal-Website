@@ -89,6 +89,20 @@
 
 **Related Files:** `styles.css`, Git history including `c488fef`
 
+## Decision: Generate the Adventure Rhythm Locally
+
+**Status:** Accepted — Implemented
+
+**Context:** The Adventure Banner needs optional audio controls without creating third-party licensing, attribution, hosting, or availability dependencies.
+
+**Decision:** Generate a 12-track playlist of original synthesized rhythms in the browser and expose it through an accessible custom audio bar. Tracks vary in duration, tempo, drum pattern, bass sequence, and electronic style.
+
+**Reasoning:** A locally generated playlist is self-contained, avoids external media rights concerns, provides stylistic variety appropriate for a technology portfolio, and still supports track switching, seeking, playback speed, volume, and looping.
+
+**Consequences:** Audio remains off until the visitor presses Play. The audio bar participates in the measured frozen-header height and stacks below navigation on smaller screens.
+
+**Related Files:** `index.html`, `styles.css`, `script.js`
+
 ## Decision: Offset Scrolling for the Frozen Header
 
 **Status:** Accepted — Implemented

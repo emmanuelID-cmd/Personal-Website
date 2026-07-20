@@ -61,6 +61,37 @@
         <a href="#home-contact" data-home-section="home-contact">Contact</a>
       </div>
     </nav>
+    <section class="banner-audio" aria-label="Adventure rhythm player" data-banner-audio>
+      <output class="banner-audio-track" data-audio-track aria-live="polite">01 / 12 — Circuit Dawn</output>
+      <button class="banner-audio-button" type="button" data-audio-previous aria-label="Previous rhythm" disabled>−</button>
+      <button class="banner-audio-button" type="button" data-audio-play aria-label="Play adventure rhythm" disabled>
+        <span aria-hidden="true" data-audio-play-icon>▶</span>
+      </button>
+      <button class="banner-audio-button" type="button" data-audio-next aria-label="Next rhythm" disabled>+</button>
+      <button class="banner-audio-button" type="button" data-audio-rewind aria-label="Rewind 10 seconds" disabled>−10</button>
+      <label class="sr-only" for="banner-audio-progress">Rhythm position</label>
+      <input id="banner-audio-progress" class="banner-audio-progress" data-audio-progress type="range" min="0" max="32" value="0" step="0.1" disabled>
+      <output class="banner-audio-time" data-audio-time for="banner-audio-progress">0:00 / 0:32</output>
+      <button class="banner-audio-button" type="button" data-audio-forward aria-label="Fast-forward 10 seconds" disabled>+10</button>
+      <label class="sr-only" for="banner-audio-speed">Playback speed</label>
+      <select id="banner-audio-speed" class="banner-audio-speed" data-audio-speed aria-label="Playback speed" disabled>
+        <option value="0.25">0.25×</option>
+        <option value="0.50">0.50×</option>
+        <option value="0.75">0.75×</option>
+        <option value="1.00" selected>1.00×</option>
+        <option value="1.25">1.25×</option>
+        <option value="1.50">1.50×</option>
+        <option value="1.75">1.75×</option>
+        <option value="2.00">2.00×</option>
+      </select>
+      <button class="banner-audio-button" type="button" data-audio-mute aria-label="Mute adventure rhythm" disabled>
+        <span aria-hidden="true" data-audio-volume-icon>♪</span>
+      </button>
+      <label class="sr-only" for="banner-audio-volume">Rhythm volume</label>
+      <input id="banner-audio-volume" class="banner-audio-volume" data-audio-volume type="range" min="0" max="1" value="0.35" step="0.05" disabled>
+      <audio data-audio-element preload="metadata"></audio>
+      <span class="sr-only" data-audio-status role="status" aria-live="polite">Adventure rhythm loading.</span>
+    </section>
   </header>
 
   <main>

@@ -74,6 +74,27 @@
 
 **Notes:** Tracking disconnects whenever Home is not the active main tab.
 
+## Adventure Banner Audio Bar
+
+**Status:** Complete
+
+**Purpose:** Provide optional playback of a 12-track original synthesized playlist without relying on licensed third-party audio.
+
+**Location:**
+- `index.html`
+- `styles.css`
+- `script.js`
+
+**HTML Structure:** `.banner-audio` contains a track label, previous/next track buttons, play/pause, 10-second rewind and fast-forward, seek, time, eight two-decimal playback-speed options from 0.25× through 2.00×, mute, and volume controls plus an internal `audio` element.
+
+**CSS Selectors:** `.banner-audio`, `.banner-audio-button`, `.banner-audio-progress`, `.banner-audio-time`, `.banner-audio-speed`, `.banner-audio-volume`.
+
+**JavaScript:** `bannerAudioTracks` defines 12 varied tracks and durations. `createAdventureRhythmWave()` builds the selected original WAV rhythm in memory; `loadBannerAudioTrack()` and `initBannerAudio()` connect playlist switching, playback, seeking, speed, mute, volume, status, and navigation-height updates.
+
+**Responsive Behavior:** The bar shares the secondary-navigation row on desktop and moves to its own row on tablet/mobile layouts. Less essential controls collapse on narrow phones.
+
+**Accessibility:** Playback starts only after user interaction. Every control has an accessible label, visible focus treatment, native keyboard behavior, and status announcements.
+
 ## About Dropdown
 
 **Status:** Complete

@@ -25,6 +25,17 @@
 
 ## Home
 
+### Adventure Banner Audio Controls
+
+- Current track number and title from a 12-track electronic playlist
+- Previous/next rhythm using −/+ controls
+- Play/Pause adventure rhythm
+- Rewind 10 seconds
+- Fast-forward 10 seconds
+- Rhythm position and elapsed/total time
+- Playback speed: 0.25×, 0.50×, 0.75×, 1.00×, 1.25×, 1.50×, 1.75×, 2.00×
+- Mute/Unmute and volume
+
 ### Home Section Navigation
 
 - Hero
