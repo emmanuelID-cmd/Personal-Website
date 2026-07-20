@@ -1232,6 +1232,36 @@ h4 {
   object-fit: cover;
 }
 
+.project-demo-thumbnail,
+.project-demo-title {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.project-demo-thumbnail {
+  display: block;
+  width: 100%;
+}
+
+.project-demo-thumbnail .project-thumbnail {
+  pointer-events: none;
+}
+
+.project-demo-title {
+  font-weight: inherit;
+}
+
+.project-demo-thumbnail:focus-visible,
+.project-demo-title:focus-visible {
+  outline: 3px solid var(--warm);
+  outline-offset: 4px;
+}
+
 .hobby-thumbnail--placeholder {
   display: grid;
   place-items: center;
@@ -1620,6 +1650,64 @@ main .journey-stage:not(.active) .journey-stage-number {
 .contact-preview-modal .button:focus-visible {
   outline: 3px solid var(--contact-subheading-color);
   outline-offset: 3px;
+}
+
+.project-demo-modal {
+  width: min(1180px, calc(100vw - 2rem));
+  height: min(820px, calc(100vh - 2rem));
+  padding: 0;
+  border: 0;
+  background: #10272c;
+  color: #ffffff;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+}
+
+.project-demo-modal::backdrop {
+  background: rgba(3, 12, 18, 0.72);
+}
+
+.project-demo-modal-content {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+}
+
+.project-demo-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+}
+
+.project-demo-modal h2 {
+  color: #ffffff;
+}
+
+.project-demo-close {
+  padding: 0.55rem 0.9rem;
+  border: 0;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.project-demo-close:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.project-demo-close:focus-visible {
+  outline: 3px solid var(--warm);
+  outline-offset: 3px;
+}
+
+.project-demo-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #ffffff;
 }
 
 .contact-submit-status {

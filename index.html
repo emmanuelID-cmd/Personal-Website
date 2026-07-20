@@ -212,8 +212,10 @@
             <div class="card-grid three">
 
               <article class="info-card">
-                <img class="project-thumbnail" src="images/projects/measurement-converter.png" alt="Measurement tools and scientific calculator illustrating dimensional analysis">
-                <h3>Measurement Converter / Dimensional Analysis Engine (Calculator)</h3>
+                <button class="project-demo-thumbnail" type="button" data-project-demo="measurement" aria-label="Open the Measurement Converter and Dimensional Analysis Engine demo">
+                  <img class="project-thumbnail" src="images/projects/measurement-converter.png" alt="Measurement tools and scientific calculator illustrating dimensional analysis">
+                </button>
+                <h3><button class="project-demo-title" type="button" data-project-demo="measurement">Measurement Converter / Dimensional Analysis Engine (Calculator)</button></h3>
                 <p class="resizable-section-text">
                   A dual-purpose application that converts between Metric and U.S. Customary units while also performing dimensional analysis calculations. Users can convert measurements, calculate equivalent values using compatible units, and switch between multiple categories—including length, weight, volume, area, and temperature—through an intuitive multi-tab interface.
                 </p>
@@ -256,8 +258,10 @@
               </article>
 
               <article class="info-card">
-                <img class="project-thumbnail" src="images/projects/java-pig-latin.png" alt="Person speaking to a crowd with Pig Latin subtitles">
-                <h3>Java Pig Latin Translator</h3>
+                <button class="project-demo-thumbnail" type="button" data-project-demo="pig-latin" aria-label="Open the Java Pig Latin Translator demo">
+                  <img class="project-thumbnail" src="images/projects/java-pig-latin.png" alt="Person speaking to a crowd with Pig Latin subtitles">
+                </button>
+                <h3><button class="project-demo-title" type="button" data-project-demo="pig-latin">Java Pig Latin Translator</button></h3>
                 <p class="resizable-section-text">
                   Developed a Java program that converts user-provided words into Pig Latin by applying language transformation rules through programming logic.
                 </p>
@@ -345,8 +349,10 @@
         </div>
         <div class="card-grid three">
           <article class="info-card">
-            <img class="project-thumbnail" src="images/projects/measurement-converter.png" alt="Measurement tools and scientific calculator illustrating dimensional analysis">
-            <h3>Measurement Converter / Dimensional Analysis Engine (Calculator)</h3>
+            <button class="project-demo-thumbnail" type="button" data-project-demo="measurement" aria-label="Open the Measurement Converter and Dimensional Analysis Engine demo">
+              <img class="project-thumbnail" src="images/projects/measurement-converter.png" alt="Measurement tools and scientific calculator illustrating dimensional analysis">
+            </button>
+            <h3><button class="project-demo-title" type="button" data-project-demo="measurement">Measurement Converter / Dimensional Analysis Engine (Calculator)</button></h3>
             <p class="resizable-section-text">Converts Metric and U.S. Customary units while performing dimensional analysis calculations through a multi-tab interface.</p>
           </article>
           <article class="info-card">
@@ -494,6 +500,16 @@
         <button class="button primary" type="button" data-contact-submit disabled>Submit</button>
       </div>
       <p class="contact-submit-status" data-contact-submit-status role="status" aria-live="polite"></p>
+    </div>
+  </dialog>
+
+  <dialog class="project-demo-modal" id="project-demo-modal" aria-labelledby="project-demo-title">
+    <div class="project-demo-modal-content">
+      <div class="project-demo-modal-header">
+        <h2 id="project-demo-title">Project Demo</h2>
+        <button class="project-demo-close" type="button" data-project-demo-close aria-label="Close project demo">Close</button>
+      </div>
+      <iframe class="project-demo-frame" data-project-demo-frame src="about:blank" title="Project demo"></iframe>
     </div>
   </dialog>
 

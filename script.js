@@ -90,6 +90,21 @@ const contactPreviewSubject = document.querySelector("[data-contact-preview-subj
 const contactPreviewMessage = document.querySelector("[data-contact-preview-message]");
 const contactSubmitStatus = document.querySelector("[data-contact-submit-status]");
 const contactFormStatus = document.querySelector("[data-contact-form-status]");
+const projectDemoButtons = document.querySelectorAll("[data-project-demo]");
+const projectDemoModal = document.querySelector("#project-demo-modal");
+const projectDemoCloseButton = document.querySelector("[data-project-demo-close]");
+const projectDemoTitle = document.querySelector("#project-demo-title");
+const projectDemoFrame = document.querySelector("[data-project-demo-frame]");
+const projectDemos = {
+  measurement: {
+    title: "Measurement Converter / Dimensional Analysis Engine (Calculator)",
+    source: "projects/measurement-converter-2.html"
+  },
+  "pig-latin": {
+    title: "Java Pig Latin Translator",
+    source: "projects/pig-latin-translator.html"
+  }
+};
 const heroPreviewElements = {
   hero: document.querySelector("#home-hero"),
   grid: document.querySelector("#home-hero .hero-grid"),
@@ -231,6 +246,26 @@ function closeContactPreview() {
   }
 
   contactPreviewButton?.focus();
+}
+
+function openProjectDemo(event) {
+  const demo = projectDemos[event.currentTarget.dataset.projectDemo];
+
+  if (!demo || !projectDemoModal || !projectDemoTitle || !projectDemoFrame) return;
+
+  projectDemoTitle.textContent = demo.title;
+  projectDemoFrame.src = demo.source;
+  projectDemoFrame.title = `${demo.title} demo`;
+
+  if (!projectDemoModal.open) {
+    projectDemoModal.showModal();
+  }
+}
+
+function closeProjectDemo() {
+  if (projectDemoModal?.open) {
+    projectDemoModal.close();
+  }
 }
 
 function submitContactForm() {
@@ -1508,10 +1543,20 @@ contactPreviewCloseButton?.addEventListener("click", closeContactPreview);
 contactSubmitButtons.forEach((button) => {
   button.addEventListener("click", submitContactForm);
 });
+projectDemoButtons.forEach((button) => {
+  button.addEventListener("click", openProjectDemo);
+});
+projectDemoCloseButton?.addEventListener("click", closeProjectDemo);
 
 contactPreviewModal?.addEventListener("cancel", (event) => {
   event.preventDefault();
   closeContactPreview();
+});
+
+projectDemoModal?.addEventListener("close", () => {
+  if (projectDemoFrame) {
+    projectDemoFrame.src = "about:blank";
+  }
 });
 
 updateButtonStates();
