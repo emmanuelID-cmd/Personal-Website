@@ -50,7 +50,7 @@ Enjoy exploring the site—and if you're curious, see if you can find my Easter 
 
 ### Hero Introduction
 
-**Identity:** Builder | Project Manager | Operations Professional | AI Enthusiast
+**Identity:** AI Builder | Project Manager | Operations Manager | Entrepreneur
 
 My technology journey began in high school with MS Office, Oracle, Visual Basic, Perl on the Terminal, and Java. In college, I expanded into web development with HTML, CSS, and JavaScript, leading me toward AI and becoming a Builder focused on creating solutions that solve real-world problems.
 
