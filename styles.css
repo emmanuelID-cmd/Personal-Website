@@ -1410,8 +1410,8 @@ main .journey-stage:not(.active) .journey-stage-number {
   gap: 1rem;
 }
 
-.education strong {
-  color: var(--text);
+#home-background .education strong {
+  color: #6b7680;
 }
 
 .skills-region {
@@ -1452,6 +1452,7 @@ main .journey-stage:not(.active) .journey-stage-number {
 }
 
 #home-background .skill-tag {
+  color: var(--muted-text);
   font-size: 16pt;
 }
 
