@@ -5,6 +5,22 @@
 **Last Updated:** 2026-07-19
 **Living Document:** Revisit these decisions when requirements change. Status describes the current implementation, not merely an earlier proposal.
 
+## Decision: Use a Dark-Default Semantic Theme System
+
+**Status:** Accepted — Implemented
+
+**Context:** The website needs optional Light Mode without duplicating the stylesheet, weakening section identity, or producing unreadable content.
+
+**Decision:** Keep Dark Mode values in default `:root` semantic variables and apply optional Light Mode through `:root[data-theme="light"]`. Persist only validated `light` or `dark` values under `personal-website-theme`; invalid values and unavailable JavaScript fall back to Dark Mode. Maintain separate paired heading/subheading colors for Home, About, Journey, Learned, Style, Projects, and Contact, plus related project-tool colors.
+
+**Reasoning:** Semantic roles allow shared components, forms, cards, modals, focus states, and text to adapt consistently while retaining each section’s professional color family. A small early external script prevents a saved Light preference from flashing through the default Dark presentation.
+
+**Consequences:** New theme-sensitive colors outside protected areas should use the semantic variables. Both themes require contrast, keyboard, persistence, and responsive verification.
+
+**Protected Areas:** The Adventure Banner remains visually identical across themes, including its background, text, logos, animation, dimensions, spacing, navigation layers, and audio controls. The compact theme button is the only added Banner-adjacent control. The Hero greeting remains outside generic heading variables and preserves its typography, sizing, spacing, hanging `E`, positioning, hierarchy, and established Dark colors.
+
+**Related Files:** `index.html`, `theme-init.js`, `styles.css`, `script.js`, `website-itinerary.md`, `component-library.md`
+
 ## Decision: Use Four Main Tabs
 
 **Status:** Accepted — Implemented

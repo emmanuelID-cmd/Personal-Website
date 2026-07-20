@@ -5,6 +5,30 @@
 **Last Updated:** 2026-07-19
 **Living Document:** Keep entries aligned with `index.html`, `styles.css`, and `script.js`. A component is marked Complete only when its implementation is present in the current source.
 
+## Light and Dark Theme System
+
+**Status:** Complete
+
+**Purpose:** Provide a reusable Dark-default color system with an optional persistent Light Mode while preserving section identity and readable interface states.
+
+**Location:**
+- `index.html`
+- `theme-init.js`
+- `styles.css`
+- `script.js`
+
+**HTML Structure:** `button[data-theme-toggle]` is a compact native button immediately adjacent to the Adventure Banner title. It exposes `aria-pressed`, a changing accessible label, and a decorative sun/moon icon sized to the title text.
+
+**CSS Selectors:** Default semantic values live in `:root`; Light Mode overrides live in `:root[data-theme="light"]`. Variables cover page, surfaces, cards, text roles, borders, inputs, buttons, focus, modals, shadows, tool colors, and paired section heading/subheading colors.
+
+**JavaScript:** `getSavedTheme()`, `applyTheme()`, `toggleTheme()`, `updateThemeToggle()`, and `initTheme()` validate, apply, persist, and announce theme state. `theme-init.js` applies a valid saved Light preference before the stylesheet renders to prevent flashing. Storage key: `personal-website-theme`.
+
+**Responsive Behavior:** The inline toggle follows the existing Banner title without changing Banner dimensions or navigation positioning and remains keyboard operable at every breakpoint.
+
+**Accessibility:** Dark Mode is the no-script default. Primary, secondary, muted, form, modal, focus, and section colors are paired for readable contrast in both themes. Invalid or inaccessible storage safely falls back to Dark Mode.
+
+**Protected Areas:** Theme variables do not restyle the Adventure Banner, its copy, logos, animation, dimensions, navigation layering, or audio controls. The Hero greeting’s typography, size, weight, spacing, hanging `E`, layout, positioning, hierarchy, and existing Dark colors remain independent from generic heading rules.
+
 ## Main Tab Navigation
 
 **Status:** Complete

@@ -1,13 +1,29 @@
 :root {
-  --bg: #f7f8fa;
-  --surface: #ffffff;
-  --surface-muted: #eef2f5;
-  --text: #17202a;
-  --muted-text: #5c6670;
-  --line: #d8dee4;
+  color-scheme: dark;
+  --page-background: #f7f8fa;
+  --surface-background: #ffffff;
+  --surface-muted-background: #eef2f5;
+  --card-background: #ffffff;
+  --text-primary: #17202a;
+  --text-secondary: #5c6670;
+  --text-muted: #5c6670;
+  --border-color: #d8dee4;
+  --input-background: #f7f8fa;
+  --button-background: #2f5d62;
+  --button-hover-background: #24494d;
+  --focus-color: #b7894f;
+  --modal-background: #17202a;
+  --modal-backdrop: rgba(3, 12, 18, 0.72);
+  --theme-shadow: 0 18px 50px rgba(23, 32, 42, 0.08);
+  --bg: var(--page-background);
+  --surface: var(--surface-background);
+  --surface-muted: var(--surface-muted-background);
+  --text: var(--text-primary);
+  --muted-text: var(--text-muted);
+  --line: var(--border-color);
   --accent: #2f5d62;
   --accent-dark: #24494d;
-  --warm: #b7894f;
+  --warm: var(--focus-color);
   /* Section heading color system. The Hero greeting and Adventure Banner are excluded. */
   --home-heading-color: #9ed7dc;
   --home-subheading-color: #d2f1f3;
@@ -19,12 +35,65 @@
   --projects-subheading-color: #cce8f6;
   --contact-heading-color: #d08e9b;
   --contact-subheading-color: #f4c8d0;
-  --shadow: 0 18px 50px rgba(23, 32, 42, 0.08);
+  --learned-heading-color: var(--about-heading-color);
+  --learned-subheading-color: var(--about-subheading-color);
+  --style-heading-color: var(--about-heading-color);
+  --style-subheading-color: var(--about-subheading-color);
+  --project-tool-1: #8dc7eb;
+  --project-tool-2: #a9d29a;
+  --project-tool-3: #d7b0e8;
+  --project-tool-4: #efbd83;
+  --project-tool-5: #e5a8b7;
+  --project-tool-6: #9fcbd0;
+  --hero-greeting-copy: #3f4c5f;
+  --shadow: var(--theme-shadow);
   --header-height: 76px;
   --frozen-nav-height: 127px;
   --career-banner-typography-height: 48px;
   --home-nav-clearance: 1.25rem;
   --home-scroll-offset: calc(var(--frozen-nav-height) + var(--home-nav-clearance));
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --page-background: #f4f6f7;
+  --surface-background: #ffffff;
+  --surface-muted-background: #e9eef1;
+  --card-background: #ffffff;
+  --text-primary: #17202a;
+  --text-secondary: #34444f;
+  --text-muted: #56636d;
+  --border-color: #aebbc3;
+  --input-background: #f7f9fa;
+  --button-background: #2f5d62;
+  --button-hover-background: #24494d;
+  --focus-color: #8a611f;
+  --modal-background: #ffffff;
+  --modal-backdrop: rgba(16, 24, 32, 0.58);
+  --theme-shadow: 0 14px 36px rgba(23, 32, 42, 0.13);
+  --accent: #2f5d62;
+  --accent-dark: #24494d;
+  --home-heading-color: #21666d;
+  --home-subheading-color: #2d747b;
+  --about-heading-color: #376d4c;
+  --about-subheading-color: #467d58;
+  --journey-heading-color: #376d4c;
+  --journey-subheading-color: #467d58;
+  --learned-heading-color: #674d8c;
+  --learned-subheading-color: #795fa0;
+  --style-heading-color: #805b26;
+  --style-subheading-color: #946d33;
+  --projects-heading-color: #245f87;
+  --projects-subheading-color: #34759d;
+  --contact-heading-color: #8c4051;
+  --contact-subheading-color: #a14e60;
+  --project-tool-1: #225f87;
+  --project-tool-2: #3d7130;
+  --project-tool-3: #70458a;
+  --project-tool-4: #875416;
+  --project-tool-5: #93465a;
+  --project-tool-6: #276970;
+  --hero-greeting-copy: #3f4c5f;
 }
 
 * {
@@ -396,6 +465,41 @@ li {
   text-shadow: 0 2px 16px rgba(12, 134, 172, 0.88), 0 1px 2px rgba(255, 255, 255, 0.32);
 }
 
+.theme-toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  position: fixed;
+  top: 0.38rem;
+  left: 19.5rem;
+  z-index: 1001;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 24px;
+  padding: 0.15rem 0.35rem;
+  border: 0;
+  border-radius: 5px;
+  background: rgba(7, 25, 43, 0.78);
+  color: #bff4ff;
+  font: 700 0.72rem/1 "Orbitron", sans-serif;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.theme-toggle [data-theme-icon] {
+  font-size: 1em;
+}
+
+.theme-toggle:hover {
+  color: #ffffff;
+}
+
+.theme-toggle:focus-visible {
+  border-radius: 3px;
+  outline: 2px solid #f2d77a;
+  outline-offset: 3px;
+}
+
 .career-banner-title {
   font-size: calc(var(--career-banner-typography-height) * 0.5);
   font-weight: 700;
@@ -459,7 +563,7 @@ li {
   padding: 0.5rem;
   border: 0;
   border-radius: 0 10px 10px 10px;
-  background: var(--surface);
+  background: #ffffff;
   box-shadow: none;
   opacity: 0;
   visibility: hidden;
@@ -489,7 +593,7 @@ li {
 .nav-dropdown-menu a:hover,
 .nav-dropdown-menu a:focus-visible {
   background: rgba(47, 93, 98, 0.08);
-  color: var(--accent-dark);
+  color: #24494d;
   outline: none;
 }
 
@@ -524,7 +628,7 @@ li {
 }
 
 .site-nav button:focus-visible {
-  outline: 3px solid var(--warm);
+  outline: 3px solid #b7894f;
   outline-offset: 3px;
 }
 
@@ -737,7 +841,7 @@ h4 {
 .hero .eyebrow,
 .hero-greeting-intro,
 .hero-greeting-thanks {
-  color: #3f4c5f;
+  color: var(--hero-greeting-copy);
   font-size: 31pt;
 }
 
@@ -1001,7 +1105,7 @@ h4 {
 .banner-audio-speed:focus-visible,
 .banner-audio-progress:focus-visible,
 .banner-audio-volume:focus-visible {
-  outline: 3px solid var(--warm);
+  outline: 3px solid #b7894f;
   outline-offset: 2px;
 }
 
@@ -1071,7 +1175,7 @@ h4 {
 }
 
 .home-section-nav a:focus-visible {
-  outline: 3px solid var(--warm);
+  outline: 3px solid #b7894f;
   outline-offset: 3px;
 }
 
@@ -1994,6 +2098,10 @@ main .journey-stage:not(.active) .journey-stage-number {
     width: min(450px, calc(100% - 1rem));
   }
 
+  .theme-toggle {
+    left: 15.5rem;
+  }
+
   .hero-grid,
   .split-layout,
   .contact-layout,
@@ -2055,6 +2163,13 @@ main .journey-stage:not(.active) .journey-stage-number {
 @media (max-width: 560px) {
   :root {
     --home-nav-clearance: 1rem;
+  }
+
+  .theme-toggle {
+    left: 15.2rem;
+    gap: 0.2rem;
+    padding-inline: 0.2rem;
+    font-size: 0.62rem;
   }
 
   .section {
@@ -2203,4 +2318,130 @@ p.resizable-section-text {
 #journey,
 #learned {
   margin-bottom: -4rem;
+}
+
+/* Light Mode overrides only; Dark Mode retains the established background-only design. */
+:root[data-theme="light"] #learned h2 { color: var(--learned-heading-color); }
+:root[data-theme="light"] #learned .eyebrow,
+:root[data-theme="light"] #learned h3,
+:root[data-theme="light"] #learned h4 { color: var(--learned-subheading-color); }
+:root[data-theme="light"] #style h2 { color: var(--style-heading-color); }
+:root[data-theme="light"] #style .eyebrow,
+:root[data-theme="light"] #style h3,
+:root[data-theme="light"] #style h4 { color: var(--style-subheading-color); }
+
+:root[data-theme="light"] main {
+  background: var(--page-background);
+  color: var(--text-primary);
+}
+
+:root[data-theme="light"] main p,
+:root[data-theme="light"] main li {
+  color: var(--text-muted);
+}
+
+:root[data-theme="light"] main .content-panel,
+:root[data-theme="light"] main .info-card,
+:root[data-theme="light"] main .skill-group,
+:root[data-theme="light"] main .journey-stage-content {
+  border-color: var(--border-color) !important;
+  background: var(--card-background) !important;
+  box-shadow: var(--theme-shadow) !important;
+}
+
+:root[data-theme="light"] main .muted {
+  background: var(--surface-muted-background) !important;
+}
+
+:root[data-theme="light"] .button.primary {
+  background: var(--button-background);
+  color: #ffffff;
+}
+
+:root[data-theme="light"] .button.primary:hover {
+  background: var(--button-hover-background);
+}
+
+:root[data-theme="light"] .button.secondary {
+  border-color: var(--border-color);
+  background: var(--surface-background);
+  color: var(--accent-dark);
+}
+
+:root[data-theme="light"] .button:focus-visible,
+:root[data-theme="light"] .project-demo-thumbnail:focus-visible,
+:root[data-theme="light"] .project-demo-title:focus-visible {
+  outline-color: var(--focus-color);
+}
+
+:root[data-theme="light"] #projects .info-card:nth-child(6n + 1) .project-tools { color: var(--project-tool-1); }
+:root[data-theme="light"] #projects .info-card:nth-child(6n + 2) .project-tools { color: var(--project-tool-2); }
+:root[data-theme="light"] #projects .info-card:nth-child(6n + 3) .project-tools { color: var(--project-tool-3); }
+:root[data-theme="light"] #projects .info-card:nth-child(6n + 4) .project-tools { color: var(--project-tool-4); }
+:root[data-theme="light"] #projects .info-card:nth-child(6n + 5) .project-tools { color: var(--project-tool-5); }
+:root[data-theme="light"] #projects .info-card:nth-child(6n + 6) .project-tools { color: var(--project-tool-6); }
+:root[data-theme="light"] #home-projects .info-card:nth-child(3n + 1) .project-tools { color: var(--project-tool-1); }
+:root[data-theme="light"] #home-projects .info-card:nth-child(3n + 2) .project-tools { color: var(--project-tool-2); }
+:root[data-theme="light"] #home-projects .info-card:nth-child(3n + 3) .project-tools { color: var(--project-tool-3); }
+
+:root[data-theme="light"] .contact-information > div {
+  background: color-mix(in srgb, var(--surface-background) 88%, transparent);
+}
+
+:root[data-theme="light"] .contact-information a,
+:root[data-theme="light"] .contact-message-form input,
+:root[data-theme="light"] .contact-message-form textarea {
+  color: var(--text-primary);
+}
+
+:root[data-theme="light"] .contact-message-form input,
+:root[data-theme="light"] .contact-message-form textarea {
+  border: 1px solid var(--border-color) !important;
+  background: var(--input-background);
+}
+
+:root[data-theme="light"] .contact-message-form input::placeholder,
+:root[data-theme="light"] .contact-message-form textarea::placeholder {
+  color: var(--text-muted);
+}
+
+:root[data-theme="light"] .contact-preview-modal,
+:root[data-theme="light"] .project-demo-modal {
+  background: var(--modal-background);
+  color: var(--text-primary);
+  box-shadow: var(--theme-shadow);
+}
+
+:root[data-theme="light"] .contact-preview-modal::backdrop,
+:root[data-theme="light"] .project-demo-modal::backdrop {
+  background: var(--modal-backdrop);
+}
+
+:root[data-theme="light"] .contact-preview-modal h2,
+:root[data-theme="light"] .contact-email-preview dd,
+:root[data-theme="light"] .project-demo-modal h2 {
+  color: var(--text-primary);
+}
+
+:root[data-theme="light"] .contact-email-preview {
+  border-color: var(--border-color);
+}
+
+:root[data-theme="light"] .project-demo-close {
+  background: var(--surface-muted-background);
+  color: var(--text-primary);
+}
+
+:root[data-theme="light"] .project-demo-close:hover {
+  background: var(--button-hover-background);
+  color: #ffffff;
+}
+
+:root[data-theme="light"] .site-footer:not(.site-footer--banner) {
+  border-color: var(--border-color);
+  background: var(--surface-background);
+}
+
+:root[data-theme="light"] main .philosophy p {
+  color: var(--text-muted);
 }

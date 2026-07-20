@@ -7,6 +7,16 @@
 
 ## ✅ Completed
 
+### Reusable Light and Dark Theme System
+
+- Dark Mode is the CSS and no-JavaScript default.
+- Optional Light Mode is applied with `:root[data-theme="light"]` and semantic color variables.
+- Section-specific paired heading and subheading colors preserve the Home, About, Journey, Learned, Style, Projects, and Contact identities in both themes.
+- A compact accessible theme button sits immediately beside “Explore My Adventure” without changing the Adventure Banner’s established visuals, geometry, navigation, logos, animation, or audio controls.
+- The Hero greeting retains its typography, layout, hierarchy, and Dark Mode colors; only theme-specific readability overrides may be added when necessary.
+- The preference uses the `personal-website-theme` localStorage key, accepts only `light` or `dark`, and falls back to Dark Mode.
+- Content surfaces, forms, modal controls, focus states, and text colors use contrast-conscious semantic variables.
+
 ### Repository and Workflow
 
 - GitHub repository established with `main` as the active branch.

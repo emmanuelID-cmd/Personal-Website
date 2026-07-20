@@ -112,6 +112,10 @@ const bannerAudioVolumeIcon = document.querySelector("[data-audio-volume-icon]")
 const bannerAudioVolume = document.querySelector("[data-audio-volume]");
 const bannerAudioStatus = document.querySelector("[data-audio-status]");
 const pongBunny = document.querySelector("[data-pong-bunny]");
+const themeToggle = document.querySelector("[data-theme-toggle]");
+const themeIcon = document.querySelector("[data-theme-icon]");
+const themeLabel = document.querySelector("[data-theme-label]");
+const THEME_STORAGE_KEY = "personal-website-theme";
 const projectDemos = {
   measurement: {
     title: "Measurement Converter / Dimensional Analysis Engine (Calculator)",
@@ -151,6 +155,49 @@ const heroPreviewState = {
 };
 let homeSectionObserver;
 let homeScrollTicking = false;
+
+function getSavedTheme() {
+  try {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    return savedTheme === "light" || savedTheme === "dark" ? savedTheme : "dark";
+  } catch (error) {
+    return "dark";
+  }
+}
+
+function updateThemeToggle(theme) {
+  if (!themeToggle) return;
+  const isLight = theme === "light";
+  themeToggle.setAttribute("aria-pressed", String(isLight));
+  themeToggle.setAttribute("aria-label", isLight ? "Switch to Dark Mode" : "Switch to Light Mode");
+  if (themeIcon) themeIcon.textContent = isLight ? "☾" : "☀";
+  if (themeLabel) themeLabel.textContent = isLight ? "Dark Mode" : "Light Mode";
+}
+
+function applyTheme(theme) {
+  const validTheme = theme === "light" ? "light" : "dark";
+  if (validTheme === "light") {
+    document.documentElement.dataset.theme = "light";
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+  }
+  updateThemeToggle(validTheme);
+}
+
+function toggleTheme() {
+  const nextTheme = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  applyTheme(nextTheme);
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  } catch (error) {
+    // The active theme still works when storage is unavailable.
+  }
+}
+
+function initTheme() {
+  applyTheme(getSavedTheme());
+  themeToggle?.addEventListener("click", toggleTheme);
+}
 
 const pongBunnyState = {
   x: 24,
@@ -1908,6 +1955,7 @@ projectDemoModal?.addEventListener("close", () => {
 });
 
 updateButtonStates();
+initTheme();
 renderSkills();
 showTab("home");
 initBannerAudio();
