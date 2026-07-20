@@ -126,22 +126,6 @@ August 2009 - May 2011
 - Stakeholder Engagement
 - Training & Mentorship
 
-#### Awards, Certifications & Recognition
-
-**FEMA Incident Command System Certifications**
-2025
-
-- IS-13
-- IS-35.25
-- IS-100
-- IS-101
-
-**National Society of High School Scholars (NSHSS)**
-Member Since 2009
-
-**Community Service**
-Intermediate School 302 Beacon Program, 2009
-
 ### Featured Projects
 
 A selection of projects that reflect my progression across web development, analytics, and programming.
@@ -321,8 +305,6 @@ Built a Visual Basic calendar application that calculates the number of days, we
 ## Contact
 
 ### Contact Introduction
-
-**Eyebrow:** Contact
 
 #### Emmanuel De Jesus
 

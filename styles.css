@@ -1973,3 +1973,22 @@ p.resizable-section-text {
 #journey .journey-stage-content h3 {
   font-size: 20pt;
 }
+
+/* Match the established Personal Interests heading-to-introduction spacing. */
+#home-background .section-heading,
+#about .section-heading,
+#learned .section-heading,
+#style .section-heading,
+#projects .section-heading {
+  margin-bottom: 1rem;
+}
+
+/* Reduce only the requested inter-section boundaries by exactly 4rem. */
+#home-philosophy,
+#home-background,
+#home-projects,
+#about .about-section,
+#journey,
+#learned {
+  margin-bottom: -4rem;
+}

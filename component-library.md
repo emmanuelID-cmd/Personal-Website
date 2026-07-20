@@ -157,24 +157,24 @@
 
 **Accessibility:** Uses tab/tabpanel semantics, `aria-selected`, `aria-controls`, `aria-labelledby`, visible focus, and `aria-live="polite"`.
 
-## Skills and Recognition
+## Skills
 
 **Status:** Complete
 
-**Purpose:** Render categorized professional capabilities and verified recognition.
+**Purpose:** Render categorized professional capabilities.
 
 **Location:**
 - `index.html`
 - `script.js`
 - `styles.css`
 
-**HTML Structure:** `#skills-region` is populated under the Professional Background section; recognition remains semantic content in `.recognition-list`.
+**HTML Structure:** `#skills-region` is populated under the Professional Background section.
 
-**CSS Selectors:** `.skills-region`, `.skill-group`, `.skill-tags`, `.skill-tag`, `.recognition`, `.recognition-list`.
+**CSS Selectors:** `.skills-region`, `.skill-group`, `.skill-tags`, `.skill-tag`.
 
 **JavaScript:** `skillGroups` is the data structure; `renderSkills()` creates the groups and tags.
 
-**Responsive Behavior:** Skill groups and recognition content reflow through the shared grid and breakpoint rules.
+**Responsive Behavior:** Skill groups reflow through the shared grid and breakpoint rules.
 
 **Accessibility:** The dynamic region uses `aria-live="polite"`; headings identify each group.
 
