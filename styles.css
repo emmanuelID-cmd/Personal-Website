@@ -354,7 +354,7 @@ li {
 
 .site-nav {
   position: relative;
-  z-index: 3;
+  z-index: 100;
   grid-column: 2;
   grid-row: 1;
   border: 0;
@@ -896,7 +896,7 @@ h4 {
 
 .banner-audio {
   position: relative;
-  z-index: 3;
+  z-index: 1;
   display: grid;
   grid-column: 2;
   grid-row: 2;
