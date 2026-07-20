@@ -42,7 +42,7 @@
 - Philosophy
 - Professional Background
 - Featured Projects
-- Hobbies
+- Personal Interests
 - Contact
 
 ### Hero Greeting

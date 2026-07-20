@@ -43,7 +43,7 @@
 
 - Home established as the scrolling landing interface.
 - About, Projects, and Contact established as separate tab panels.
-- Home section navigation implemented for Hero, Philosophy, Professional Background, Featured Projects, Hobbies, and Contact.
+- Home section navigation implemented for Hero, Philosophy, Professional Background, Featured Projects, Personal Interests, and Contact.
 - Home section links smooth-scroll without hiding Home content behind nested tabs.
 - Active Home section tracking implemented with `IntersectionObserver` and a scroll fallback.
 - Single Source of Truth content principle adopted.
