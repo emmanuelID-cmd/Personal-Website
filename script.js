@@ -1,73 +1,63 @@
 const skillGroups = [
   {
-    title: "Core Competencies",
+    title: "Programming Languages",
     skills: [
-      "Operations Management",
-      "Project Coordination",
-      "Program Support",
-      "Stakeholder Engagement",
-      "Compliance Oversight",
-      "Process Improvement",
-      "Administrative Operations",
-      "AI-Assisted Development"
+      "JavaScript",
+      "HTML5",
+      "CSS3",
+      "Java",
+      "Perl"
     ]
   },
   {
-    title: "Technical Skills",
+    title: "Artificial Intelligence",
     skills: [
-      "Artificial Intelligence Tools",
       "Prompt Engineering",
-      "Process Automation",
-      "Research & Analysis",
-      "Technical Documentation",
-      "Digital Product Development",
-      "Workflow Design",
-      "Project Coordination",
-      "Data Organization",
-      "Software Adaptation & Learning",
-      "Salesforce",
+      "AI-Assisted Development",
+      "Large Language Models (LLMs)",
+      "AI Research"
+    ]
+  },
+  {
+    title: "Development Tools",
+    skills: [
+      "Git",
+      "GitHub",
+      "Visual Studio Code",
+      "Codex",
+      "Claude",
+      "ChatGPT"
+    ]
+  },
+  {
+    title: "Software & Platforms",
+    skills: [
       "Microsoft Office Suite",
+      "Salesforce",
       "Workday",
       "Deputy",
-      "Workflow Tracking",
-      "Data Entry & Recordkeeping"
+      "Canva"
     ]
   },
   {
-    title: "Interpersonal Skills",
+    title: "Professional Skills",
     skills: [
-      "Communication",
-      "Relationship Building",
-      "Active Listening",
-      "Conflict Resolution",
-      "Stakeholder Engagement",
-      "Customer Service",
+      "Problem Solving",
+      "Technical Documentation",
+      "Process Improvement",
+      "Project Coordination",
       "Team Collaboration",
       "Adaptability",
-      "Mentorship",
-      "Public Interaction",
-      "Consultation Management",
-      "Vendor Relations"
+      "Leadership & Operations"
     ]
   },
   {
-    title: "Business Skills",
+    title: "Operations Management",
     skills: [
-      "Operations Management",
-      "Process Improvement",
-      "Project Management",
+      "Workflow Design",
       "Strategic Planning",
-      "Problem Solving",
-      "Administrative Oversight",
-      "Compliance Awareness",
-      "Decision Making",
-      "Resource Coordination",
-      "Leadership & Supervision",
-      "Scheduling & Dispatch",
-      "Inventory Management",
-      "Compliance & Confidentiality",
-      "Strategic Leadership",
-      "Training & Delegation"
+      "Stakeholder Engagement",
+      "Training & Mentorship"
     ]
   }
 ];

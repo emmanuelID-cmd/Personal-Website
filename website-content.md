@@ -77,68 +77,54 @@ Manhattan, New York
 Computer Information Systems
 August 2009 - May 2011
 
-#### Core Competencies
+#### Programming Languages
 
-- Operations Management
-- Project Coordination
-- Program Support
-- Stakeholder Engagement
-- Compliance Oversight
-- Process Improvement
-- Administrative Operations
-- AI-Assisted Development
+- JavaScript
+- HTML5
+- CSS3
+- Java
+- Perl
 
-#### Technical Skills
+#### Artificial Intelligence
 
-- Artificial Intelligence Tools
 - Prompt Engineering
-- Process Automation
-- Research & Analysis
-- Technical Documentation
-- Digital Product Development
-- Workflow Design
-- Project Coordination
-- Data Organization
-- Software Adaptation & Learning
-- Salesforce
+- AI-Assisted Development
+- Large Language Models (LLMs)
+- AI Research
+
+#### Development Tools
+
+- Git
+- GitHub
+- Visual Studio Code
+- Codex
+- Claude
+- ChatGPT
+
+#### Software & Platforms
+
 - Microsoft Office Suite
+- Salesforce
 - Workday
 - Deputy
-- Workflow Tracking
-- Data Entry & Recordkeeping
+- Canva
 
-#### Interpersonal Skills
+#### Professional Skills
 
-- Communication
-- Relationship Building
-- Active Listening
-- Conflict Resolution
-- Stakeholder Engagement
-- Customer Service
+- Problem Solving
+- Technical Documentation
+- Process Improvement
+- Project Coordination
 - Team Collaboration
 - Adaptability
-- Mentorship
-- Public Interaction
-- Consultation Management
-- Vendor Relations
+- Leadership & Operations
 
-#### Business Skills
+#### Operations Management
 
-- Operations Management
-- Process Improvement
-- Project Management
+- Workflow Design
 - Strategic Planning
-- Problem Solving
-- Administrative Oversight
-- Compliance Awareness
-- Decision Making
-- Resource Coordination
-- Leadership & Supervision
-- Scheduling & Dispatch
-- Inventory Management
-- Compliance & Confidentiality
-- Strategic Leadership
-- Training & Delegation
+- Stakeholder Engagement
+- Training & Mentorship
 
 #### Awards, Certifications & Recognition
 
@@ -160,13 +146,13 @@ Intermediate School 302 Beacon Program, 2009
 
 A selection of projects that reflect my progression across web development, analytics, and programming.
 
+#### Measurement Converter / Dimensional Analysis Engine (Calculator)
+
+Converts Metric and U.S. Customary units while performing dimensional analysis calculations through a multi-tab interface.
+
 #### Personal Website Portfolio
 
 Designed and developed a professional portfolio website to showcase my technology journey, projects, and experience.
-
-#### Budgeting & Analytics Tool
-
-Built a spreadsheet-based solution to organize financial data, analyze trends, and support data-driven decision making.
 
 #### Perl Probability Random Number Generator
 
@@ -296,35 +282,41 @@ I prefer ideas that can be implemented and measured rather than remaining theore
 
 ## Projects
 
+### Measurement Converter / Dimensional Analysis Engine (Calculator)
+
+A dual-purpose application that converts between Metric and U.S. Customary units while also performing dimensional analysis calculations. Users can convert measurements, calculate equivalent values using compatible units, and switch between multiple categories—including length, weight, volume, area, and temperature—through an intuitive multi-tab interface.
+
+**Tools:** Claude, Git, GitHub
+
 ### Personal Website Portfolio
 
 Designed and developed a professional portfolio website to showcase my technology journey, projects, and experience. Built using modern web development practices with version control through Git and GitHub.
 
-**Technology:** HTML, CSS, JavaScript, Git/GitHub
+**Tools:** HTML, CSS, JavaScript, Git/GitHub
 
 ### Budgeting & Analytics Tool
 
 Built a spreadsheet-based budgeting and analytics solution to organize financial data, analyze trends, and support data-driven decision making.
 
-**Technology:** Excel, Data Analysis, Visualization
+**Tools:** Excel, Data Analysis, Visualization
 
 ### Perl Probability Random Number Generator
 
 Created a Perl program that generates random numbers between 1-100 and analyzes probability outcomes. The program explores scenarios such as the likelihood of generating prime numbers multiple times within a defined range.
 
-**Technology:** Perl, Randomization, Probability Logic
+**Tools:** Perl, Randomization, Probability Logic
 
 ### Java Pig Latin Translator
 
 Developed a Java program that converts user-provided words into Pig Latin by applying language transformation rules through programming logic.
 
-**Technology:** Java, String Manipulation, Algorithm Development
+**Tools:** Java, String Manipulation, Algorithm Development
 
 ### Visual Basic Calendar Application
 
 Built a Visual Basic calendar application that calculates the number of days, weeks, months, and years between specified start and end dates.
 
-**Technology:** Visual Basic, Date Calculations, User Interface Design
+**Tools:** Visual Basic, Date Calculations, User Interface Design
 
 ## Contact
 
